@@ -103,6 +103,7 @@
       font-size: 18px;
       animation: twinkle 2.5s ease-in-out infinite;
     }
+
     @keyframes twinkle {
 
       0%,
@@ -151,11 +152,12 @@
       color: #ffffff;
       letter-spacing: 0.3px;
     }
+
     .nav-logo span {
       color: #C47BA3;
     }
 
-    .login-card {   
+    .login-card {
       background: rgba(255, 255, 255, 0.07);
       backdrop-filter: blur(28px);
       -webkit-backdrop-filter: blur(28px);
@@ -195,6 +197,7 @@
       text-align: center;
       letter-spacing: -0.3px;
     }
+
     .card-sub {
       font-size: 13.5px;
       color: rgba(255, 255, 255, 0.45);
@@ -215,6 +218,7 @@
       letter-spacing: 0.8px;
       text-transform: uppercase;
     }
+
     .input-wrap {
       display: flex;
       align-items: center;
@@ -225,6 +229,7 @@
       padding: 0 16px;
       transition: border-color .2s, background .2s, box-shadow .2s;
     }
+
     .input-wrap:focus-within {
       border-color: rgba(196, 123, 163, 0.65);
       background: rgba(255, 255, 255, 0.11);
@@ -258,6 +263,7 @@
       justify-content: space-between;
       margin: 14px 0 18px;
     }
+
     .remember {
       display: flex;
       align-items: center;
@@ -268,7 +274,7 @@
     .remember input[type=checkbox] {
       display: none;
     }
-    
+
     .check-box {
       width: 18px;
       height: 18px;
@@ -421,6 +427,39 @@
     .form-container.fade-in-view {
       opacity: 1;
       transform: translateY(0);
+    }
+
+    .role-toggle {
+      display: flex;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .role-btn {
+      flex: 1;
+      height: 36px;
+      border: none;
+      border-radius: 9px;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.45);
+      font-size: 13.5px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all .25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+    }
+
+    .role-btn.active {
+      background: linear-gradient(135deg, #5C3476, #8B5490);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(92, 52, 118, 0.45);
     }
   </style>
 </head>
@@ -580,6 +619,7 @@ $showRegisterOnLoad = $errors->has('name') || old('name');
 
           <form method="POST" action="{{ route('login') }}">
             @csrf
+            <input type="hidden" name="role" class="roleInput" value="teacher">
 
             <div class="field">
               <label>Email address</label>
@@ -644,6 +684,23 @@ $showRegisterOnLoad = $errors->has('name') || old('name');
 
           <form method="POST" action="{{ route('register') }}">
             @csrf
+            <div class="role-toggle">
+              <button type="button" class="role-btn role-btn-teacher active" onclick="selectRole('teacher')">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                  <rect x="1" y="10" width="14" height="5" rx="2" stroke="currentColor" stroke-width="1.4" />
+                  <path d="M8 2 L14 5.5 L8 9 L2 5.5 Z" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round" />
+                </svg>
+                Teacher
+              </button>
+              <button type="button" class="role-btn role-btn-student" onclick="selectRole('student')">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.4" />
+                  <path d="M2 13.5c0-2.5 2.5-4.5 6-4.5s6 2 6 4.5" stroke="currentColor" stroke-width="1.4" fill="none" />
+                </svg>
+                Student
+              </button>
+            </div>
+            <input type="hidden" name="role" class="roleInput" value="teacher">
 
             <div class="field">
               <label>Name</label>
@@ -723,34 +780,40 @@ $showRegisterOnLoad = $errors->has('name') || old('name');
     const card = document.getElementById('authCard');
     const loginContainer = document.getElementById('loginContainer');
     const registerContainer = document.getElementById('registerContainer');
-    const toRegisterBtn = document.getElementById('toRegister');
-    const toLoginBtn = document.getElementById('toLogin');
+
     window.addEventListener('DOMContentLoaded', () => {
       card.style.height = card.offsetHeight + 'px';
     });
 
+    function selectRole(role) {
+      document.querySelectorAll('.role-btn-teacher').forEach(b =>
+        b.classList.toggle('active', role === 'teacher'));
+      document.querySelectorAll('.role-btn-student').forEach(b =>
+        b.classList.toggle('active', role === 'student'));
+      document.querySelectorAll('.roleInput').forEach(i => i.value = role);
+    }
+
     function switchView(hideContainer, showContainer) {
       hideContainer.classList.remove('fade-in-view');
-
       hideContainer.classList.remove('active-view');
+
       showContainer.classList.add('active-view');
 
       card.style.height = 'auto';
       const targetHeight = card.offsetHeight;
-
       card.style.height = card.offsetHeight + 'px';
-      card.offsetHeight;
-
+      card.offsetHeight; // force reflow
       card.style.height = targetHeight + 'px';
+
       showContainer.classList.add('fade-in-view');
     }
 
-    toRegisterBtn.addEventListener('click', function(e) {
+    document.getElementById('toRegister').addEventListener('click', e => {
       e.preventDefault();
       switchView(loginContainer, registerContainer);
     });
 
-    toLoginBtn.addEventListener('click', function(e) {
+    document.getElementById('toLogin').addEventListener('click', e => {
       e.preventDefault();
       switchView(registerContainer, loginContainer);
     });

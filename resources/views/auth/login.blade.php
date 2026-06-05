@@ -34,17 +34,14 @@
 
       background:
         radial-gradient(ellipse 1400px 600px at 50% -10%,
-          rgba(232, 168, 192, .40) 0%,
-          rgba(196, 123, 163, .28) 25%,
-          rgba(196, 123, 163, .12) 50%,
-          transparent 75%),
-        radial-gradient(ellipse 1800px 800px at 50% -20%,
-          rgba(232, 168, 192, .10) 0%,
-          transparent 70%),
+          rgba(99, 102, 241, 0.25) 0%,
+          rgba(139, 92, 246, 0.15) 35%,
+          rgba(15, 12, 30, 0.6) 70%,
+          transparent 100%),
         linear-gradient(180deg,
-          #4A2560 0%,
-          #3A235C 40%,
-          #2B1B4E 100%);
+          #161233 0%,
+          #0E0B20 50%,
+          #070514 100%);
     }
 
     .dots {
@@ -57,7 +54,7 @@
       width: 4px;
       height: 4px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.22);
+      background: rgba(129, 140, 248, 0.15);
       display: block;
     }
 
@@ -99,7 +96,7 @@
 
     .sparkle {
       position: absolute;
-      color: rgba(255, 220, 180, 0.85);
+      color: rgba(34, 211, 238, 0.65);
       font-size: 18px;
       animation: twinkle 2.5s ease-in-out infinite;
     }
@@ -120,7 +117,7 @@
 
     .deco {
       position: absolute;
-      color: rgba(255, 255, 255, 0.28);
+      color: rgba(129, 140, 248, 0.18);
       font-size: 18px;
       font-weight: 200;
     }
@@ -154,16 +151,14 @@
     }
 
     .nav-logo span {
-      color: #C47BA3;
+      color: #818CF8;
     }
 
     .login-card {
-      background: rgba(255, 255, 255, 0.07);
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
+      background: #1E1A3E;
       border-radius: 18px;
       padding: 40px 28px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       box-shadow:
         0 30px 70px rgba(0, 0, 0, 0.55),
         inset 0 1px 0 rgba(255, 255, 255, 0.04);
@@ -183,14 +178,14 @@
       height: 2px;
       background: linear-gradient(90deg,
           transparent,
-          rgba(196, 123, 163, 0.55),
-          rgba(139, 84, 144, 0.35),
+          rgba(99, 102, 241, 0.65),
+          rgba(139, 92, 246, 0.45),
           transparent);
       opacity: 0.9;
     }
 
     .card-title {
-      font-size: 30px;
+      font-size: 27px;
       font-weight: 700;
       color: #ffffff;
       margin-bottom: 6px;
@@ -199,7 +194,7 @@
     }
 
     .card-sub {
-      font-size: 13.5px;
+      font-size: 13px;
       color: rgba(255, 255, 255, 0.45);
       text-align: center;
       margin-bottom: 20px;
@@ -211,10 +206,10 @@
 
     .field label {
       display: block;
-      font-size: 11px;
+      font-size: 9px;
       font-weight: 600;
       color: rgba(255, 255, 255, 0.50);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       letter-spacing: 0.8px;
       text-transform: uppercase;
     }
@@ -231,9 +226,9 @@
     }
 
     .input-wrap:focus-within {
-      border-color: rgba(196, 123, 163, 0.65);
+      border-color: rgba(99, 102, 241, 0.65);
       background: rgba(255, 255, 255, 0.11);
-      box-shadow: 0 0 0 4px rgba(196, 123, 163, 0.12);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
     }
 
     .input-wrap svg {
@@ -243,12 +238,12 @@
 
     .input-wrap input {
       flex: 1;
-      height: 42px;
+      height: 38px;
       background: none;
       border: none;
       outline: none;
       color: #ffffff;
-      font-size: 15px;
+      font-size: 13px;
       font-family: inherit;
       font-weight: 400;
     }
@@ -276,8 +271,8 @@
     }
 
     .check-box {
-      width: 18px;
-      height: 18px;
+      width: 15px;
+      height: 15px;
       border-radius: 5px;
       border: 1.5px solid rgba(255, 255, 255, 0.22);
       background: rgba(255, 255, 255, 0.05);
@@ -289,8 +284,8 @@
     }
 
     .remember input:checked+.check-box {
-      background: #8B5490;
-      border-color: #8B5490;
+      background: #4F46E5;
+      border-color: #4F46E5;
     }
 
     .remember input:checked+.check-box::after {
@@ -310,7 +305,7 @@
 
     .forgot {
       font-size: 13px;
-      color: rgba(196, 123, 163, 0.85);
+      color: rgba(129, 140, 248, 0.85);
       text-decoration: none;
       cursor: pointer;
       transition: color .2s;
@@ -322,13 +317,13 @@
 
     .btn-login {
       width: 100%;
-      height: 44px;
-      background: linear-gradient(135deg, #5C3476 0%, #8B5490 50%, #C47BA3 100%);
+      height: 38px;
+      background: linear-gradient(135deg, #2E2570 0%, #4F46E5 50%, #818CF8 100%);
       border: none;
       border-radius: 14px;
       color: #fff;
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 700;
       font-family: inherit;
       cursor: pointer;
       letter-spacing: 0.4px;
@@ -339,20 +334,20 @@
       background-size: 200% 200%;
       background-position: 0% 50%;
 
-      box-shadow: 0 6px 24px rgba(92, 52, 118, 0.45);
+      box-shadow: 0 6px 24px rgba(46, 37, 112, 0.6);
     }
 
     .btn-login:hover {
       transform: translateY(-3px) scale(1.01);
       background-position: 100% 50%;
       box-shadow:
-        0 12px 35px rgba(92, 52, 118, 0.65),
-        0 0 18px rgba(196, 123, 163, 0.35);
+        0 12px 35px rgba(46, 37, 112, 0.8),
+        0 0 18px rgba(129, 140, 248, 0.4);
     }
 
     .btn-login:active {
       transform: translateY(0) scale(0.99);
-      box-shadow: 0 6px 18px rgba(92, 52, 118, 0.4);
+      box-shadow: 0 6px 18px rgba(46, 37, 112, 0.5);
     }
 
     /* Shine sweep animation */
@@ -391,18 +386,18 @@
     }
 
     .divider span {
-      font-size: 12px;
+      font-size: 11px;
       color: rgba(255, 255, 255, 0.25);
     }
 
     .card-footer {
       text-align: center;
-      font-size: 13.5px;
+      font-size: 13px;
       color: rgba(255, 255, 255, 0.38);
     }
 
     .card-footer a {
-      color: #C47BA3;
+      color: #818CF8;
       text-decoration: none;
       font-weight: 600;
       cursor: pointer;
@@ -445,7 +440,7 @@
       border-radius: 9px;
       background: transparent;
       color: rgba(255, 255, 255, 0.45);
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 600;
       font-family: inherit;
       cursor: pointer;
@@ -457,9 +452,9 @@
     }
 
     .role-btn.active {
-      background: linear-gradient(135deg, #5C3476, #8B5490);
+      background: linear-gradient(135deg, #2E2570, #4F46E5);
       color: #fff;
-      box-shadow: 0 4px 14px rgba(92, 52, 118, 0.45);
+      box-shadow: 0 4px 14px rgba(46, 37, 112, 0.5);
     }
   </style>
 </head>
@@ -496,111 +491,111 @@ $showRegisterOnLoad = $errors->has('name') || old('name');
     <span class="sparkle" style="bottom:202px;left:822px;animation-delay:0.9s;font-size:12px">✦</span>
 
     <span class="deco" style="bottom:62px;left:55px">+</span>
-    <span class="deco" style="bottom:62px;left:372px;width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.22);display:flex;align-items:center;justify-content:center"></span>
+    <span class="deco" style="bottom:62px;left:372px;width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(129,140,248,0.25);display:flex;align-items:center;justify-content:center"></span>
 
     <div class="el" style="top:90px;left:160px;animation-delay:0s">
       <svg width="68" height="68" viewBox="0 0 68 68">
-        <rect x="4" y="4" width="60" height="60" rx="10" fill="none" stroke="rgba(255,200,180,0.7)" stroke-width="2.5" />
-        <polyline points="18,34 29,45 50,23" fill="none" stroke="rgba(255,200,180,0.85)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+        <rect x="4" y="4" width="60" height="60" rx="10" fill="none" stroke="rgba(129,140,248,0.35)" stroke-width="2.5" />
+        <polyline points="18,34 29,45 50,23" fill="none" stroke="rgba(34,211,238,0.75)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
     </div>
 
     <div class="el" style="top:165px;left:80px;animation-delay:0.5s">
       <svg width="80" height="72" viewBox="0 0 80 72">
-        <rect x="4" y="4" width="66" height="52" rx="10" fill="none" stroke="rgba(255,200,180,0.65)" stroke-width="2.5" />
-        <polygon points="18,56 10,68 30,56" fill="none" stroke="rgba(255,200,180,0.65)" stroke-width="2.5" stroke-linejoin="round" />
-        <text x="37" y="37" text-anchor="middle" fill="rgba(255,200,180,0.85)" font-size="26" font-weight="600" font-family="Georgia,serif">?</text>
+        <rect x="4" y="4" width="66" height="52" rx="10" fill="none" stroke="rgba(129,140,248,0.3)" stroke-width="2.5" />
+        <polygon points="18,56 10,68 30,56" fill="none" stroke="rgba(129,140,248,0.3)" stroke-width="2.5" stroke-linejoin="round" />
+        <text x="37" y="37" text-anchor="middle" fill="rgba(34,211,238,0.65)" text-shadow="0 0 10px rgba(34,211,238,0.3)" font-size="26" font-weight="600" font-family="Georgia,serif">?</text>
       </svg>
     </div>
 
     <div style="position:absolute;top:185px;left:175px">
-      <div style="width:120px;height:2.5px;background:rgba(255,180,160,0.38);border-radius:2px;margin-bottom:10px"></div>
-      <div style="width:80px;height:2.5px;background:rgba(255,180,160,0.28);border-radius:2px"></div>
+      <div style="width:120px;height:2.5px;background:rgba(129,140,248,0.25);border-radius:2px;margin-bottom:10px"></div>
+      <div style="width:80px;height:2.5px;background:rgba(129,140,248,0.15);border-radius:2px"></div>
     </div>
 
     <div class="el" style="top:320px;left:55px;flex-direction:column;gap:10px;align-items:flex-start;animation-delay:1s">
-      <div style="display:flex;align-items:center;gap:10px;width:310px;height:46px;border:2px solid rgba(255,180,160,0.7);border-radius:24px;padding:0 16px;background:rgba(255,255,255,0.06)">
-        <div style="width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,180,160,0.8);display:flex;align-items:center;justify-content:center"><span style="color:rgba(255,200,180,0.9);font-size:13px;font-weight:600">A</span></div>
-        <div style="flex:1;height:3px;background:rgba(255,180,160,0.4);border-radius:2px"></div>
+      <div style="display:flex;align-items:center;gap:10px;width:310px;height:46px;border:2px solid rgba(99,102,241,0.5);border-radius:24px;padding:0 16px;background:rgba(30,26,62,0.6);box-shadow:0 0 15px rgba(99,102,241,0.15)">
+        <div style="width:28px;height:28px;border-radius:50%;border:2px solid rgba(34,211,238,0.7);display:flex;align-items:center;justify-content:center"><span style="color:rgba(34,211,238,0.9);font-size:13px;font-weight:600">A</span></div>
+        <div style="flex:1;height:3px;background:rgba(34,211,238,0.4);border-radius:2px"></div>
         <svg width="18" height="18" viewBox="0 0 18 18">
-          <polyline points="3,9 7,13 15,5" fill="none" stroke="rgba(255,200,180,0.9)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+          <polyline points="3,9 7,13 15,5" fill="none" stroke="rgba(34,211,238,0.9)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;width:310px;height:46px;border:1.5px solid rgba(255,180,160,0.3);border-radius:24px;padding:0 16px;background:rgba(255,255,255,0.04)">
-        <div style="width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(255,180,160,0.4);display:flex;align-items:center;justify-content:center"><span style="color:rgba(255,200,180,0.6);font-size:13px;font-weight:600">B</span></div>
-        <div style="flex:1;height:3px;background:rgba(255,180,160,0.25);border-radius:2px"></div>
+      <div style="display:flex;align-items:center;gap:10px;width:310px;height:46px;border:1.5px solid rgba(255,255,255,0.08);border-radius:24px;padding:0 16px;background:rgba(255,255,255,0.03)">
+        <div style="width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center"><span style="color:rgba(255,255,255,0.4);font-size:13px;font-weight:600">B</span></div>
+        <div style="flex:1;height:3px;background:rgba(255,255,255,0.1);border-radius:2px"></div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;width:310px;height:46px;border:1.5px solid rgba(255,180,160,0.3);border-radius:24px;padding:0 16px;background:rgba(255,255,255,0.04)">
-        <div style="width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(255,180,160,0.4);display:flex;align-items:center;justify-content:center"><span style="color:rgba(255,200,180,0.6);font-size:13px;font-weight:600">C</span></div>
-        <div style="flex:1;height:3px;background:rgba(255,180,160,0.2);border-radius:2px"></div>
+      <div style="display:flex;align-items:center;gap:10px;width:310px;height:46px;border:1.5px solid rgba(255,255,255,0.08);border-radius:24px;padding:0 16px;background:rgba(255,255,255,0.03)">
+        <div style="width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center"><span style="color:rgba(255,255,255,0.4);font-size:13px;font-weight:600">C</span></div>
+        <div style="flex:1;height:3px;background:rgba(255,255,255,0.1);border-radius:2px"></div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;width:310px;height:46px;border:1.5px solid rgba(255,180,160,0.3);border-radius:24px;padding:0 16px;background:rgba(255,255,255,0.04)">
-        <div style="width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(255,180,160,0.4);display:flex;align-items:center;justify-content:center"><span style="color:rgba(255,200,180,0.6);font-size:13px;font-weight:600">D</span></div>
-        <div style="flex:1;height:3px;background:rgba(255,180,160,0.15);border-radius:2px"></div>
+      <div style="display:flex;align-items:center;gap:10px;width:310px;height:46px;border:1.5px solid rgba(255,255,255,0.08);border-radius:24px;padding:0 16px;background:rgba(255,255,255,0.03)">
+        <div style="width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center"><span style="color:rgba(255,255,255,0.4);font-size:13px;font-weight:600">D</span></div>
+        <div style="flex:1;height:3px;background:rgba(255,255,255,0.1);border-radius:2px"></div>
       </div>
     </div>
 
     <div class="el" style="bottom:100px;left:90px;animation-delay:1.5s">
       <svg width="110" height="110" viewBox="0 0 110 110">
-        <circle cx="55" cy="55" r="50" fill="none" stroke="rgba(255,200,180,0.32)" stroke-width="1.5" stroke-dasharray="6 5" />
-        <circle cx="55" cy="55" r="36" fill="rgba(255,255,255,0.07)" stroke="rgba(255,200,180,0.7)" stroke-width="2.5" />
-        <polyline points="36,55 49,68 74,42" fill="none" stroke="rgba(255,200,180,0.9)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="55" cy="55" r="50" fill="none" stroke="rgba(129,140,248,0.2)" stroke-width="1.5" stroke-dasharray="6 5" />
+        <circle cx="55" cy="55" r="36" fill="rgba(255,255,255,0.03)" stroke="rgba(129,140,248,0.4)" stroke-width="2.5" />
+        <polyline points="36,55 49,68 74,42" fill="none" stroke="rgba(34,211,238,0.7)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
     </div>
 
     <div class="el" style="top:55px;right:130px;animation-delay:0.4s">
       <svg width="120" height="120" viewBox="0 0 120 120">
-        <circle cx="60" cy="60" r="50" fill="rgba(255,255,255,0.10)" stroke="rgba(255,200,180,0.5)" stroke-width="2" />
-        <ellipse cx="60" cy="60" rx="68" ry="22" fill="none" stroke="rgba(255,200,180,0.28)" stroke-width="1.5" transform="rotate(-20,60,60)" />
-        <circle cx="108" cy="45" r="5" fill="rgba(255,200,180,0.5)" />
-        <text x="60" y="75" text-anchor="middle" fill="rgba(255,220,190,0.95)" font-size="48" font-weight="700" font-family="Georgia,serif">?</text>
+        <circle cx="60" cy="60" r="50" fill="rgba(255,255,255,0.03)" stroke="rgba(129,140,248,0.25)" stroke-width="2" />
+        <ellipse cx="60" cy="60" rx="68" ry="22" fill="none" stroke="rgba(129,140,248,0.15)" stroke-width="1.5" transform="rotate(-20,60,60)" />
+        <circle cx="108" cy="45" r="5" fill="rgba(34,211,238,0.4)" />
+        <text x="60" y="75" text-anchor="middle" fill="rgba(139,92,246,0.5)" font-size="48" font-weight="700" font-family="Georgia,serif">?</text>
       </svg>
     </div>
 
     <div class="el" style="top:270px;right:230px;animation-delay:1.1s">
       <svg width="70" height="70" viewBox="0 0 70 70">
-        <rect x="4" y="4" width="62" height="62" rx="10" fill="rgba(255,255,255,0.09)" stroke="rgba(255,200,180,0.58)" stroke-width="2" />
-        <circle cx="18" cy="22" r="4" fill="rgba(255,200,180,0.7)" />
-        <rect x="28" y="19" width="28" height="5" rx="2.5" fill="rgba(255,200,180,0.5)" />
-        <circle cx="18" cy="35" r="4" fill="rgba(255,200,180,0.7)" />
-        <rect x="28" y="32" width="22" height="5" rx="2.5" fill="rgba(255,200,180,0.5)" />
-        <circle cx="18" cy="48" r="4" fill="rgba(255,200,180,0.7)" />
-        <rect x="28" y="45" width="26" height="5" rx="2.5" fill="rgba(255,200,180,0.5)" />
+        <rect x="4" y="4" width="62" height="62" rx="10" fill="rgba(255,255,255,0.03)" stroke="rgba(129,140,248,0.3)" stroke-width="2" />
+        <circle cx="18" cy="22" r="4" fill="rgba(34,211,238,0.6)" />
+        <rect x="28" y="19" width="28" height="5" rx="2.5" fill="rgba(129,140,248,0.3)" />
+        <circle cx="18" cy="35" r="4" fill="rgba(34,211,238,0.6)" />
+        <rect x="28" y="32" width="22" height="5" rx="2.5" fill="rgba(129,140,248,0.3)" />
+        <circle cx="18" cy="48" r="4" fill="rgba(34,211,238,0.6)" />
+        <rect x="28" y="45" width="26" height="5" rx="2.5" fill="rgba(129,140,248,0.3)" />
       </svg>
     </div>
 
     <div class="el" style="top:330px;right:170px;animation-delay:1.6s">
       <svg width="56" height="56" viewBox="0 0 56 56">
-        <rect x="4" y="4" width="48" height="48" rx="8" fill="none" stroke="rgba(255,200,180,0.58)" stroke-width="2" />
-        <polyline points="14,28 24,38 42,18" fill="none" stroke="rgba(255,200,180,0.85)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+        <rect x="4" y="4" width="48" height="48" rx="8" fill="none" stroke="rgba(129,140,248,0.3)" stroke-width="2" />
+        <polyline points="14,28 24,38 42,18" fill="none" stroke="rgba(34,211,238,0.65)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
     </div>
 
     <div class="el" style="bottom:160px;right:195px;animation-delay:0.9s">
       <svg width="80" height="70" viewBox="0 0 80 70">
-        <rect x="8" y="40" width="16" height="26" rx="3" fill="rgba(200,120,160,0.58)" />
-        <rect x="30" y="24" width="16" height="42" rx="3" fill="rgba(200,120,160,0.74)" />
-        <rect x="52" y="10" width="16" height="56" rx="3" fill="rgba(200,120,160,0.9)" />
+        <rect x="8" y="40" width="16" height="26" rx="3" fill="rgba(46,37,112,0.6)" />
+        <rect x="30" y="24" width="16" height="42" rx="3" fill="rgba(79,70,229,0.5)" />
+        <rect x="52" y="10" width="16" height="56" rx="3" fill="rgba(129,140,248,0.6)" />
       </svg>
     </div>
 
     <div class="el" style="bottom:120px;right:110px;animation-delay:2.1s">
       <svg width="72" height="72" viewBox="0 0 72 72">
-        <rect x="4" y="4" width="64" height="64" rx="10" fill="none" stroke="rgba(255,200,180,0.52)" stroke-width="2" />
-        <text x="19" y="31" text-anchor="middle" fill="rgba(255,200,180,0.8)" font-size="14" font-weight="600" font-family="Georgia,serif">A</text>
-        <text x="53" y="31" text-anchor="middle" fill="rgba(255,200,180,0.8)" font-size="14" font-weight="600" font-family="Georgia,serif">B</text>
-        <text x="19" y="56" text-anchor="middle" fill="rgba(255,200,180,0.8)" font-size="14" font-weight="600" font-family="Georgia,serif">C</text>
-        <text x="53" y="56" text-anchor="middle" fill="rgba(255,200,180,0.8)" font-size="14" font-weight="600" font-family="Georgia,serif">D</text>
-        <line x1="36" y1="8" x2="36" y2="64" stroke="rgba(255,200,180,0.28)" stroke-width="1" />
-        <line x1="8" y1="38" x2="64" y2="38" stroke="rgba(255,200,180,0.28)" stroke-width="1" />
+        <rect x="4" y="4" width="64" height="64" rx="10" fill="none" stroke="rgba(129,140,248,0.25)" stroke-width="2" />
+        <text x="19" y="31" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="14" font-weight="600" font-family="Georgia,serif">A</text>
+        <text x="53" y="31" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="14" font-weight="600" font-family="Georgia,serif">B</text>
+        <text x="19" y="56" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="14" font-weight="600" font-family="Georgia,serif">C</text>
+        <text x="53" y="56" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="14" font-weight="600" font-family="Georgia,serif">D</text>
+        <line x1="36" y1="8" x2="36" y2="64" stroke="rgba(129,140,248,0.15)" stroke-width="1" />
+        <line x1="8" y1="38" x2="64" y2="38" stroke="rgba(129,140,248,0.15)" stroke-width="1" />
       </svg>
     </div>
 
     <div class="el" style="bottom:185px;right:265px;animation-delay:1.4s">
       <svg width="60" height="55" viewBox="0 0 60 55">
-        <polyline points="4,28 56,4 44,52 26,36 4,28" fill="none" stroke="rgba(255,200,180,0.68)" stroke-width="2" stroke-linejoin="round" />
-        <line x1="26" y1="36" x2="56" y2="4" stroke="rgba(255,200,180,0.48)" stroke-width="1.5" />
-        <path d="M 46 52 Q 70 30 46 4" fill="none" stroke="rgba(255,200,180,0.28)" stroke-width="1.5" stroke-dasharray="5 4" />
+        <polyline points="4,28 56,4 44,52 26,36 4,28" fill="none" stroke="rgba(129,140,248,0.4)" stroke-width="2" stroke-linejoin="round" />
+        <line x1="26" y1="36" x2="56" y2="4" stroke="rgba(129,140,248,0.25)" stroke-width="1.5" />
+        <path d="M 46 52 Q 70 30 46 4" fill="none" stroke="rgba(34,211,238,0.15)" stroke-width="1.5" stroke-dasharray="5 4" />
       </svg>
     </div>
 
@@ -612,7 +607,7 @@ $showRegisterOnLoad = $errors->has('name') || old('name');
           <div class="card-sub">Sign in to manage your quizzes</div>
 
           @if (session('status'))
-          <div style="background:rgba(245,216,200,0.15);color:#F5D8C8;font-size:13px;padding:10px 14px;border-radius:10px;margin-bottom:14px;border:1px solid rgba(245,216,200,0.25);">
+          <div style="background:rgba(129,140,248,0.1);color:#818CF8;font-size:13px;padding:10px 14px;border-radius:10px;margin-bottom:14px;border:1px solid rgba(129,140,248,0.2);">
             {{ session('status') }}
           </div>
           @endif

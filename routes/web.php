@@ -11,6 +11,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->prefix('teacher')->group(function () {
     Route::get('/dashboard', [TeacherDashboard::class, 'index'])->name('teacher.dashboard');
+    Route::get('/leaderboard/{quiz}', [TeacherDashboard::class, 'leaderboard'])->name('teacher.leaderboard');
 });
 
 Route::middleware(['auth'])->prefix('student')->group(function () {

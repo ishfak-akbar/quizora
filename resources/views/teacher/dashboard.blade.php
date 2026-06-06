@@ -997,7 +997,7 @@
           <div class="create-info">
             <h3>Create a New Quiz</h3>
             <p>Build quizzes with MCQ, True/False, or Short Answer questions.<br>Set timers, due dates, and control who can attempt.</p>
-            <a href="#" class="create-btn">
+            <a href="{{ route('teacher.quiz.create') }}" class="create-btn">
               <i class="ti ti-plus" aria-hidden="true"></i> Create New Quiz
             </a>
           </div>

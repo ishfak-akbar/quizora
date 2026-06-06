@@ -71,4 +71,16 @@ class QuizController extends Controller
         return redirect()->route('teacher.dashboard')
             ->with('success', 'Quiz created successfully!');
     }
+
+    public function destroy(Quiz $quiz)
+    {
+        if ($quiz->teacher_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $quiz->delete();
+
+        return redirect()->route('teacher.dashboard')
+            ->with('success', 'Quiz deleted successfully.');
+    }
 }

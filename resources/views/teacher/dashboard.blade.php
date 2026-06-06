@@ -1047,11 +1047,12 @@
                     <a href="#" class="action-btn" title="Results">
                       <i class="ti ti-chart-bar" aria-hidden="true"></i>
                     </a>
-                    <form method="POST" action="#">
-                      @csrf @method('DELETE')
+                    <form method="POST" action="{{ route('teacher.quiz.destroy', $quiz->id) }}">
+                      @csrf
+                      @method('DELETE')
                       <button type="submit" class="action-btn" title="Delete"
-                        onclick="return confirm('Delete this quiz?')">
-                        <i class="ti ti-trash" aria-hidden="true"></i>
+                        onclick="return confirm('Are you sure you want to delete this quiz?')">
+                        <i class="ti ti-trash"></i>
                       </button>
                     </form>
                   </div>
@@ -1157,6 +1158,42 @@
       }
     }
   </script>
+  @if(session('success'))
+  <div id="toast" style="
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(52,211,153,0.15);
+      border: 1px solid rgba(52,211,153,0.4);
+      color: #34D399;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 9999;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+  ">
+    <i class="ti ti-circle-check" style="font-size:18px;"></i>
+    {{ session('success') }}
+  </div>
+
+  <script>
+    const toast = document.getElementById('toast');
+    if (toast) {
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(-12px)';
+        setTimeout(() => toast.remove(), 500);
+      }, 3000);
+    }
+  </script>
+  @endif
 </body>
 
 </html>

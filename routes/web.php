@@ -32,4 +32,6 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->group(function (
     Route::post('/quiz/store', [QuizController::class, 'store'])->name('teacher.quiz.store');
 });
 
+Route::delete('/quiz/{quiz}', [QuizController::class, 'destroy'])->name('teacher.quiz.destroy');
+
 require __DIR__ . '/auth.php';

@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <link rel="stylesheet" href="{{ asset('quizora.css') }}">
   <title>Quizora — Teacher Dashboard</title>
   <style>
     :root {
@@ -875,6 +876,7 @@
 </head>
 
 <body>
+  <script src="{{ asset('quizora.js') }}"></script>
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
       <div class="logo-icon">Q</div>
@@ -985,23 +987,96 @@
         </div>
       </div>
       <!-- CREATE QUIZ CTA -->
-      <div class="create-section">
-        <div class="create-header">
-          <h2>Quick Actions</h2>
-          <span class="section-tag">Get started</span>
-        </div>
-        <div class="create-body">
-          <div class="create-visual">
-            <i class="ti ti-circle-plus" aria-hidden="true"></i>
+      <!-- QUICK ACTION CARDS -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+
+        <!-- CREATE QUIZ CARD -->
+        <div style="
+    background: linear-gradient(135deg, #2E2570 0%, #4F46E5 50%, #818CF8 100%);
+    border-radius: 16px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 160px;
+  ">
+          <!-- background decoration -->
+          <div style="position:absolute;top:-30px;right:-30px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.06);"></div>
+          <div style="position:absolute;bottom:-40px;right:40px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.04);"></div>
+          <div style="position:absolute;top:20px;right:20px;opacity:0.15;font-size:80px;line-height:1;">
+            <i class="ti ti-pencil-plus"></i>
           </div>
-          <div class="create-info">
-            <h3>Create a New Quiz</h3>
-            <p>Build quizzes with MCQ, True/False, or Short Answer questions.<br>Set timers, due dates, and control who can attempt.</p>
-            <a href="{{ route('teacher.quiz.create') }}" class="create-btn">
-              <i class="ti ti-plus" aria-hidden="true"></i> Create New Quiz
+
+          <div>
+            <div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:6px;">
+              Create New Quiz
+            </div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.5;">
+              Build tailored MCQ quizzes, customize your timers<br>and deadlines, and publish them to your classes<br>in just a click.
+            </div>
+          </div>
+
+          <div style="margin-top:20px;">
+            <a href="{{ route('teacher.quiz.create') }}" style="
+              display: inline-flex;
+              align-items: center;
+              gap: 8px;
+              background: rgba(255,255,255,0.15);
+              backdrop-filter: blur(8px);
+              border: 1px solid rgba(255,255,255,0.25);
+              color: #fff;
+              font-size: 13px;
+              font-weight: 600;
+              padding: 9px 18px;
+              border-radius: 9px;
+              text-decoration: none;
+              transition: background 0.2s;
+              font-family: var(--font);
+            " onmouseover="this.style.background='rgba(255,255,255,0.25)'"
+              onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+              <i class="ti ti-plus"></i> Create Quiz
             </a>
           </div>
         </div>
+
+        <!-- OVERALL RESULTS CARD -->
+        <div style="
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border-light);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            min-height: 160px;
+        ">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <div>
+              <div style="font-size:15px;font-weight:700;color:#fff;">Quiz Results</div>
+              <div style="font-size:12px;color:var(--color-text-muted);margin-top:2px;">Overall performance</div>
+            </div>
+            <i class="ti ti-chart-bar" style="font-size:22px;color:var(--color-primary-glow);"></i>
+          </div>
+
+          <div id="resultSelectContainer" style="margin-bottom:16px;"></div>
+
+          <div id="resultStats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+            <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:12px;text-align:center;">
+              <div style="font-size:20px;font-weight:700;color:#fff;" id="res-submissions">—</div>
+              <div style="font-size:11px;color:var(--color-text-muted);margin-top:3px;">Submissions</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:12px;text-align:center;">
+              <div style="font-size:20px;font-weight:700;color:var(--color-status-success);" id="res-avg">—</div>
+              <div style="font-size:11px;color:var(--color-text-muted);margin-top:3px;">Avg Score</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:12px;text-align:center;">
+              <div style="font-size:20px;font-weight:700;color:var(--color-primary-glow);" id="res-highest">—</div>
+              <div style="font-size:11px;color:var(--color-text-muted);margin-top:3px;">Highest</div>
+            </div>
+          </div>
+        </div>
+
       </div>
       <!-- MAIN GRID -->
       <div class="dashboard-grid">
@@ -1072,16 +1147,10 @@
         <div class="card">
           <div class="card-header">
             <h2>Leaderboard</h2>
-            <i class="ti ti-trophy" style="color:#F59E0B;font-size:18px" aria-hidden="true"></i>
+            <i class="ti ti-trophy" style="color:#F59E0B;font-size:18px"></i>
           </div>
-          <div class="leaderboard-filter">
-            <select class="quiz-select" id="quizSelect">
-              @forelse($quizzes as $quiz)
-              <option value="{{ $quiz->id }}">{{ $quiz->title }}</option>
-              @empty
-              <option value="">No active quizzes</option>
-              @endforelse
-            </select>
+          <div style="padding:12px 16px;border-bottom:1px solid var(--color-border-light);">
+            <div id="lbSelectContainer"></div>
           </div>
           <div class="leaderboard-list" id="lbList">
             <div style="text-align:center;padding:32px;color:var(--color-text-muted);font-size:13px;">
@@ -1145,6 +1214,44 @@
           lbList.innerHTML = '<div style="text-align:center;padding:32px;color:var(--color-status-error);font-size:13px;">Failed to load.</div>';
         });
     }
+
+    function fetchQuizResult(quizId) {
+      if (!quizId) {
+        document.getElementById('res-submissions').textContent = '—';
+        document.getElementById('res-avg').textContent = '—';
+        document.getElementById('res-highest').textContent = '—';
+        return;
+      }
+      fetch(`/teacher/quiz/${quizId}/results-summary`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('res-submissions').textContent = data.submissions;
+          document.getElementById('res-avg').textContent = data.avg;
+          document.getElementById('res-highest').textContent = data.highest;
+        });
+    }
+
+    const lbOptions = [
+      @foreach($quizzes as $quiz) {
+        value: "{{ $quiz->id }}",
+        label: "{{ $quiz->title }}"
+      },
+      @endforeach
+    ];
+
+    createCustomSelect(
+      document.getElementById('lbSelectContainer'),
+      lbOptions,
+      'Select a quiz...',
+      (value) => fetchLeaderboard(value)
+    );
+
+    createCustomSelect(
+      document.getElementById('resultSelectContainer'),
+      lbOptions,
+      'Select a quiz...',
+      (value) => fetchQuizResult(value)
+    );
 
     if (quizSelect) {
       quizSelect.addEventListener('change', () => {

@@ -36,4 +36,6 @@ Route::delete('/quiz/{quiz}', [QuizController::class, 'destroy'])->name('teacher
 Route::get('/quiz/{quiz}/edit', [QuizController::class, 'edit'])->name('teacher.quiz.edit');
 Route::put('/quiz/{quiz}', [QuizController::class, 'update'])->name('teacher.quiz.update');
 
+Route::get('/quiz/{quiz}/results-summary', [TeacherDashboard::class, 'resultsSummary'])->name('teacher.results.summary');
+
 require __DIR__ . '/auth.php';

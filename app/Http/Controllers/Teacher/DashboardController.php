@@ -80,4 +80,30 @@ class DashboardController extends Controller
 
         return response()->json($leaderboard);
     }
+    public function resultsSummary($quizId)
+    {
+        $teacher = Auth::user();
+
+        $quiz = Quiz::where('id', $quizId)
+            ->where('teacher_id', $teacher->id)
+            ->firstOrFail();
+
+        $attempts = Attempt::where('quiz_id', $quiz->id)
+            ->where('status', 'submitted')
+            ->get();
+
+        $submissions = $attempts->count();
+        $avg = $submissions > 0
+            ? round($attempts->avg(fn($a) => $a->total_marks > 0 ? ($a->score / $a->total_marks) * 100 : 0))
+            : 0;
+        $highest = $submissions > 0
+            ? round($attempts->max(fn($a) => $a->total_marks > 0 ? ($a->score / $a->total_marks) * 100 : 0))
+            : 0;
+
+        return response()->json([
+            'submissions' => $submissions,
+            'avg'         => $avg . '%',
+            'highest'     => $highest . '%',
+        ]);
+    }
 }

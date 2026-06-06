@@ -1041,8 +1041,8 @@
                 </td>
                 <td>
                   <div class="action-btns">
-                    <a href="#" class="action-btn" title="Edit">
-                      <i class="ti ti-edit" aria-hidden="true"></i>
+                    <a href="{{ route('teacher.quiz.edit', $quiz->id) }}" class="action-btn" title="Edit">
+                      <i class="ti ti-edit"></i>
                     </a>
                     <a href="#" class="action-btn" title="Results">
                       <i class="ti ti-chart-bar" aria-hidden="true"></i>

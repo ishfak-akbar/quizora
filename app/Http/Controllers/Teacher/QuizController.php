@@ -83,4 +83,74 @@ class QuizController extends Controller
         return redirect()->route('teacher.dashboard')
             ->with('success', 'Quiz deleted successfully.');
     }
+
+    public function edit(Quiz $quiz)
+    {
+        if ($quiz->teacher_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $quiz->load('questions.options');
+        return view('teacher.quiz.edit', compact('quiz'));
+    }
+
+    public function update(Request $request, Quiz $quiz)
+    {
+        if ($quiz->teacher_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $request->validate([
+            'title'             => 'required|string|max:255',
+            'description'       => 'nullable|string',
+            'time_limit'        => 'nullable|integer|min:1',
+            'max_attempts'      => 'required|integer|min:1',
+            'starts_at'         => 'nullable|date',
+            'ends_at'           => 'nullable|date|after_or_equal:starts_at',
+            'shuffle_questions' => 'boolean',
+            'show_results'      => 'boolean',
+            'status'            => 'required|in:draft,active',
+            'questions'         => 'required|array|min:1',
+            'questions.*.text'  => 'required|string',
+            'questions.*.marks' => 'required|integer|min:1',
+            'questions.*.correct' => 'required|integer|between:0,3',
+            'questions.*.options' => 'required|array|size:4',
+        ]);
+
+        $quiz->update([
+            'title'             => $request->title,
+            'description'       => $request->description,
+            'time_limit'        => $request->time_limit,
+            'max_attempts'      => $request->max_attempts,
+            'starts_at'         => $request->starts_at,
+            'ends_at'           => $request->ends_at,
+            'shuffle_questions'  => $request->boolean('shuffle_questions'),
+            'show_results'      => $request->boolean('show_results'),
+            'status'            => $request->status,
+        ]);
+
+        $quiz->questions()->delete();
+
+        foreach ($request->questions as $index => $q) {
+            $question = Question::create([
+                'quiz_id'       => $quiz->id,
+                'question_text' => $q['text'],
+                'type'          => 'mcq',
+                'marks'         => $q['marks'],
+                'order'         => $index,
+            ]);
+
+            foreach ($q['options'] as $optIndex => $optText) {
+                Option::create([
+                    'question_id' => $question->id,
+                    'option_text' => $optText,
+                    'is_correct'  => $optIndex == $q['correct'],
+                    'order'       => $optIndex,
+                ]);
+            }
+        }
+
+        return redirect()->route('teacher.dashboard')
+            ->with('success', 'Quiz updated successfully.');
+    }
 }

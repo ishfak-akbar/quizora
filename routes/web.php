@@ -39,4 +39,7 @@ Route::put('/quiz/{quiz}', [QuizController::class, 'update'])->name('teacher.qui
 Route::get('/quiz/{quiz}/results-summary', [TeacherDashboard::class, 'resultsSummary'])->name('teacher.results.summary');
 Route::get('/quizzes', [QuizController::class, 'index'])->name('teacher.quizzes');
 
+Route::get('/results', [QuizController::class, 'results'])->name('teacher.results');
+Route::get('/results/{quiz}', [QuizController::class, 'quizResults'])->name('teacher.quiz.results');
+
 require __DIR__ . '/auth.php';

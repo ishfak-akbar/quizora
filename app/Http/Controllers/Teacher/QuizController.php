@@ -8,6 +8,7 @@ use App\Models\Question;
 use App\Models\Option;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Attempt;
 
 class QuizController extends Controller
 {
@@ -167,5 +168,48 @@ class QuizController extends Controller
             ->get();
 
         return view('teacher.quizzes', compact('quizzes'));
+    }
+
+    public function results()
+    {
+        $quizzes = Quiz::where('teacher_id', Auth::id())
+            ->withCount([
+                'attempts',
+                'attempts as submitted_count' => fn($q) => $q->where('status', 'submitted')
+            ])
+            ->latest()
+            ->get();
+
+        return view('teacher.results', compact('quizzes'));
+    }
+
+    public function quizResults(Quiz $quiz)
+    {
+        if ($quiz->teacher_id !== Auth::id()) abort(403);
+
+        $attempts = Attempt::where('quiz_id', $quiz->id)
+            ->where('status', 'submitted')
+            ->with('student')
+            ->orderByDesc('score')
+            ->get()
+            ->map(function ($attempt) {
+                return [
+                    'name'       => $attempt->student->name,
+                    'email'      => $attempt->student->email,
+                    'score'      => $attempt->score,
+                    'total'      => $attempt->total_marks,
+                    'percentage' => $attempt->score_percentage,
+                    'submitted'  => $attempt->submitted_at->format('M d, Y h:i A'),
+                ];
+            });
+
+        $stats = [
+            'submissions' => $attempts->count(),
+            'avg'         => $attempts->count() > 0 ? round($attempts->avg('percentage')) : 0,
+            'highest'     => $attempts->count() > 0 ? $attempts->max('percentage') : 0,
+            'lowest'      => $attempts->count() > 0 ? $attempts->min('percentage') : 0,
+        ];
+
+        return response()->json(['attempts' => $attempts, 'stats' => $stats]);
     }
 }

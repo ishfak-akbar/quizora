@@ -898,8 +898,8 @@
         <span class="nav-text">Create Quiz</span>
       </a>
       <div class="nav-label">Analytics</div>
-      <a href="#" class="nav-item">
-        <i class="ti ti-chart-bar nav-icon" aria-hidden="true"></i>
+      <a href="{{ route('teacher.results') }}" class="nav-item">
+        <i class="ti ti-chart-bar nav-icon"></i>
         <span class="nav-text">Results</span>
       </a>
       <a href="#" class="nav-item">

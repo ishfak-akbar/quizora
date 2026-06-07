@@ -42,4 +42,7 @@ Route::get('/quizzes', [QuizController::class, 'index'])->name('teacher.quizzes'
 Route::get('/results', [QuizController::class, 'results'])->name('teacher.results');
 Route::get('/results/{quiz}', [QuizController::class, 'quizResults'])->name('teacher.quiz.results');
 
+Route::get('/leaderboard', [QuizController::class, 'leaderboard'])->name('teacher.leaderboard.page');
+Route::get('/leaderboard/{quiz}', [TeacherDashboard::class, 'leaderboard'])->name('teacher.leaderboard');
+
 require __DIR__ . '/auth.php';

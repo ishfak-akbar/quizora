@@ -212,4 +212,13 @@ class QuizController extends Controller
 
         return response()->json(['attempts' => $attempts, 'stats' => $stats]);
     }
+
+    public function leaderboard()
+    {
+        $quizzes = Quiz::where('teacher_id', Auth::id())
+            ->latest()
+            ->get();
+
+        return view('teacher.leaderboard', compact('quizzes'));
+    }
 }

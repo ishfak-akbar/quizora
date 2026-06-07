@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-    <link rel="stylesheet" href="{{ asset('css/quizora.css') }}">
+    <link rel="stylesheet" href="{{ asset('quizora.css') }}">
     <title>Quizora — Results</title>
     <style>
         :root {
@@ -626,7 +626,7 @@
                 <i class="ti ti-chart-bar nav-icon"></i>
                 <span class="nav-text">Results</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="{{ route('teacher.leaderboard.page') }}" class="nav-item">
                 <i class="ti ti-trophy nav-icon"></i>
                 <span class="nav-text">Leaderboard</span>
             </a>
@@ -739,7 +739,7 @@
         </div>
     </main>
 
-    <script src="{{ asset('js/quizora.js') }}"></script>
+    <script src="{{ asset('quizora.js') }}"></script>
     <script>
         // Sidebar
         const sidebar = document.getElementById('sidebar');

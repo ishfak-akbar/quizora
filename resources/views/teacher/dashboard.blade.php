@@ -902,7 +902,7 @@
         <i class="ti ti-chart-bar nav-icon"></i>
         <span class="nav-text">Results</span>
       </a>
-      <a href="#" class="nav-item">
+      <a href="{{ route('teacher.leaderboard.page') }}" class="nav-item">
         <i class="ti ti-trophy nav-icon" aria-hidden="true"></i>
         <span class="nav-text">Leaderboard</span>
       </a>

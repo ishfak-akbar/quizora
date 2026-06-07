@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
     <link rel="stylesheet" href="{{ asset('quizora.css') }}">
-    <title>Quizora — My Quizzes</title>
+    <title>Quizora — Leaderboard</title>
     <style>
         :root {
             --color-primary-glow: #818CF8;
@@ -17,7 +17,6 @@
             --color-bg-card: #1E1A3E;
             --color-bg-row-hover: #241E47;
             --color-border-light: rgba(255, 255, 255, 0.08);
-            --color-border-solid: #2E2570;
             --color-text-primary: #FFFFFF;
             --color-text-secondary: #9CA3AF;
             --color-text-muted: #6B7280;
@@ -254,6 +253,38 @@
             gap: 12px;
         }
 
+        .notif-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: 1px solid var(--color-border-light);
+            background: transparent;
+            color: var(--color-text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            position: relative;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .notif-btn:hover {
+            background: var(--color-bg-row-hover);
+            color: #fff;
+        }
+
+        .notif-dot {
+            position: absolute;
+            top: 7px;
+            right: 7px;
+            width: 7px;
+            height: 7px;
+            background: var(--color-status-error);
+            border-radius: 50%;
+            border: 1.5px solid var(--color-bg-card);
+        }
+
         .user-btn {
             display: flex;
             align-items: center;
@@ -347,7 +378,7 @@
             flex: 1;
         }
 
-        /* PAGE HEADER */
+        /* PAGE SPECIFIC */
         .page-header {
             display: flex;
             align-items: center;
@@ -367,294 +398,222 @@
             margin-top: 4px;
         }
 
-        /* FILTERS */
-        .filters {
+        .lb-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .quiz-list {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 8px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
         }
 
-        .search-wrap {
+        .quiz-list-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1.5px solid var(--color-border-light);
-            border-radius: 10px;
-            padding: 0 14px;
-            flex: 1;
-            max-width: 550px;
-            transition: border-color 0.2s;
-        }
-
-        .search-wrap:focus-within {
-            border-color: rgba(79, 70, 229, 0.6);
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
-        }
-
-        .search-wrap input {
-            flex: 1;
-            height: 38px;
-            background: none;
-            border: none;
-            outline: none;
-            color: #fff;
-            font-size: 13px;
-            font-family: var(--font);
-        }
-
-        .search-wrap input::placeholder {
-            color: var(--color-text-muted);
-        }
-
-        .search-wrap i {
-            color: var(--color-text-muted);
-            font-size: 16px;
-        }
-
-        .filter-btn {
-            height: 38px;
-            padding: 0 16px;
-            border-radius: 10px;
-            border: 1.5px solid var(--color-border-light);
-            background: transparent;
-            color: var(--color-text-secondary);
-            font-size: 13px;
-            font-family: var(--font);
+            gap: 12px;
+            padding: 14px 16px;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border-light);
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .filter-btn:hover,
-        .filter-btn.active {
-            background: rgba(79, 70, 229, 0.2);
-            border-color: rgba(79, 70, 229, 0.5);
-            color: #fff;
-        }
-
-        .filter-btn.active {
-            color: var(--color-primary-glow);
-            font-weight: 600;
-        }
-
-        .create-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--color-primary-solid);
-            color: #fff;
-            font-size: 13px;
-            font-weight: 600;
-            padding: 9px 18px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            font-family: var(--font);
-            text-decoration: none;
-            transition: background 0.2s, transform 0.15s;
-            white-space: nowrap;
-        }
-
-        .create-btn:hover {
-            background: #4338CA;
-            transform: translateY(-1px);
-        }
-
-        /* QUIZ GRID */
-        .quiz-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 16px;
-        }
-
-        .quiz-card {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border-light);
-            border-radius: 14px;
-            overflow: hidden;
-            transition: border-color 0.2s, transform 0.2s;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .quiz-card:hover {
+        .quiz-list-item:hover {
             border-color: rgba(79, 70, 229, 0.4);
-            transform: translateY(-2px);
+            background: var(--color-bg-row-hover);
         }
 
-        .quiz-card-top {
-            padding: 20px 20px 16px;
-            border-bottom: 1px solid var(--color-border-light);
-            flex: 1;
+        .quiz-list-item.active {
+            border-color: var(--color-primary-solid);
+            background: rgba(79, 70, 229, 0.15);
         }
 
-        .quiz-card-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .quiz-card-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: #fff;
-            line-height: 1.4;
-        }
-
-        .quiz-card-desc {
-            font-size: 12px;
-            color: var(--color-text-muted);
-            margin-top: 4px;
-            line-height: 1.5;
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-
-        .status-badge.active {
-            background: rgba(52, 211, 153, 0.15);
-            color: var(--color-status-success);
-        }
-
-        .status-badge.draft {
-            background: rgba(107, 114, 128, 0.2);
-            color: var(--color-text-secondary);
-        }
-
-        .status-badge.closed {
-            background: rgba(248, 113, 113, 0.15);
-            color: var(--color-status-error);
-        }
-
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: currentColor;
-            display: inline-block;
-        }
-
-        .quiz-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 14px;
-        }
-
-        .quiz-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 11px;
-            color: var(--color-text-muted);
-        }
-
-        .quiz-meta-item i {
-            font-size: 14px;
-            color: var(--color-primary-glow);
-        }
-
-        .quiz-card-footer {
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .quiz-progress {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-        }
-
-        .progress-bar {
-            flex: 1;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--color-primary-solid);
-            border-radius: 2px;
-        }
-
-        .progress-text {
-            font-size: 11px;
-            color: var(--color-text-muted);
-            white-space: nowrap;
-        }
-
-        .action-btns {
-            display: flex;
-            gap: 6px;
-        }
-
-        .action-btn {
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-            border: 1px solid var(--color-border-light);
-            background: transparent;
-            color: var(--color-text-muted);
+        .quiz-list-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            background: rgba(79, 70, 229, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            font-size: 15px;
-            text-decoration: none;
-            transition: background 0.15s, color 0.15s, border-color 0.15s;
+            font-size: 18px;
+            color: var(--color-primary-glow);
+            flex-shrink: 0;
         }
 
-        .action-btn:hover {
-            background: var(--color-bg-row-hover);
+        .quiz-list-item.active .quiz-list-icon {
+            background: var(--color-primary-solid);
             color: #fff;
-            border-color: rgba(79, 70, 229, 0.4);
         }
 
-        .action-btn.danger:hover {
-            background: rgba(248, 113, 113, 0.15);
-            color: var(--color-status-error);
-            border-color: rgba(248, 113, 113, 0.3);
+        .quiz-list-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .empty-state {
+        .quiz-list-meta {
+            font-size: 11px;
+            color: var(--color-text-muted);
+            margin-top: 2px;
+        }
+
+        /* TOP 3 PODIUM */
+        .podium {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 28px;
+            padding: 24px;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border-light);
+            border-radius: 16px;
+        }
+
+        .podium-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            max-width: 140px;
+        }
+
+        .podium-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            position: relative;
+        }
+
+        .podium-medal {
+            position: absolute;
+            top: -8px;
+            right: -4px;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .podium-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
             text-align: center;
-            padding: 60px 20px;
+        }
+
+        .podium-score {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .podium-block {
+            width: 100%;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* LB TABLE */
+        .lb-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .lb-table th {
+            padding: 10px 16px;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--color-border-light);
+        }
+
+        .lb-table td {
+            padding: 12px 16px;
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            border-bottom: 1px solid var(--color-border-light);
+            vertical-align: middle;
+        }
+
+        .lb-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .lb-table tr:hover td {
+            background: var(--color-bg-row-hover);
+        }
+
+        .lb-rank-cell {
+            font-size: 13px;
+            font-weight: 700;
+            width: 40px;
+        }
+
+        .lb-avatar-sm {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .lb-bar-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lb-bar {
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .lb-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: var(--color-primary-solid);
+        }
+
+        .empty-lb {
+            text-align: center;
+            padding: 48px;
             color: var(--color-text-muted);
         }
 
-        .empty-state i {
-            font-size: 48px;
-            margin-bottom: 16px;
-            color: rgba(79, 70, 229, 0.3);
+        .empty-lb i {
+            font-size: 40px;
             display: block;
-        }
-
-        .empty-state h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--color-text-secondary);
-            margin-bottom: 8px;
-        }
-
-        .empty-state p {
-            font-size: 13px;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
+            color: rgba(79, 70, 229, 0.3);
         }
     </style>
 </head>
@@ -671,7 +630,7 @@
                 <i class="ti ti-layout-dashboard nav-icon"></i>
                 <span class="nav-text">Dashboard</span>
             </a>
-            <a href="{{ route('teacher.quizzes') }}" class="nav-item active">
+            <a href="{{ route('teacher.quizzes') }}" class="nav-item">
                 <i class="ti ti-file-description nav-icon"></i>
                 <span class="nav-text">My Quizzes</span>
                 <span class="nav-badge">{{ auth()->user()->quizzes()->count() }}</span>
@@ -681,11 +640,11 @@
                 <span class="nav-text">Create Quiz</span>
             </a>
             <div class="nav-label">Analytics</div>
-            <a href="#" class="nav-item">
+            <a href="{{ route('teacher.results') }}" class="nav-item">
                 <i class="ti ti-chart-bar nav-icon"></i>
                 <span class="nav-text">Results</span>
             </a>
-            <a href="{{ route('teacher.leaderboard.page') }}" class="nav-item">
+            <a href="{{ route('teacher.leaderboard.page') }}" class="nav-item active">
                 <i class="ti ti-trophy nav-icon"></i>
                 <span class="nav-text">Leaderboard</span>
             </a>
@@ -713,8 +672,12 @@
 
     <main class="main" id="main">
         <header class="topbar">
-            <div class="topbar-title">My Quizzes</div>
+            <div class="topbar-title">Leaderboard</div>
             <div class="topbar-right">
+                <button class="notif-btn">
+                    <i class="ti ti-bell"></i>
+                    <span class="notif-dot"></span>
+                </button>
                 <div class="user-btn" id="userBtn">
                     <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
                     <div>
@@ -740,119 +703,48 @@
 
         <div class="content">
 
-            @if(session('success'))
-            <div id="toast" style="position:fixed;top:80px;left:50%;transform:translateX(-50%);background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.4);color:#34D399;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:10px;z-index:9999;backdrop-filter:blur(12px);box-shadow:0 8px 32px rgba(0,0,0,0.3);transition:opacity 0.5s ease,transform 0.5s ease;">
-                <i class="ti ti-circle-check" style="font-size:18px;"></i>
-                {{ session('success') }}
-            </div>
-            @endif
-
-            <!-- PAGE HEADER -->
             <div class="page-header">
                 <div>
-                    <h1>My Quizzes</h1>
-                    <p>Manage and track all your quizzes</p>
+                    <h1>Leaderboard</h1>
+                    <p>Top performing students per quiz</p>
                 </div>
-                <a href="{{ route('teacher.quiz.create') }}" class="create-btn">
-                    <i class="ti ti-plus"></i> Create Quiz
-                </a>
             </div>
 
-            <!-- FILTERS -->
-            <div class="filters">
-                <div class="search-wrap">
-                    <i class="ti ti-search"></i>
-                    <input type="text" id="searchInput" placeholder="Search quizzes..." />
-                </div>
-                <button class="filter-btn active" onclick="filterQuizzes('all', this)">All</button>
-                <button class="filter-btn" onclick="filterQuizzes('active', this)">Active</button>
-                <button class="filter-btn" onclick="filterQuizzes('draft', this)">Draft</button>
-                <button class="filter-btn" onclick="filterQuizzes('closed', this)">Closed</button>
-            </div>
+            <div class="lb-layout">
 
-            <!-- QUIZ GRID -->
-            <div class="quiz-grid" id="quizGrid">
-                @forelse($quizzes as $quiz)
-                <div class="quiz-card" data-status="{{ $quiz->status }}" data-title="{{ strtolower($quiz->title) }}">
-                    <div class="quiz-card-top">
-                        <div class="quiz-card-header">
-                            <div>
-                                <div class="quiz-card-title">{{ $quiz->title }}</div>
-                                @if($quiz->description)
-                                <div class="quiz-card-desc">{{ Str::limit($quiz->description, 60) }}</div>
-                                @endif
-                            </div>
-                            <span class="status-badge {{ $quiz->status }}">
-                                <span class="status-dot"></span>
-                                {{ ucfirst($quiz->status) }}
-                            </span>
-                        </div>
-
-                        <div class="quiz-meta">
-                            <div class="quiz-meta-item">
-                                <i class="ti ti-help-circle"></i>
-                                {{ $quiz->questions_count }} questions
-                            </div>
-                            @if($quiz->time_limit)
-                            <div class="quiz-meta-item">
-                                <i class="ti ti-clock"></i>
-                                {{ $quiz->time_limit }} min
-                            </div>
-                            @endif
-                            @if($quiz->ends_at)
-                            <div class="quiz-meta-item">
-                                <i class="ti ti-calendar"></i>
-                                {{ $quiz->ends_at->format('M d, Y') }}
-                            </div>
-                            @endif
-                            <div class="quiz-meta-item">
-                                <i class="ti ti-refresh"></i>
-                                {{ $quiz->max_attempts }} attempt(s)
-                            </div>
-                        </div>
+                <!-- QUIZ LIST -->
+                <div>
+                    <div style="font-size:12px;font-weight:600;color:var(--color-text-muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px;">
+                        Select Quiz
                     </div>
-
-                    <div class="quiz-card-footer">
-                        <div class="quiz-progress">
-                            @php
-                            $total = $quiz->attempts_count ?? 0;
-                            $submitted = $quiz->submitted_count ?? 0;
-                            $percent = $total > 0 ? round(($submitted / $total) * 100) : 0;
-                            @endphp
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width:{{ $percent }}%"></div>
+                    <div class="quiz-list">
+                        @forelse($quizzes as $quiz)
+                        <div class="quiz-list-item" onclick="loadLeaderboard({{ $quiz->id }}, this)">
+                            <div class="quiz-list-icon">
+                                <i class="ti ti-file-description"></i>
                             </div>
-                            <div class="progress-text">{{ $submitted }} submitted</div>
+                            <div style="flex:1;overflow:hidden;">
+                                <div class="quiz-list-name">{{ $quiz->title }}</div>
+                                <div class="quiz-list-meta">{{ ucfirst($quiz->status) }}</div>
+                            </div>
                         </div>
-                        <div class="action-btns" style="margin-left:12px;">
-                            <a href="{{ route('teacher.quiz.edit', $quiz->id) }}" class="action-btn" title="Edit">
-                                <i class="ti ti-edit"></i>
-                            </a>
-                            <a href="#" class="action-btn" title="Results">
-                                <i class="ti ti-chart-bar"></i>
-                            </a>
-                            <form method="POST" action="{{ route('teacher.quiz.destroy', $quiz->id) }}">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="action-btn danger" title="Delete"
-                                    onclick="return confirm('Delete this quiz?')">
-                                    <i class="ti ti-trash"></i>
-                                </button>
-                            </form>
+                        @empty
+                        <div style="text-align:center;padding:32px;color:var(--color-text-muted);font-size:13px;">
+                            No quizzes yet.
                         </div>
+                        @endforelse
                     </div>
                 </div>
-                @empty
-                <div class="empty-state" style="grid-column:1/-1;">
-                    <i class="ti ti-file-off"></i>
-                    <h3>No quizzes yet</h3>
-                    <p>Create your first quiz to get started</p>
-                    <a href="{{ route('teacher.quiz.create') }}" class="create-btn">
-                        <i class="ti ti-plus"></i> Create Quiz
-                    </a>
-                </div>
-                @endforelse
-            </div>
 
+                <!-- LEADERBOARD PANEL -->
+                <div id="lbPanel">
+                    <div class="empty-lb">
+                        <i class="ti ti-trophy"></i>
+                        <p>Select a quiz to view leaderboard</p>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </main>
 
@@ -877,36 +769,110 @@
         });
         document.addEventListener('click', () => userDropdown.classList.remove('open'));
 
-        // Toast
-        const toast = document.getElementById('toast');
-        if (toast) {
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateX(-50%) translateY(-12px)';
-                setTimeout(() => toast.remove(), 500);
-            }, 3000);
+        const colors = ['#4F46E5', '#7C3AED', '#0891B2', '#059669', '#D97706', '#DB2777', '#0891B2'];
+        const medals = ['🥇', '🥈', '🥉'];
+        const medalColors = ['#F59E0B', '#9CA3AF', '#D97706'];
+
+        function getInitials(name) {
+            const parts = name.split(' ');
+            return parts.length > 1 ?
+                (parts[0][0] + parts[1][0]).toUpperCase() :
+                name.substring(0, 2).toUpperCase();
         }
 
-        // Search
-        document.getElementById('searchInput').addEventListener('input', function() {
-            const val = this.value.toLowerCase();
-            document.querySelectorAll('.quiz-card').forEach(card => {
-                const title = card.dataset.title;
-                card.style.display = title.includes(val) ? 'flex' : 'none';
-            });
-        });
+        function loadLeaderboard(quizId, el) {
+            document.querySelectorAll('.quiz-list-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
 
-        // Filter
-        let currentFilter = 'all';
+            const panel = document.getElementById('lbPanel');
+            panel.innerHTML = '<div style="text-align:center;padding:48px;color:var(--color-text-muted);font-size:13px;">Loading...</div>';
 
-        function filterQuizzes(status, btn) {
-            currentFilter = status;
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.querySelectorAll('.quiz-card').forEach(card => {
-                const match = status === 'all' || card.dataset.status === status;
-                card.style.display = match ? 'flex' : 'none';
-            });
+            fetch(`/teacher/leaderboard/${quizId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.length === 0) {
+                        panel.innerHTML = `
+            <div class="empty-lb">
+              <i class="ti ti-inbox"></i>
+              <p>No submissions yet for this quiz.</p>
+            </div>`;
+                        return;
+                    }
+
+                    // TOP 3 PODIUM
+                    const top3 = data.slice(0, 3);
+                    const podiumOrder = top3.length >= 2 ?
+                        [top3[1], top3[0], top3[2]].filter(Boolean) :
+                        top3;
+                    const podiumHeights = top3.length >= 2 ? ['80px', '110px', '60px'] : ['110px'];
+                    const podiumRanks = top3.length >= 2 ? [2, 1, 3] : [1];
+
+                    let podiumHTML = podiumOrder.map((s, i) => `
+          <div class="podium-item">
+            <div class="podium-avatar" style="background:${colors[podiumRanks[i]-1]}">
+              ${getInitials(s.name)}
+              <span class="podium-medal">${medals[podiumRanks[i]-1]}</span>
+            </div>
+            <div class="podium-name">${s.name}</div>
+            <div class="podium-score" style="color:${medalColors[podiumRanks[i]-1]}">${s.score}%</div>
+            <div class="podium-block" style="height:${podiumHeights[i]};background:${colors[podiumRanks[i]-1]}22;border:1px solid ${colors[podiumRanks[i]-1]}44;">
+              ${podiumRanks[i]}
+            </div>
+          </div>
+        `).join('');
+
+                    // FULL TABLE
+                    let tableHTML = data.map((s, i) => `
+          <tr>
+            <td class="lb-rank-cell">
+              ${i < 3
+                ? `<span style="font-size:18px;">${medals[i]}</span>`
+                : `<span style="color:var(--color-text-muted);">${i+1}</span>`}
+            </td>
+            <td>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div class="lb-avatar-sm" style="background:${colors[i] || '#6B7280'}">
+                  ${getInitials(s.name)}
+                </div>
+                <div style="font-weight:600;color:#fff;">${s.name}</div>
+              </div>
+            </td>
+            <td style="font-weight:700;color:#fff;">${s.raw_score} / ${s.total}</td>
+            <td>
+              <div class="lb-bar-wrap">
+                <div class="lb-bar">
+                  <div class="lb-bar-fill" style="width:${s.score}%;background:${colors[i] || '#6B7280'}"></div>
+                </div>
+                <span style="font-size:13px;font-weight:700;color:${colors[i] || '#6B7280'};min-width:40px;text-align:right;">${s.score}%</span>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+
+                    panel.innerHTML = `
+          <div class="podium">${podiumHTML}</div>
+          <div class="card">
+            <div class="card-header">
+              <h2>Full Rankings</h2>
+              <span style="font-size:12px;color:var(--color-text-muted);">${data.length} students</span>
+            </div>
+            <table class="lb-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Student</th>
+                  <th>Score</th>
+                  <th>Performance</th>
+                </tr>
+              </thead>
+              <tbody>${tableHTML}</tbody>
+            </table>
+          </div>
+        `;
+                })
+                .catch(() => {
+                    panel.innerHTML = '<div style="text-align:center;padding:48px;color:var(--color-status-error);font-size:13px;">Failed to load leaderboard.</div>';
+                });
         }
     </script>
 </body>

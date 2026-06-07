@@ -153,4 +153,19 @@ class QuizController extends Controller
         return redirect()->route('teacher.dashboard')
             ->with('success', 'Quiz updated successfully.');
     }
+    public function index()
+    {
+        $quizzes = Quiz::where('teacher_id', Auth::id())
+            ->withCount([
+                'questions',
+                'attempts',
+                'attempts as submitted_count' => function ($q) {
+                    $q->where('status', 'submitted');
+                }
+            ])
+            ->latest()
+            ->get();
+
+        return view('teacher.quizzes', compact('quizzes'));
+    }
 }

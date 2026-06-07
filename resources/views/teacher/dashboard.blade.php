@@ -888,10 +888,10 @@
         <i class="ti ti-layout-dashboard nav-icon" aria-hidden="true"></i>
         <span class="nav-text">Dashboard</span>
       </a>
-      <a href="#" class="nav-item">
-        <i class="ti ti-file-description nav-icon" aria-hidden="true"></i>
+      <a href="{{ route('teacher.quizzes') }}" class="nav-item">
+        <i class="ti ti-file-description nav-icon"></i>
         <span class="nav-text">My Quizzes</span>
-        <span class="nav-badge">8</span>
+        <span class="nav-badge">{{ auth()->user()->quizzes()->count() }}</span>
       </a>
       <a href="#" class="nav-item">
         <i class="ti ti-circle-plus nav-icon" aria-hidden="true"></i>

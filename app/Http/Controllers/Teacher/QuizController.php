@@ -34,6 +34,11 @@ class QuizController extends Controller
             'questions.*.marks'  => 'required|integer|min:1',
             'questions.*.correct' => 'required|integer|between:0,3',
             'questions.*.options' => 'required|array|size:4',
+            'visibility'     => 'required|in:public,private',
+            'category'       => 'required|string|max:100',
+            'difficulty'     => 'required|in:easy,medium,hard',
+            'tags'           => 'nullable|string|max:255',
+            'passing_score'  => 'nullable|integer|min:0|max:100',
         ]);
 
         $quiz = Quiz::create([
@@ -48,6 +53,11 @@ class QuizController extends Controller
             'ends_at'           => $request->ends_at,
             'shuffle_questions'  => $request->boolean('shuffle_questions'),
             'show_results'      => $request->boolean('show_results'),
+            'visibility'        => $request->visibility,
+            'category'          => $request->category,
+            'difficulty'        => $request->difficulty,
+            'tags'              => $request->tags,
+            'passing_score'     => $request->passing_score,
         ]);
 
         foreach ($request->questions as $index => $q) {
@@ -116,6 +126,11 @@ class QuizController extends Controller
             'questions.*.marks' => 'required|integer|min:1',
             'questions.*.correct' => 'required|integer|between:0,3',
             'questions.*.options' => 'required|array|size:4',
+            'visibility'     => 'required|in:public,private',
+            'category'       => 'required|string|max:100',
+            'difficulty'     => 'required|in:easy,medium,hard',
+            'tags'           => 'nullable|string|max:255',
+            'passing_score'  => 'nullable|integer|min:0|max:100',
         ]);
 
         $quiz->update([
@@ -128,6 +143,11 @@ class QuizController extends Controller
             'shuffle_questions'  => $request->boolean('shuffle_questions'),
             'show_results'      => $request->boolean('show_results'),
             'status'            => $request->status,
+            'visibility'        => $request->visibility,
+            'category'          => $request->category,
+            'difficulty'        => $request->difficulty,
+            'tags'              => $request->tags,
+            'passing_score'     => $request->passing_score,
         ]);
 
         $quiz->questions()->delete();

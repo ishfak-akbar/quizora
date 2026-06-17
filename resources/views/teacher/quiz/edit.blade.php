@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('quizora.css') }}">
     <title>Quizora — Create Quiz</title>
     <style>
         :root {
@@ -622,6 +623,37 @@
                                 value="{{ $quiz->ends_at ? $quiz->ends_at->format('Y-m-d\TH:i') : '' }}" />
                         </div>
                     </div>
+                    <div class="row-2">
+                        <div class="field">
+                            <label>Category *</label>
+                            <input type="text" class="input" name="category"
+                                placeholder="e.g. Mathematics, BCS, Science" required />
+                        </div>
+                        <div class="field">
+                            <label>Difficulty</label>
+                            <div id="difficultySelectContainer"></div>
+                            <input type="hidden" name="difficulty" id="difficultyInput" value="medium">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>Tags (comma separated)</label>
+                        <input type="text" class="input" name="tags"
+                            placeholder="e.g. algebra, geometry, mcq" />
+                    </div>
+
+                    <div class="row-2">
+                        <div class="field">
+                            <label>Visibility</label>
+                            <div id="visibilitySelectContainer"></div>
+                            <input type="hidden" name="visibility" id="visibilityInput" value="private">
+                        </div>
+                        <div class="field">
+                            <label>Passing Score (%)</label>
+                            <input type="number" class="input" name="passing_score"
+                                placeholder="e.g. 50" min="0" max="100" />
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-card">
@@ -707,9 +739,45 @@
 
     </form>
     <script>
-        const existingQuestions = {!! json_encode($quiz->questions->load('options')) !!};
+        const existingQuestions = {
+            !!json_encode($quiz - > questions - > load('options')) !!
+        };
     </script>
+    <script src="{{ asset('quizora.js') }}"></script>
     <script>
+        createCustomSelect(
+            document.getElementById('difficultySelectContainer'),
+            [{
+                    value: 'easy',
+                    label: 'Easy'
+                },
+                {
+                    value: 'medium',
+                    label: 'Medium'
+                },
+                {
+                    value: 'hard',
+                    label: 'Hard'
+                }
+            ],
+            '{{ ucfirst($quiz->difficulty) }}',
+            (value) => document.getElementById('difficultyInput').value = value
+        );
+
+        createCustomSelect(
+            document.getElementById('visibilitySelectContainer'),
+            [{
+                    value: 'private',
+                    label: 'Private (invite only)'
+                },
+                {
+                    value: 'public',
+                    label: 'Public (anyone can attempt)'
+                }
+            ],
+            '{{ $quiz->visibility === "public" ? "Public (anyone can attempt)" : "Private (invite only)" }}',
+            (value) => document.getElementById('visibilityInput').value = value
+        );
         let currentStep = 1;
         let questionCount = 0;
 
@@ -928,14 +996,11 @@
             existingQuestions.forEach((q) => {
                 const index = questionCount;
                 addQuestion();
-
                 setTimeout(() => {
                     const card = document.getElementById('question-' + index);
                     if (!card) return;
-
                     card.querySelector('.q-text').value = q.question_text;
                     card.querySelector(`[name="questions[${index}][marks]"]`).value = q.marks;
-
                     q.options.forEach((opt, i) => {
                         const optInput = card.querySelector(`[name="questions[${index}][options][${i}]"]`);
                         if (optInput) optInput.value = opt.option_text;

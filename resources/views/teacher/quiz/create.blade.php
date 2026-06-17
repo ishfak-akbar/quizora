@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('quizora.css') }}">
     <title>Quizora — Create Quiz</title>
     <style>
         :root {
@@ -605,6 +606,37 @@
                                 value="1" min="1" required />
                         </div>
                     </div>
+                    <div class="row-2">
+                        <div class="field">
+                            <label>Category *</label>
+                            <input type="text" class="input" name="category"
+                                placeholder="e.g. Mathematics, BCS, Science" required />
+                        </div>
+                        <div class="field">
+                            <label>Difficulty</label>
+                            <div id="difficultySelectContainer"></div>
+                            <input type="hidden" name="difficulty" id="difficultyInput" value="medium">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>Tags (comma separated)</label>
+                        <input type="text" class="input" name="tags"
+                            placeholder="e.g. algebra, geometry, mcq" />
+                    </div>
+
+                    <div class="row-2">
+                        <div class="field">
+                            <label>Visibility</label>
+                            <div id="visibilitySelectContainer"></div>
+                            <input type="hidden" name="visibility" id="visibilityInput" value="private">
+                        </div>
+                        <div class="field">
+                            <label>Passing Score (%)</label>
+                            <input type="number" class="input" name="passing_score"
+                                placeholder="e.g. 50" min="0" max="100" />
+                        </div>
+                    </div>
 
                     <div class="row-2">
                         <div class="field">
@@ -698,7 +730,41 @@
         </div>
 
     </form>
+    <script src="{{ asset('quizora.js') }}"></script>
     <script>
+        createCustomSelect(
+            document.getElementById('difficultySelectContainer'),
+            [{
+                    value: 'easy',
+                    label: 'Easy'
+                },
+                {
+                    value: 'medium',
+                    label: 'Medium'
+                },
+                {
+                    value: 'hard',
+                    label: 'Hard'
+                }
+            ],
+            'Medium',
+            (value) => document.getElementById('difficultyInput').value = value
+        );
+
+        createCustomSelect(
+            document.getElementById('visibilitySelectContainer'),
+            [{
+                    value: 'private',
+                    label: 'Private (invite only)'
+                },
+                {
+                    value: 'public',
+                    label: 'Public (anyone can attempt)'
+                }
+            ],
+            'Private',
+            (value) => document.getElementById('visibilityInput').value = value
+        );
         let currentStep = 1;
         let questionCount = 0;
 

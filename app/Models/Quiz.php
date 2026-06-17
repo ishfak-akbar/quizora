@@ -6,7 +6,8 @@ class Quiz extends Model
 {
     protected $fillable = [
         'teacher_id', 'title', 'description', 'type',
-        'status', 'time_limit', 'max_attempts',
+        'status', 'visibility', 'category', 'difficulty', 'tags', 'passing_score',
+        'time_limit', 'max_attempts',
         'starts_at', 'ends_at', 'show_results', 'shuffle_questions'
     ];
 

@@ -333,7 +333,7 @@
         <i class="ti ti-layout-dashboard nav-icon"></i>
         <span class="nav-text">Dashboard</span>
       </a>
-      <a href="#" class="nav-item">
+      <a href="{{ route('student.browse') }}" class="nav-item">
         <i class="ti ti-compass nav-icon"></i>
         <span class="nav-text">Browse Quizzes</span>
       </a>
@@ -424,7 +424,7 @@
           <h2>Discover new quizzes</h2>
           <p>Explore thousands of quizzes across every topic — from school to BCS prep</p>
         </div>
-        <a href="#" class="browse-btn">
+        <a href="{{ route('student.browse') }}" class="browse-btn">
           <i class="ti ti-compass"></i> Browse Quizzes
         </a>
       </div>

@@ -45,4 +45,13 @@ Route::get('/results/{quiz}', [QuizController::class, 'quizResults'])->name('tea
 Route::get('/leaderboard', [QuizController::class, 'leaderboard'])->name('teacher.leaderboard.page');
 Route::get('/leaderboard/{quiz}', [TeacherDashboard::class, 'leaderboard'])->name('teacher.leaderboard');
 
+Route::middleware(['auth', 'role:student'])->prefix('student')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('student.dashboard');
+    })->name('student.dashboard');
+    Route::get('/browse', function () {
+        return view('student.browse');
+    })->name('student.browse');
+});
+
 require __DIR__ . '/auth.php';

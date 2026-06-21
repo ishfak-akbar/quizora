@@ -337,17 +337,17 @@
         <i class="ti ti-compass nav-icon"></i>
         <span class="nav-text">Browse Quizzes</span>
       </a>
-      <a href="#" class="nav-item">
+      <a href="{{ route('student.bookmarks') }}" class="nav-item">
         <i class="ti ti-bookmark nav-icon"></i>
         <span class="nav-text">Bookmarks</span>
         <span class="nav-badge">3</span>
       </a>
       <div class="nav-label">Activity</div>
-      <a href="#" class="nav-item">
+      <a href="{{ route('student.results') }}" class="nav-item">
         <i class="ti ti-history nav-icon"></i>
         <span class="nav-text">My Results</span>
       </a>
-      <a href="#" class="nav-item">
+      <a href="{{ route('student.leaderboard.page') }}" class="nav-item">
         <i class="ti ti-trophy nav-icon"></i>
         <span class="nav-text">Leaderboard</span>
       </a>

@@ -395,7 +395,7 @@
                 </div>
                 <div class="quiz-grid">
 
-                    <a href="#" class="pquiz-card">
+                    <a href="{{ route('student.quiz.detail') }}" class="pquiz-card">
                         <div class="pquiz-banner" style="background:linear-gradient(135deg,#4F46E5,#818CF8);">
                             <i class="ti ti-building-bank"></i>
                         </div>
@@ -412,7 +412,7 @@
                         </div>
                     </a>
 
-                    <a href="#" class="pquiz-card">
+                    <a href="{{ route('student.quiz.detail') }}" class="pquiz-card">
                         <div class="pquiz-banner" style="background:linear-gradient(135deg,#059669,#34D399);">
                             <i class="ti ti-flask"></i>
                         </div>
@@ -429,7 +429,7 @@
                         </div>
                     </a>
 
-                    <a href="#" class="pquiz-card">
+                    <a href="{{ route('student.quiz.detail') }}" class="pquiz-card">
                         <div class="pquiz-banner" style="background:linear-gradient(135deg,#DB2777,#F472B6);">
                             <i class="ti ti-code"></i>
                         </div>
@@ -446,7 +446,7 @@
                         </div>
                     </a>
 
-                    <a href="#" class="pquiz-card">
+                    <a href="{{ route('student.quiz.detail') }}" class="pquiz-card">
                         <div class="pquiz-banner" style="background:linear-gradient(135deg,#B45309,#F59E0B);">
                             <i class="ti ti-calculator"></i>
                         </div>

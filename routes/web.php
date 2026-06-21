@@ -54,4 +54,26 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->group(function (
     })->name('student.browse');
 });
 
+Route::middleware(['auth', 'role:student'])->prefix('student')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('student.dashboard');
+    })->name('student.dashboard');
+
+    Route::get('/browse', function () {
+        return view('student.browse');
+    })->name('student.browse');
+
+    Route::get('/quiz/detail', function () {
+        return view('student.quiz-detail');
+    })->name('student.quiz.detail');
+
+    Route::get('/quiz/take', function () {
+        return view('student.take-quiz');
+    })->name('student.quiz.take');
+
+    Route::get('/quiz/result', function () {
+        return view('student.quiz-result'); 
+    })->name('student.quiz.result');
+});
+
 require __DIR__ . '/auth.php';

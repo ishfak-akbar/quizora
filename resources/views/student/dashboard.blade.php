@@ -329,7 +329,7 @@
     </div>
     <nav class="sidebar-nav">
       <div class="nav-label">Main</div>
-      <a href="#" class="nav-item active">
+      <a href="{{ route('student.dashboard') }}" class="nav-item active">
         <i class="ti ti-layout-dashboard nav-icon"></i>
         <span class="nav-text">Dashboard</span>
       </a>

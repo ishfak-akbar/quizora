@@ -106,4 +106,87 @@ class DashboardController extends Controller
             'highest'     => $highest . '%',
         ]);
     }
+
+    public function students()
+    {
+        $teacher = Auth::user();
+
+        // 1. Fetch all student IDs who have interacted with this teacher's quizzes
+        $teacherQuizIds = Quiz::where('teacher_id', $teacher->id)->pluck('id');
+
+        // 2. Base query for this teacher's student attempts
+        $baseAttemptsQuery = Attempt::whereIn('quiz_id', $teacherQuizIds)->where('status', 'submitted');
+
+        // --- CARDS/STATS LOGIC ---
+        $totalStudentsCount = (clone $baseAttemptsQuery)->distinct('student_id')->count('student_id');
+
+        // Active this month (June 2026)
+        $activeThisMonth = (clone $baseAttemptsQuery)->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->distinct('student_id')
+            ->count('student_id');
+
+        $totalAttemptsCount = (clone $baseAttemptsQuery)->count();
+
+        // Overall Average Score calculation across all submissions
+        $allAttempts = (clone $baseAttemptsQuery)->get();
+        $avgScore = $allAttempts->count() > 0
+            ? round($allAttempts->avg(fn($a) => $a->total_marks > 0 ? ($a->score / $a->total_marks) * 100 : 0))
+            : 0;
+
+        // --- DATA TABLE LOGIC ---
+        // Pull unique students with eager loaded user data, and compute aggregates on the fly
+        $students = User::whereHas('attempts', function ($q) use ($teacherQuizIds) {
+            $q->whereIn('quiz_id', $teacherQuizIds)->where('status', 'submitted');
+        })
+            ->with(['attempts' => function ($q) use ($teacherQuizIds) {
+                $q->whereIn('quiz_id', $teacherQuizIds)->where('status', 'submitted');
+            }])
+            ->get()
+            ->map(function ($student) {
+                $studentAttempts = $student->attempts;
+
+                $quizzesTaken = $studentAttempts->count();
+
+                $avg = $quizzesTaken > 0
+                    ? round($studentAttempts->avg(fn($a) => $a->total_marks > 0 ? ($a->score / $a->total_marks) * 100 : 0))
+                    : 0;
+
+                // Simple calculation for passed quizzes (assuming passing score is >= 50%)
+                $quizzesPassed = $studentAttempts->filter(fn($a) => $a->total_marks > 0 ? (($a->score / $a->total_marks) * 100) >= 50 : false)->count();
+
+                $lastActiveAttempt = $studentAttempts->sortByDesc('created_at')->first();
+                $lastActiveDate = $lastActiveAttempt ? $lastActiveAttempt->created_at : null;
+
+                // Determine status badge based on timing window
+                if ($lastActiveDate && $lastActiveDate->greaterThanOrEqualTo(now()->subDays(7))) {
+                    $status = 'active';
+                } elseif ($lastActiveDate && $lastActiveDate->greaterThanOrEqualTo(now()->subMonths(1))) {
+                    $status = 'recent';
+                } else {
+                    $status = 'inactive';
+                }
+
+                return [
+                    'id' => $student->id,
+                    'name' => $student->name,
+                    'email' => $student->email,
+                    'initial' => strtoupper(substr($student->name, 0, 1)),
+                    'quizzes_taken' => $quizzesTaken,
+                    'quizzes_passed' => $quizzesPassed,
+                    'avg_score' => $avg,
+                    'last_active_raw' => $lastActiveDate,
+                    'last_active' => $lastActiveDate ? $lastActiveDate->diffForHumans() : 'Never',
+                    'status' => $status
+                ];
+            });
+
+        return view('teacher.students', compact(
+            'totalStudentsCount',
+            'activeThisMonth',
+            'avgScore',
+            'totalAttemptsCount',
+            'students'
+        ));
+    }
 }

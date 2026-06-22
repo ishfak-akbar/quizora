@@ -907,7 +907,7 @@
         <span class="nav-text">Leaderboard</span>
       </a>
       <div class="nav-label">Manage</div>
-      <a href="#" class="nav-item">
+      <a href="{{ route('teacher.students') }}" class="nav-item">
         <i class="ti ti-users nav-icon" aria-hidden="true"></i>
         <span class="nav-text">Students</span>
       </a>

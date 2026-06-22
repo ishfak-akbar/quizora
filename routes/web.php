@@ -13,6 +13,7 @@ Route::get('/', function () {
 Route::middleware(['auth'])->prefix('teacher')->group(function () {
     Route::get('/dashboard', [TeacherDashboard::class, 'index'])->name('teacher.dashboard');
     Route::get('/leaderboard/{quiz}', [TeacherDashboard::class, 'leaderboard'])->name('teacher.leaderboard');
+    Route::get('/students', [TeacherDashboard::class, 'students'])->name('teacher.students');
 });
 
 Route::middleware(['auth'])->prefix('student')->group(function () {
@@ -30,6 +31,7 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->group(function (
     Route::get('/leaderboard/{quiz}', [TeacherDashboard::class, 'leaderboard'])->name('teacher.leaderboard');
     Route::get('/quiz/create', [QuizController::class, 'create'])->name('teacher.quiz.create');
     Route::post('/quiz/store', [QuizController::class, 'store'])->name('teacher.quiz.store');
+    Route::get('/students', [TeacherDashboard::class, 'students'])->name('teacher.students');
 });
 
 Route::delete('/quiz/{quiz}', [QuizController::class, 'destroy'])->name('teacher.quiz.destroy');

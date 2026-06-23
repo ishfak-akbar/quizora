@@ -442,24 +442,64 @@
         .create-btn {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            gap: 6px;
             background: var(--color-primary-solid);
-            color: #fff;
+            color: #ffffff;
             font-size: 13px;
             font-weight: 600;
-            padding: 9px 18px;
-            border-radius: 10px;
-            border: none;
+            letter-spacing: 0.2px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             cursor: pointer;
             font-family: var(--font);
             text-decoration: none;
-            transition: background 0.2s, transform 0.15s;
             white-space: nowrap;
+            box-sizing: border-box;
+
+            transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.1s ease;
+
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25),
+                0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .create-btn i {
+            font-size: 15px;
+            display: inline-block;
+            line-height: 1;
+            flex-shrink: 0;
+            /* Prevents layout engines from smashing the icon width down to zero */
         }
 
         .create-btn:hover {
             background: #4338CA;
             transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35),
+                0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .create-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 6px rgba(79, 70, 229, 0.2),
+                0 1px 1px rgba(0, 0, 0, 0.2);
+        }
+
+        .empty-state .create-btn {
+            display: inline-flex !important;
+            margin-top: 12px;
+        }
+
+        .btn-plus-icon {
+            font-size: 18px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 0;
         }
 
         /* QUIZ GRID */
@@ -847,7 +887,7 @@
                     <h3>No quizzes yet</h3>
                     <p>Create your first quiz to get started</p>
                     <a href="{{ route('teacher.quiz.create') }}" class="create-btn">
-                        <i class="ti ti-plus"></i> Create Quiz
+                        <span class="btn-plus-icon">+</span> Create Quiz
                     </a>
                 </div>
                 @endforelse

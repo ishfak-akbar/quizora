@@ -706,33 +706,159 @@
                     <div style="font-size:12px;font-weight:600;color:var(--color-text-muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px;">
                         Select Quiz
                     </div>
-                    <div class="quiz-list">
-                        @forelse($quizzes as $quiz)
-                        <div class="quiz-list-item" data-quiz-id="{{ $quiz->id }}">
+
+                    <div class="custom-select" id="quizCustomSelect">
+                        <div class="custom-select-trigger" id="selectTrigger">
+                            <span class="selected" id="triggerText">Midterm Examination — Physics</span>
+                            <i class="ti ti-chevron-down custom-select-chevron"></i>
+                        </div>
+                        <div class="custom-select-dropdown">
+                            <div class="custom-select-option selected" data-value="1">
+                                <span>Midterm Examination — Physics</span>
+                                <i class="ti ti-check check-icon"></i>
+                            </div>
+                            <div class="custom-select-option" data-value="2">
+                                <span>Final Term — Higher Mathematics</span>
+                                <i class="ti ti-check check-icon"></i>
+                            </div>
+                            <div class="custom-select-option" data-value="3">
+                                <span>Programming Concept Quiz</span>
+                                <i class="ti ti-check check-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-list" style="margin-top: 16px;">
+                        <div class="quiz-list-item active">
                             <div class="quiz-list-icon">
                                 <i class="ti ti-file-description"></i>
                             </div>
                             <div class="quiz-list-info">
-                                <div class="quiz-list-name">{{ $quiz->title }}</div>
-                                <div class="quiz-list-meta">
-                                    {{ $quiz->submitted_count }} submitted · {{ ucfirst($quiz->status) }}
-                                </div>
+                                <div class="quiz-list-name">Midterm Examination — Physics</div>
+                                <div class="quiz-list-meta">142 submitted · Active</div>
                             </div>
                         </div>
-                        @empty
-                        <div style="text-align:center;padding:32px;color:var(--color-text-muted);font-size:13px;">
-                            No quizzes yet.
+                        <div class="quiz-list-item">
+                            <div class="quiz-list-icon">
+                                <i class="ti ti-file-description"></i>
+                            </div>
+                            <div class="quiz-list-info">
+                                <div class="quiz-list-name">Final Term — Higher Mathematics</div>
+                                <div class="quiz-list-meta">98 submitted · Closed</div>
+                            </div>
                         </div>
-                        @endforelse
+                        <div class="quiz-list-item">
+                            <div class="quiz-list-icon">
+                                <i class="ti ti-file-description"></i>
+                            </div>
+                            <div class="quiz-list-info">
+                                <div class="quiz-list-name">Programming Concept Quiz</div>
+                                <div class="quiz-list-meta">64 submitted · Active</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- RESULTS PANEL -->
                 <div id="resultsPanel">
-                    <div class="empty-results">
-                        <i class="ti ti-chart-bar"></i>
-                        <p>Select a quiz to view results</p>
+
+                    <div class="stats-row" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px;">
+                        <div class="mini-stat">
+                            <div class="mini-stat-value">142</div>
+                            <div class="mini-stat-label">Total Submissions</div>
+                        </div>
+                        <div class="mini-stat">
+                            <div class="mini-stat-value" style="color:var(--color-status-success)">76%</div>
+                            <div class="mini-stat-label">Average Score</div>
+                        </div>
+                        <div class="mini-stat">
+                            <div class="mini-stat-value" style="color:var(--color-primary-glow)">98%</div>
+                            <div class="mini-stat-label">Highest Score</div>
+                        </div>
+                        <div class="mini-stat">
+                            <div class="mini-stat-value" style="color:var(--color-status-error)">12%</div>
+                            <div class="mini-stat-label">Lowest Score</div>
+                        </div>
                     </div>
+
+                    <div class="card" style="background: var(--color-bg-card); border: 1px solid var(--color-border-light); border-radius: 14px; overflow: hidden; padding: 20px;">
+                        <div class="card-header" style="margin-bottom: 16px;">
+                            <h2 style="font-size: 16px; font-weight: 600;">Student Submissions</h2>
+                        </div>
+                        <table class="results-table" style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Student</th>
+                                    <th>Score</th>
+                                    <th>Performance</th>
+                                    <th>Submitted</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="rank-badge" style="background: rgba(245, 158, 11, 0.15); color: #F59E0B;">🥇</div>
+                                    </td>
+                                    <td>
+                                        <div class="student-name">Nahian Islam</div>
+                                        <div class="student-email">nahian@example.com</div>
+                                    </td>
+                                    <td style="font-weight: 700; color: #fff;">49 / 50</td>
+                                    <td>
+                                        <div class="score-bar-wrap">
+                                            <div class="score-bar">
+                                                <div class="score-bar-fill" style="width: 98%; background: var(--color-status-success);"></div>
+                                            </div>
+                                            <div class="score-pct" style="color: var(--color-status-success);">98%</div>
+                                        </div>
+                                    </td>
+                                    <td>2 hours ago</td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <div class="rank-badge" style="background: rgba(156, 163, 175, 0.15); color: #9CA3AF;">🥈</div>
+                                    </td>
+                                    <td>
+                                        <div class="student-name">Rafi Ahmed</div>
+                                        <div class="student-email">rafi@example.com</div>
+                                    </td>
+                                    <td style="font-weight: 700; color: #fff;">45 / 50</td>
+                                    <td>
+                                        <div class="score-bar-wrap">
+                                            <div class="score-bar">
+                                                <div class="score-bar-fill" style="width: 90%; background: var(--color-status-success);"></div>
+                                            </div>
+                                            <div class="score-pct" style="color: var(--color-status-success);">90%</div>
+                                        </div>
+                                    </td>
+                                    <td>Yesterday</td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <div class="rank-badge" style="background: rgba(217, 119, 6, 0.15); color: #D97706;">🥉</div>
+                                    </td>
+                                    <td>
+                                        <div class="student-name">Sadia Rahman</div>
+                                        <div class="student-email">sadia@example.com</div>
+                                    </td>
+                                    <td style="font-weight: 700; color: #fff;">37 / 50</td>
+                                    <td>
+                                        <div class="score-bar-wrap">
+                                            <div class="score-bar">
+                                                <div class="score-bar-fill" style="width: 74%; background: var(--color-stat-cyan);"></div>
+                                            </div>
+                                            <div class="score-pct" style="color: var(--color-stat-cyan);">74%</div>
+                                        </div>
+                                    </td>
+                                    <td>3 days ago</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
                 </div>
 
             </div>
@@ -869,6 +995,34 @@
                     panel.innerHTML = '<div style="text-align:center;padding:48px;color:var(--color-status-error);font-size:13px;">Failed to load results.</div>';
                 });
         }
+        const customSelect = document.getElementById('quizCustomSelect');
+        const selectTrigger = document.getElementById('selectTrigger');
+        const triggerText = document.getElementById('triggerText');
+        const options = document.querySelectorAll('.custom-select-option');
+
+        // Toggle the drop-down view open/close state
+        selectTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            customSelect.classList.toggle('open');
+        });
+
+        // Toggle selection state styles when option variants are clicked
+        options.forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.stopPropagation();
+
+                options.forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+
+                triggerText.textContent = this.querySelector('span').textContent;
+                customSelect.classList.remove('open');
+            });
+        });
+
+        // Safely close select box windows when clicking anywhere else on the document
+        document.addEventListener('click', () => {
+            customSelect.classList.remove('open');
+        });
     </script>
 </body>
 

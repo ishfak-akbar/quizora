@@ -386,7 +386,12 @@
             <a href="#" class="dropdown-item"><i class="ti ti-user"></i> Profile</a>
             <a href="#" class="dropdown-item"><i class="ti ti-settings"></i> Settings</a>
             <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item danger"><i class="ti ti-logout"></i> Logout</a>
+            <form method="POST" action="{{ route('logout') }}">
+              @csrf
+              <button type="submit" class="dropdown-item danger" style="width:100%;border:none;text-align:left;">
+                <i class="ti ti-logout" aria-hidden="true"></i> Logout
+              </button>
+            </form>
           </div>
         </div>
       </div>

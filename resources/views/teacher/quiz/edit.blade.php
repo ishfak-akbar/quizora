@@ -739,9 +739,22 @@
 
     </form>
     <script>
-        const existingQuestions = {
-            !!json_encode($quiz - > questions - > load('options')) !!
-        };
+        @php
+        $existingQuestions = $quiz->questions()->with('options')->get()->map(function($q) {
+            return [
+                'text' => $q->question_text ?? '',
+                'marks' => $q->marks ?? 1,
+                'options' => $q->options->map(function($opt) {
+                    return [
+                        'text' => $opt->option_text ?? '',
+                        'is_correct' => (bool) $opt->is_correct
+                    ];
+                })->toArray()
+            ];
+        })->toArray();
+        @endphp
+
+        let existingQuestions = @json($existingQuestions);
     </script>
     <script src="{{ asset('quizora.js') }}"></script>
     <script>
@@ -857,6 +870,45 @@
             document.getElementById('nextBtn').style.display = currentStep === 3 ? 'none' : 'inline-flex';
             document.getElementById('publishBtn').style.display = currentStep === 3 ? 'inline-flex' : 'none';
             document.getElementById('saveDraftBtn').style.display = currentStep === 3 ? 'inline-flex' : 'none';
+        }
+
+        function loadExistingQuestions() {
+            if (!existingQuestions || existingQuestions.length === 0) {
+                addQuestion();
+                return;
+            }
+
+            existingQuestions.forEach((q) => {
+                addQuestion();
+
+                setTimeout(() => {
+                    const index = questionCount - 1;
+                    const card = document.getElementById('question-' + index);
+                    if (!card) return;
+
+                    // Fill Question Text
+                    const textInput = card.querySelector('.q-text');
+                    if (textInput) textInput.value = q.text;
+
+                    // Fill Marks
+                    const marksInput = card.querySelector('input[name*="marks"]');
+                    if (marksInput) marksInput.value = q.marks;
+
+                    // Fill Options & Correct Answer
+                    q.options.forEach((opt, i) => {
+                        const optInput = card.querySelector(`[name="questions[${index}][options][${i}]"]`);
+                        if (optInput) optInput.value = opt.text;
+
+                        if (opt.is_correct) {
+                            const radio = document.getElementById(`opt-radio-${index}-${i}`);
+                            if (radio) {
+                                radio.checked = true;
+                                markCorrect(index, i);
+                            }
+                        }
+                    });
+                }, 30);
+            });
         }
 
         //ADD QUESTION
@@ -992,31 +1044,9 @@
         }
 
         //Pre-load existing questions from DB
-        if (existingQuestions.length > 0) {
-            existingQuestions.forEach((q) => {
-                const index = questionCount;
-                addQuestion();
-                setTimeout(() => {
-                    const card = document.getElementById('question-' + index);
-                    if (!card) return;
-                    card.querySelector('.q-text').value = q.question_text;
-                    card.querySelector(`[name="questions[${index}][marks]"]`).value = q.marks;
-                    q.options.forEach((opt, i) => {
-                        const optInput = card.querySelector(`[name="questions[${index}][options][${i}]"]`);
-                        if (optInput) optInput.value = opt.option_text;
-                        if (opt.is_correct) {
-                            const radio = document.getElementById(`opt-radio-${index}-${i}`);
-                            if (radio) {
-                                radio.checked = true;
-                                markCorrect(index, i);
-                            }
-                        }
-                    });
-                }, 0);
-            });
-        } else {
-            addQuestion();
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            loadExistingQuestions();
+        });
     </script>
 </body>
 

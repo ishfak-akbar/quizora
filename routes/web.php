@@ -32,6 +32,9 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->group(function (
     Route::get('/quiz/create', [QuizController::class, 'create'])->name('teacher.quiz.create');
     Route::post('/quiz/store', [QuizController::class, 'store'])->name('teacher.quiz.store');
     Route::get('/students', [TeacherDashboard::class, 'students'])->name('teacher.students');
+    Route::get('/students', [QuizController::class, 'students'])->name('teacher.students');
+    Route::get('/question-bank', [QuizController::class, 'questionBank'])->name('teacher.questionbank');
+    Route::get('/settings', [QuizController::class, 'settings'])->name('teacher.settings');
 });
 
 Route::delete('/quiz/{quiz}', [QuizController::class, 'destroy'])->name('teacher.quiz.destroy');
@@ -89,5 +92,7 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->group(function (
         return view('student.bookmarks');
     })->name('student.bookmarks');
 });
+
+Route::get('/teacher/question-bank', [TeacherDashboard::class, 'questionBank'])->name('teacher.question-bank');
 
 require __DIR__ . '/auth.php';

@@ -189,4 +189,8 @@ class DashboardController extends Controller
             'students'
         ));
     }
+    public function questionBank()
+    {
+        return view('teacher.question-bank');
+    }
 }

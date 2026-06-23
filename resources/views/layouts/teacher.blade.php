@@ -507,7 +507,6 @@
 </head>
 
 <body>
-    <script src="{{ asset('quizora.js') }}"></script>
 
     {{-- SIDEBAR --}}
     <aside class="sidebar" id="sidebar">
@@ -653,7 +652,7 @@
         }
     </script>
     @endif
-
+    <script src="{{ asset('quizora.js') }}"></script>
     @stack('scripts')
 </body>
 

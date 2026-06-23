@@ -208,7 +208,7 @@
     background: var(--color-bg-card);
     border: 1px solid var(--color-border-light);
     border-radius: 14px;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .card-header {
@@ -672,23 +672,6 @@
 @endsection
 @push('scripts')
 <script>
-  const sidebar = document.getElementById('sidebar');
-  const toggleBtn = document.getElementById('toggleBtn');
-  const toggleIcon = document.getElementById('toggleIcon');
-  toggleBtn.addEventListener('click', () => {
-    const collapsed = sidebar.classList.toggle('collapsed');
-    document.body.classList.toggle('collapsed', collapsed);
-    toggleIcon.className = collapsed ? 'ti ti-chevron-right' : 'ti ti-chevron-left';
-  });
-
-  const userBtn = document.getElementById('userBtn');
-  const userDropdown = document.getElementById('userDropdown');
-  userBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    userDropdown.classList.toggle('open');
-  });
-  document.addEventListener('click', () => userDropdown.classList.remove('open'));
-
   const quizSelect = document.getElementById('quizSelect');
   const lbList = document.getElementById('lbList');
   const colors = ['#4F46E5', '#7C3AED', '#0891B2', '#059669', '#D97706'];

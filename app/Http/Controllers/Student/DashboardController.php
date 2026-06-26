@@ -42,6 +42,22 @@ class DashboardController extends Controller
             ->get();
 
         $bookmarkCount = Bookmark::where('student_id', $student->id)->count();
+        $recommendedQuizzes = Quiz::where('status', 'active')
+            ->where('visibility', 'public')
+            ->withCount('questions')
+            ->inRandomOrder()
+            ->take(4)
+            ->get();
+
+        return view('student.dashboard', compact(
+            'totalAttempts',
+            'avgScore',
+            'bestScore',
+            'quizzesPassed',
+            'recentAttempts',
+            'bookmarkCount',
+            'recommendedQuizzes'
+        ));
 
         return view('student.dashboard', compact(
             'totalAttempts',

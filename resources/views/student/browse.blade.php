@@ -1,624 +1,679 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.student')
+@section('title', 'Quizora — Browse Quizzes')
+@push('styles')
+<style>
+    .page-header {
+        margin-bottom: 20px;
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-    <link rel="stylesheet" href="{{ asset('student-layout.css') }}">
-    <title>Quizora — Browse Quizzes</title>
-    <style>
-        .page-header {
-            margin-bottom: 20px;
-        }
+    .page-header h1 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #fff;
+    }
 
-        .page-header h1 {
-            font-size: 22px;
-            font-weight: 700;
-            color: #fff;
-        }
+    .page-header p {
+        font-size: 13px;
+        color: var(--color-text-muted);
+        margin-top: 4px;
+    }
 
-        .page-header p {
-            font-size: 13px;
-            color: var(--color-text-muted);
-            margin-top: 4px;
-        }
+    /* ── SEARCH BAR ── */
+    .search-bar-wrap {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
 
-        /* SEARCH BAR */
-        .search-bar-wrap {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-        }
+    .search-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1.5px solid var(--color-border-light);
+        border-radius: 12px;
+        padding: 0 16px;
+        flex: 1;
+        min-width: 240px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
 
-        .search-wrap {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1.5px solid var(--color-border-light);
-            border-radius: 12px;
-            padding: 0 16px;
-            flex: 1;
-            min-width: 240px;
-            transition: border-color 0.2s;
-        }
+    .search-wrap:focus-within {
+        border-color: rgba(79, 70, 229, 0.6);
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    }
 
-        .search-wrap:focus-within {
-            border-color: rgba(79, 70, 229, 0.6);
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
-        }
+    .search-wrap input {
+        flex: 1;
+        height: 44px;
+        background: none;
+        border: none;
+        outline: none;
+        color: #fff;
+        font-size: 14px;
+        font-family: var(--font);
+    }
 
-        .search-wrap input {
-            flex: 1;
-            height: 44px;
-            background: none;
-            border: none;
-            outline: none;
-            color: #fff;
-            font-size: 14px;
-            font-family: var(--font);
-        }
+    .search-wrap input::placeholder {
+        color: var(--color-text-muted);
+    }
 
-        .search-wrap input::placeholder {
-            color: var(--color-text-muted);
-        }
+    .search-wrap i {
+        color: var(--color-text-muted);
+        font-size: 18px;
+    }
 
-        .search-wrap i {
-            color: var(--color-text-muted);
-            font-size: 18px;
-        }
+    .filter-pill {
+        height: 44px;
+        padding: 0 18px;
+        border-radius: 12px;
+        border: 1.5px solid var(--color-border-light);
+        background: var(--color-bg-card);
+        color: var(--color-text-secondary);
+        font-size: 13px;
+        font-weight: 500;
+        font-family: var(--font);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s;
+        white-space: nowrap;
+        appearance: none;
+        -webkit-appearance: none;
+    }
 
-        .filter-pill {
-            height: 44px;
-            padding: 0 18px;
-            border-radius: 12px;
-            border: 1.5px solid var(--color-border-light);
-            background: var(--color-bg-card);
-            color: var(--color-text-secondary);
-            font-size: 13px;
-            font-weight: 500;
-            font-family: var(--font);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
+    .filter-pill:hover {
+        border-color: rgba(79, 70, 229, 0.4);
+        color: #fff;
+    }
 
-        .filter-pill:hover {
-            border-color: rgba(79, 70, 229, 0.4);
-            color: #fff;
-        }
+    /* ── CATEGORY CHIPS ── */
+    .category-scroll {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        margin-bottom: 28px;
+        scrollbar-width: none;
+    }
 
-        /* CATEGORY CHIPS */
-        .category-scroll {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 6px;
-            margin-bottom: 28px;
-            scrollbar-width: none;
-        }
+    .category-scroll::-webkit-scrollbar {
+        display: none;
+    }
 
-        .category-scroll::-webkit-scrollbar {
-            display: none;
-        }
+    .category-chip {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 16px;
+        border-radius: 24px;
+        background: var(--color-bg-card);
+        border: 1.5px solid var(--color-border-light);
+        color: var(--color-text-secondary);
+        font-size: 13px;
+        font-weight: 500;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: all 0.2s;
+        flex-shrink: 0;
+        text-decoration: none;
+    }
 
-        .category-chip {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 9px 16px;
-            border-radius: 24px;
-            background: var(--color-bg-card);
-            border: 1.5px solid var(--color-border-light);
-            color: var(--color-text-secondary);
-            font-size: 13px;
-            font-weight: 500;
-            white-space: nowrap;
-            cursor: pointer;
-            transition: all 0.2s;
-            flex-shrink: 0;
-        }
+    .category-chip:hover {
+        border-color: rgba(79, 70, 229, 0.4);
+        color: #fff;
+    }
 
-        .category-chip i {
-            font-size: 16px;
-        }
+    .category-chip.active {
+        background: var(--color-primary-solid);
+        border-color: var(--color-primary-solid);
+        color: #fff;
+    }
 
-        .category-chip:hover {
-            border-color: rgba(79, 70, 229, 0.4);
-            color: #fff;
-        }
+    /* ── SECTION ── */
+    .quiz-section {
+        margin-bottom: 36px;
+    }
 
-        .category-chip.active {
-            background: var(--color-primary-solid);
-            border-color: var(--color-primary-solid);
-            color: #fff;
-        }
+    .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+    }
 
-        /* SECTION */
-        .quiz-section {
-            margin-bottom: 32px;
-        }
+    .section-header h2 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
 
-        .section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 14px;
-        }
+    .section-header h2 i {
+        color: var(--color-primary-glow);
+        font-size: 18px;
+    }
 
-        .section-header h2 {
-            font-size: 16px;
-            font-weight: 700;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+    /* ── QUIZ GRID ── */
+    .quiz-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
+        gap: 18px;
+    }
 
-        .section-header h2 i {
-            color: var(--color-primary-glow);
-            font-size: 18px;
-        }
+    /* ── QUIZ CARD ── */
+    .pquiz-card {
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border-light);
+        border-radius: 16px;
+        overflow: hidden;
+        transition: border-color 0.22s, transform 0.22s, box-shadow 0.22s;
+        text-decoration: none;
+        display: block;
+        position: relative;
+    }
 
-        .view-all-link {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--color-primary-glow);
-            text-decoration: none;
-        }
+    .pquiz-card:hover {
+        border-color: rgba(79, 70, 229, 0.5);
+        transform: translateY(-4px);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    }
 
-        .view-all-link:hover {
-            color: #fff;
-        }
+    /* ── CARD BANNER ── */
+    .pquiz-banner {
+        height: 96px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
 
-        /* QUIZ CARD GRID */
-        .quiz-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 16px;
-        }
+    /* Subtle noise texture overlay */
+    .pquiz-banner::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+        pointer-events: none;
+    }
 
-        .pquiz-card {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border-light);
-            border-radius: 14px;
-            overflow: hidden;
-            transition: border-color 0.2s, transform 0.2s;
-            cursor: pointer;
-            text-decoration: none;
-            display: block;
-        }
+    .pquiz-banner-icon {
+        font-size: 38px;
+        color: rgba(255, 255, 255, 0.9);
+        position: relative;
+        z-index: 1;
+        filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+    }
 
-        .pquiz-card:hover {
-            border-color: rgba(79, 70, 229, 0.4);
-            transform: translateY(-3px);
-        }
+    /* Decorative circles in banner */
+    .pquiz-banner-deco {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        pointer-events: none;
+    }
 
-        .pquiz-banner {
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            color: rgba(255, 255, 255, 0.9);
-            position: relative;
-        }
+    .pquiz-banner-deco.d1 {
+        width: 80px;
+        height: 80px;
+        bottom: -24px;
+        right: -20px;
+    }
 
-        .pquiz-body {
-            padding: 16px;
-        }
+    .pquiz-banner-deco.d2 {
+        width: 44px;
+        height: 44px;
+        top: -10px;
+        left: 16px;
+    }
 
-        .pquiz-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 6px;
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
+    /* ── BOOKMARK BTN ── */
+    .bookmark-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 32px;
+        height: 32px;
+        border-radius: 9px;
+        background: rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 16px;
+        cursor: pointer;
+        z-index: 2;
+        transition: background 0.2s, color 0.2s, transform 0.15s;
+        text-decoration: none;
+    }
 
-        .pquiz-meta {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-        }
+    .bookmark-btn:hover {
+        background: rgba(0, 0, 0, 0.55);
+        color: #F59E0B;
+    }
 
-        .pquiz-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 11px;
-            color: var(--color-text-muted);
-        }
+    .bookmark-btn.bookmarked {
+        color: #F59E0B;
+    }
 
-        .pquiz-meta-item i {
-            font-size: 13px;
-        }
+    .bookmark-btn.bookmarked i::before {
+        content: '\eac3';
+    }
 
-        .pquiz-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+    /* filled bookmark tabler icon */
 
-        .diff-badge {
-            font-size: 10px;
-            font-weight: 700;
-            padding: 3px 9px;
-            border-radius: 20px;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-        }
+    /* ── CARD BODY ── */
+    .pquiz-body {
+        padding: 16px 18px 18px;
+    }
 
-        .diff-easy {
-            background: rgba(52, 211, 153, 0.15);
-            color: var(--color-status-success);
-        }
+    .pquiz-category {
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--color-primary-glow);
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+        margin-bottom: 6px;
+    }
 
-        .diff-medium {
-            background: rgba(245, 158, 11, 0.15);
-            color: #F59E0B;
-        }
+    .pquiz-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 10px;
+        line-height: 1.45;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
 
-        .diff-hard {
-            background: rgba(248, 113, 113, 0.15);
-            color: var(--color-status-error);
-        }
+    .pquiz-meta {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+    }
 
-        .pquiz-attempts {
-            font-size: 11px;
-            color: var(--color-text-muted);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-    </style>
-</head>
+    .pquiz-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11px;
+        color: var(--color-text-muted);
+    }
 
-<body>
+    .pquiz-meta-item i {
+        font-size: 13px;
+    }
 
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-logo">
-            <div class="logo-icon">Q</div>
-            <div class="logo-text">Quiz<span>ora</span></div>
+    /* ── CARD FOOTER ── */
+    .pquiz-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 12px;
+        border-top: 1px solid var(--color-border-light);
+    }
+
+    .diff-badge {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .diff-easy {
+        background: rgba(52, 211, 153, 0.15);
+        color: #34D399;
+    }
+
+    .diff-medium {
+        background: rgba(245, 158, 11, 0.15);
+        color: #F59E0B;
+    }
+
+    .diff-hard {
+        background: rgba(248, 113, 113, 0.15);
+        color: #F87171;
+    }
+
+    .pquiz-take-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(79, 70, 229, 0.18);
+        border: 1px solid rgba(79, 70, 229, 0.35);
+        color: var(--color-primary-glow);
+        font-size: 12px;
+        font-weight: 600;
+        padding: 6px 14px;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: background 0.2s, border-color 0.2s;
+        font-family: var(--font);
+    }
+
+    .pquiz-take-btn:hover {
+        background: rgba(79, 70, 229, 0.3);
+        border-color: rgba(79, 70, 229, 0.6);
+        color: #fff;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-section {
+        padding: 48px 40px;
+        text-align: center;
+        color: var(--color-text-muted);
+        font-size: 13px;
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border-light);
+        border-radius: 16px;
+    }
+
+    .empty-section i {
+        font-size: 36px;
+        display: block;
+        margin-bottom: 12px;
+        color: rgba(79, 70, 229, 0.3);
+    }
+</style>
+@endpush
+
+@section('content')
+
+<div class="page-header">
+    <h1>Discover Quizzes</h1>
+    <p>Browse public quizzes from school basics to BCS preparation</p>
+</div>
+
+{{-- SEARCH + FILTERS --}}
+<form method="GET" action="{{ route('student.browse') }}" id="browseForm">
+    <div class="search-bar-wrap">
+        <div class="search-wrap">
+            <i class="ti ti-search"></i>
+            <input type="text" name="search" placeholder="Search quizzes, topics, or tags..."
+                value="{{ $search }}" id="searchInput" autocomplete="off" />
         </div>
-        <nav class="sidebar-nav">
-            <div class="nav-label">Main</div>
-            <a href="{{ route('student.dashboard') }}" class="nav-item">
-                <i class="ti ti-layout-dashboard nav-icon"></i>
-                <span class="nav-text">Dashboard</span>
-            </a>
-            <a href="#" class="nav-item active">
-                <i class="ti ti-compass nav-icon"></i>
-                <span class="nav-text">Browse Quizzes</span>
-            </a>
-            <a href="{{ route('student.bookmarks') }}" class="nav-item">
-                <i class="ti ti-bookmark nav-icon"></i>
-                <span class="nav-text">Bookmarks</span>
-                <span class="nav-badge">3</span>
-            </a>
-            <div class="nav-label">Activity</div>
-            <a href="{{ route('student.results') }}" class="nav-item">
-                <i class="ti ti-history nav-icon"></i>
-                <span class="nav-text">My Results</span>
-            </a>
-            <a href="{{ route('student.leaderboard.page') }}" class="nav-item">
-                <i class="ti ti-trophy nav-icon"></i>
-                <span class="nav-text">Leaderboard</span>
-            </a>
-        </nav>
-        <div class="sidebar-bottom">
-            <a href="#" class="nav-item">
-                <i class="ti ti-settings nav-icon"></i>
-                <span class="nav-text">Settings</span>
-            </a>
-        </div>
-    </aside>
+        <select name="difficulty" class="filter-pill" onchange="document.getElementById('browseForm').submit()">
+            <option value="">All Difficulties</option>
+            <option value="easy" {{ request('difficulty') === 'easy'   ? 'selected' : '' }}>🟢 Easy</option>
+            <option value="medium" {{ request('difficulty') === 'medium' ? 'selected' : '' }}>🟡 Medium</option>
+            <option value="hard" {{ request('difficulty') === 'hard'   ? 'selected' : '' }}>🔴 Hard</option>
+        </select>
+    </div>
 
-    <button class="toggle-btn" id="toggleBtn">
-        <i class="ti ti-chevron-left" id="toggleIcon"></i>
-    </button>
+    {{-- CATEGORY CHIPS --}}
+    <div class="category-scroll">
+        <a href="{{ route('student.browse') }}"
+            class="category-chip {{ $activeCategory === 'all' ? 'active' : '' }}">
+            <i class="ti ti-apps"></i> All
+        </a>
+        @foreach($categories as $cat)
+        <a href="{{ route('student.browse', ['category' => $cat, 'difficulty' => request('difficulty')]) }}"
+            class="category-chip {{ $activeCategory === $cat ? 'active' : '' }}">
+            <i class="{{ \App\Helpers\QuizHelper::categoryIcon($cat) }}"></i> {{ $cat }}
+        </a>
+        @endforeach
+    </div>
+</form>
 
-    <main class="main" id="main">
-        <header class="topbar">
-            <div class="topbar-title">Browse Quizzes</div>
-            <div class="topbar-right">
-                <button class="notif-btn">
-                    <i class="ti ti-bell"></i>
-                    <span class="notif-dot"></span>
-                </button>
-                <div class="user-btn" id="userBtn">
-                    <div class="user-avatar">N</div>
-                    <div>
-                        <div class="user-name">Nahian</div>
-                        <div class="user-role">Student</div>
+@php
+/**
+* Banner config: gradient + icon per category keyword.
+* Falls back to a colour cycle if no keyword matches.
+*/
+function quizBannerConfig(string $category, int $index): array {
+$map = [
+'math' => ['linear-gradient(135deg,#7C3AED,#A78BFA)', 'ti ti-math'],
+'calculus' => ['linear-gradient(135deg,#7C3AED,#A78BFA)', 'ti ti-math'],
+'science' => ['linear-gradient(135deg,#0891B2,#22D3EE)', 'ti ti-flask'],
+'physics' => ['linear-gradient(135deg,#0891B2,#22D3EE)', 'ti ti-atom'],
+'chemistry' => ['linear-gradient(135deg,#059669,#34D399)', 'ti ti-flask-2'],
+'biology' => ['linear-gradient(135deg,#15803D,#4ADE80)', 'ti ti-dna'],
+'english' => ['linear-gradient(135deg,#B45309,#F59E0B)', 'ti ti-alphabet-latin'],
+'language' => ['linear-gradient(135deg,#B45309,#F59E0B)', 'ti ti-language'],
+'history' => ['linear-gradient(135deg,#92400E,#D97706)', 'ti ti-building-castle'],
+'geography' => ['linear-gradient(135deg,#065F46,#10B981)', 'ti ti-map'],
+'bcs' => ['linear-gradient(135deg,#1E3A5F,#3B82F6)', 'ti ti-building-bank'],
+'bangladesh' => ['linear-gradient(135deg,#166534,#22C55E)', 'ti ti-building-bank'],
+'computer' => ['linear-gradient(135deg,#1D4ED8,#60A5FA)', 'ti ti-device-desktop'],
+'coding' => ['linear-gradient(135deg,#DB2777,#F472B6)', 'ti ti-code'],
+'algorithm' => ['linear-gradient(135deg,#DB2777,#F472B6)', 'ti ti-binary-tree'],
+'data' => ['linear-gradient(135deg,#DB2777,#F472B6)', 'ti ti-chart-dots'],
+'general' => ['linear-gradient(135deg,#4F46E5,#818CF8)', 'ti ti-bulb'],
+'gk' => ['linear-gradient(135deg,#4F46E5,#818CF8)', 'ti ti-bulb'],
+'religion' => ['linear-gradient(135deg,#78350F,#D97706)', 'ti ti-moon-stars'],
+'islamic' => ['linear-gradient(135deg,#78350F,#D97706)', 'ti ti-moon-stars'],
+'economics' => ['linear-gradient(135deg,#0F766E,#2DD4BF)', 'ti ti-chart-line'],
+'business' => ['linear-gradient(135deg,#0F766E,#2DD4BF)', 'ti ti-briefcase'],
+];
+$fallbacks = [
+'linear-gradient(135deg,#4F46E5,#818CF8)',
+'linear-gradient(135deg,#059669,#34D399)',
+'linear-gradient(135deg,#DB2777,#F472B6)',
+'linear-gradient(135deg,#B45309,#F59E0B)',
+'linear-gradient(135deg,#0891B2,#22D3EE)',
+'linear-gradient(135deg,#7C3AED,#A78BFA)',
+];
+$fallbackIcons = ['ti ti-help-circle','ti ti-star','ti ti-bolt','ti ti-flame','ti ti-rocket','ti ti-crown'];
+
+$lower = strtolower($category);
+foreach ($map as $keyword => $config) {
+if (str_contains($lower, $keyword)) {
+return $config;
+}
+}
+return [
+$fallbacks[$index % count($fallbacks)],
+$fallbackIcons[$index % count($fallbackIcons)],
+];
+}
+@endphp
+
+{{-- ── TRENDING ── --}}
+<div class="quiz-section">
+    <div class="section-header">
+        <h2><i class="ti ti-flame"></i> Trending Now</h2>
+    </div>
+
+    @if($trending->isEmpty())
+    <div class="empty-section">
+        <i class="ti ti-mood-empty"></i>
+        No quizzes available yet. Check back soon!
+    </div>
+    @else
+    <div class="quiz-grid">
+        @foreach($trending as $quiz)
+        @php [$bg, $icon] = quizBannerConfig($quiz->category ?? '', $loop->index); @endphp
+        <a href="{{ route('student.quiz.detail', $quiz->id) }}" class="pquiz-card">
+
+            {{-- BANNER --}}
+            <div class="pquiz-banner" style="background: {{ $bg }};">
+                <div class="pquiz-banner-deco d1"></div>
+                <div class="pquiz-banner-deco d2"></div>
+                <i class="{{ $icon }} pquiz-banner-icon"></i>
+            </div>
+
+            {{-- BOOKMARK --}}
+            <button class="bookmark-btn"
+                onclick="toggleBookmark(event, this, {{ $quiz->id }})"
+                data-quiz-id="{{ $quiz->id }}"
+                title="Bookmark this quiz">
+                <i class="ti ti-bookmark"></i>
+            </button>
+
+            {{-- BODY --}}
+            <div class="pquiz-body">
+                @if($quiz->category)
+                <div class="pquiz-category">{{ $quiz->category }}</div>
+                @endif
+                <div class="pquiz-title">{{ $quiz->title }}</div>
+                <div class="pquiz-meta">
+                    <div class="pquiz-meta-item">
+                        <i class="ti ti-help-circle"></i> {{ $quiz->questions_count }} Qs
                     </div>
-                    <i class="ti ti-chevron-down" style="font-size:14px;color:var(--color-text-muted);"></i>
-                    <div class="user-dropdown" id="userDropdown">
-                        <a href="#" class="dropdown-item"><i class="ti ti-user"></i> Profile</a>
-                        <a href="#" class="dropdown-item"><i class="ti ti-settings"></i> Settings</a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item danger"><i class="ti ti-logout"></i> Logout</a>
+                    @if($quiz->time_limit)
+                    <div class="pquiz-meta-item">
+                        <i class="ti ti-clock"></i> {{ $quiz->time_limit }} min
+                    </div>
+                    @endif
+                    <div class="pquiz-meta-item">
+                        <i class="ti ti-users"></i> {{ number_format($quiz->attempts_count) }}
                     </div>
                 </div>
-            </div>
-        </header>
-
-        <div class="content">
-
-            <div class="page-header">
-                <h1>Discover Quizzes</h1>
-                <p>Browse public quizzes from school basics to BCS preparation</p>
-            </div>
-
-            <!-- SEARCH + FILTERS -->
-            <div class="search-bar-wrap">
-                <div class="search-wrap">
-                    <i class="ti ti-search"></i>
-                    <input type="text" placeholder="Search quizzes, topics, or tags..." />
-                </div>
-                <button class="filter-pill"><i class="ti ti-adjustments-horizontal"></i> Difficulty</button>
-                <button class="filter-pill"><i class="ti ti-language"></i> Language</button>
-                <button class="filter-pill"><i class="ti ti-sort-descending"></i> Sort by</button>
-            </div>
-
-            <!-- CATEGORIES -->
-            <div class="category-scroll">
-                <div class="category-chip active"><i class="ti ti-apps"></i> All</div>
-                <div class="category-chip"><i class="ti ti-calculator"></i> Mathematics</div>
-                <div class="category-chip"><i class="ti ti-flask"></i> Science</div>
-                <div class="category-chip"><i class="ti ti-building-bank"></i> BCS Cadre</div>
-                <div class="category-chip"><i class="ti ti-world"></i> History</div>
-                <div class="category-chip"><i class="ti ti-language"></i> English</div>
-                <div class="category-chip"><i class="ti ti-code"></i> Programming</div>
-                <div class="category-chip"><i class="ti ti-map"></i> Geography</div>
-                <div class="category-chip"><i class="ti ti-gavel"></i> General Knowledge</div>
-            </div>
-
-            <!-- FEATURED -->
-            <div class="quiz-section">
-                <div class="section-header">
-                    <h2><i class="ti ti-flame"></i> Trending Now</h2>
-                    <a href="#" class="view-all-link">View all</a>
-                </div>
-                <div class="quiz-grid">
-
-                    <a href="{{ route('student.quiz.detail') }}" class="pquiz-card">
-                        <div class="pquiz-banner" style="background:linear-gradient(135deg,#4F46E5,#818CF8);">
-                            <i class="ti ti-building-bank"></i>
-                        </div>
-                        <div class="pquiz-body">
-                            <div class="pquiz-title">BCS Preliminary — Bangladesh Affairs Full Set</div>
-                            <div class="pquiz-meta">
-                                <div class="pquiz-meta-item"><i class="ti ti-help-circle"></i> 50 Qs</div>
-                                <div class="pquiz-meta-item"><i class="ti ti-clock"></i> 60 min</div>
-                            </div>
-                            <div class="pquiz-footer">
-                                <span class="diff-badge diff-hard">Hard</span>
-                                <span class="pquiz-attempts"><i class="ti ti-users"></i> 1.2k attempts</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="{{ route('student.quiz.detail') }}" class="pquiz-card">
-                        <div class="pquiz-banner" style="background:linear-gradient(135deg,#059669,#34D399);">
-                            <i class="ti ti-flask"></i>
-                        </div>
-                        <div class="pquiz-body">
-                            <div class="pquiz-title">General Science for Class 9-10</div>
-                            <div class="pquiz-meta">
-                                <div class="pquiz-meta-item"><i class="ti ti-help-circle"></i> 20 Qs</div>
-                                <div class="pquiz-meta-item"><i class="ti ti-clock"></i> 25 min</div>
-                            </div>
-                            <div class="pquiz-footer">
-                                <span class="diff-badge diff-medium">Medium</span>
-                                <span class="pquiz-attempts"><i class="ti ti-users"></i> 890 attempts</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="{{ route('student.quiz.detail') }}" class="pquiz-card">
-                        <div class="pquiz-banner" style="background:linear-gradient(135deg,#DB2777,#F472B6);">
-                            <i class="ti ti-code"></i>
-                        </div>
-                        <div class="pquiz-body">
-                            <div class="pquiz-title">Data Structures & Algorithms Basics</div>
-                            <div class="pquiz-meta">
-                                <div class="pquiz-meta-item"><i class="ti ti-help-circle"></i> 30 Qs</div>
-                                <div class="pquiz-meta-item"><i class="ti ti-clock"></i> 35 min</div>
-                            </div>
-                            <div class="pquiz-footer">
-                                <span class="diff-badge diff-hard">Hard</span>
-                                <span class="pquiz-attempts"><i class="ti ti-users"></i> 654 attempts</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="{{ route('student.quiz.detail') }}" class="pquiz-card">
-                        <div class="pquiz-banner" style="background:linear-gradient(135deg,#B45309,#F59E0B);">
-                            <i class="ti ti-calculator"></i>
-                        </div>
-                        <div class="pquiz-body">
-                            <div class="pquiz-title">Algebra Fundamentals — Quick Practice</div>
-                            <div class="pquiz-meta">
-                                <div class="pquiz-meta-item"><i class="ti ti-help-circle"></i> 15 Qs</div>
-                                <div class="pquiz-meta-item"><i class="ti ti-clock"></i> 20 min</div>
-                            </div>
-                            <div class="pquiz-footer">
-                                <span class="diff-badge diff-easy">Easy</span>
-                                <span class="pquiz-attempts"><i class="ti ti-users"></i> 2.1k attempts</span>
-                            </div>
-                        </div>
-                    </a>
-
+                <div class="pquiz-footer">
+                    <span class="diff-badge diff-{{ $quiz->difficulty }}">{{ ucfirst($quiz->difficulty) }}</span>
+                    <span class="pquiz-take-btn">
+                        <i class="ti ti-player-play"></i> Start
+                    </span>
                 </div>
             </div>
+        </a>
+        @endforeach
+    </div>
+    @endif
+</div>
 
-            <!-- MATHEMATICS -->
-            <div class="quiz-section">
-                <div class="section-header">
-                    <h2><i class="ti ti-calculator"></i> Mathematics</h2>
-                    <a href="#" class="view-all-link">View all</a>
-                </div>
-                <div class="quiz-grid">
+{{-- ── RECENTLY ADDED ── --}}
+<div class="quiz-section">
+    <div class="section-header">
+        <h2><i class="ti ti-sparkles"></i> Recently Added</h2>
+    </div>
 
-                    <a href="#" class="pquiz-card">
-                        <div class="pquiz-banner" style="background:linear-gradient(135deg,#B45309,#F59E0B);">
-                            <i class="ti ti-square-root-2"></i>
-                        </div>
-                        <div class="pquiz-body">
-                            <div class="pquiz-title">Geometry Essentials</div>
-                            <div class="pquiz-meta">
-                                <div class="pquiz-meta-item"><i class="ti ti-help-circle"></i> 18 Qs</div>
-                                <div class="pquiz-meta-item"><i class="ti ti-clock"></i> 25 min</div>
-                            </div>
-                            <div class="pquiz-footer">
-                                <span class="diff-badge diff-medium">Medium</span>
-                                <span class="pquiz-attempts"><i class="ti ti-users"></i> 432 attempts</span>
-                            </div>
-                        </div>
-                    </a>
+    @if($latest->isEmpty())
+    <div class="empty-section">
+        <i class="ti ti-mood-empty"></i>
+        No quizzes available yet.
+    </div>
+    @else
+    <div class="quiz-grid">
+        @foreach($latest as $quiz)
+        @php [$bg, $icon] = quizBannerConfig($quiz->category ?? '', $loop->index + 3); @endphp
+        <a href="{{ route('student.quiz.detail', $quiz->id) }}" class="pquiz-card">
 
-                    <a href="#" class="pquiz-card">
-                        <div class="pquiz-banner" style="background:linear-gradient(135deg,#B45309,#F59E0B);">
-                            <i class="ti ti-infinity"></i>
-                        </div>
-                        <div class="pquiz-body">
-                            <div class="pquiz-title">Advanced Calculus Challenge</div>
-                            <div class="pquiz-meta">
-                                <div class="pquiz-meta-item"><i class="ti ti-help-circle"></i> 25 Qs</div>
-                                <div class="pquiz-meta-item"><i class="ti ti-clock"></i> 40 min</div>
-                            </div>
-                            <div class="pquiz-footer">
-                                <span class="diff-badge diff-hard">Hard</span>
-                                <span class="pquiz-attempts"><i class="ti ti-users"></i> 198 attempts</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="#" class="pquiz-card">
-                        <div class="pquiz-banner" style="background:linear-gradient(135deg,#B45309,#F59E0B);">
-                            <i class="ti ti-percentage"></i>
-                        </div>
-                        <div class="pquiz-body">
-                            <div class="pquiz-title">Basic Arithmetic for Beginners</div>
-                            <div class="pquiz-meta">
-                                <div class="pquiz-meta-item"><i class="ti ti-help-circle"></i> 10 Qs</div>
-                                <div class="pquiz-meta-item"><i class="ti ti-clock"></i> 15 min</div>
-                            </div>
-                            <div class="pquiz-footer">
-                                <span class="diff-badge diff-easy">Easy</span>
-                                <span class="pquiz-attempts"><i class="ti ti-users"></i> 3.4k attempts</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="#" class="pquiz-card">
-                        <div class="pquiz-banner" style="background:linear-gradient(135deg,#B45309,#F59E0B);">
-                            <i class="ti ti-chart-line"></i>
-                        </div>
-                        <div class="pquiz-body">
-                            <div class="pquiz-title">Statistics & Probability</div>
-                            <div class="pquiz-meta">
-                                <div class="pquiz-meta-item"><i class="ti ti-help-circle"></i> 22 Qs</div>
-                                <div class="pquiz-meta-item"><i class="ti ti-clock"></i> 30 min</div>
-                            </div>
-                            <div class="pquiz-footer">
-                                <span class="diff-badge diff-medium">Medium</span>
-                                <span class="pquiz-attempts"><i class="ti ti-users"></i> 567 attempts</span>
-                            </div>
-                        </div>
-                    </a>
-
-                </div>
+            <div class="pquiz-banner" style="background: {{ $bg }};">
+                <div class="pquiz-banner-deco d1"></div>
+                <div class="pquiz-banner-deco d2"></div>
+                <i class="{{ $icon }} pquiz-banner-icon"></i>
             </div>
 
-            <!-- BCS CADRE -->
-            <div class="quiz-section">
-                <div class="section-header">
-                    <h2><i class="ti ti-building-bank"></i> BCS Cadre Preparation</h2>
-                    <a href="#" class="view-all-link">View all</a>
+            <button class="bookmark-btn"
+                onclick="toggleBookmark(event, this, {{ $quiz->id }})"
+                data-quiz-id="{{ $quiz->id }}"
+                title="Bookmark this quiz">
+                <i class="ti ti-bookmark"></i>
+            </button>
+
+            <div class="pquiz-body">
+                @if($quiz->category)
+                <div class="pquiz-category">{{ $quiz->category }}</div>
+                @endif
+                <div class="pquiz-title">{{ $quiz->title }}</div>
+                <div class="pquiz-meta">
+                    <div class="pquiz-meta-item">
+                        <i class="ti ti-help-circle"></i> {{ $quiz->questions_count }} Qs
+                    </div>
+                    @if($quiz->time_limit)
+                    <div class="pquiz-meta-item">
+                        <i class="ti ti-clock"></i> {{ $quiz->time_limit }} min
+                    </div>
+                    @endif
+                    <div class="pquiz-meta-item">
+                        <i class="ti ti-users"></i> {{ number_format($quiz->attempts_count) }}
+                    </div>
                 </div>
-                <div class="quiz-grid">
-
-                    <a href="#" class="pquiz-card">
-                        <div class="pquiz-banner" style="background:linear-gradient(135deg,#4F46E5,#818CF8);">
-                            <i class="ti ti-scale"></i>
-                        </div>
-                        <div class="pquiz-body">
-                            <div class="pquiz-title">BCS Preli — Bangladesh Constitution</div>
-                            <div class="pquiz-meta">
-                                <div class="pquiz-meta-item"><i class="ti ti-help-circle"></i> 35 Qs</div>
-                                <div class="pquiz-meta-item"><i class="ti ti-clock"></i> 45 min</div>
-                            </div>
-                            <div class="pquiz-footer">
-                                <span class="diff-badge diff-hard">Hard</span>
-                                <span class="pquiz-attempts"><i class="ti ti-users"></i> 876 attempts</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="#" class="pquiz-card">
-                        <div class="pquiz-banner" style="background:linear-gradient(135deg,#4F46E5,#818CF8);">
-                            <i class="ti ti-world"></i>
-                        </div>
-                        <div class="pquiz-body">
-                            <div class="pquiz-title">International Affairs & Organizations</div>
-                            <div class="pquiz-meta">
-                                <div class="pquiz-meta-item"><i class="ti ti-help-circle"></i> 28 Qs</div>
-                                <div class="pquiz-meta-item"><i class="ti ti-clock"></i> 35 min</div>
-                            </div>
-                            <div class="pquiz-footer">
-                                <span class="diff-badge diff-medium">Medium</span>
-                                <span class="pquiz-attempts"><i class="ti ti-users"></i> 543 attempts</span>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="#" class="pquiz-card">
-                        <div class="pquiz-banner" style="background:linear-gradient(135deg,#4F46E5,#818CF8);">
-                            <i class="ti ti-coin"></i>
-                        </div>
-                        <div class="pquiz-body">
-                            <div class="pquiz-title">Bangladesh Economy Overview</div>
-                            <div class="pquiz-meta">
-                                <div class="pquiz-meta-item"><i class="ti ti-help-circle"></i> 24 Qs</div>
-                                <div class="pquiz-meta-item"><i class="ti ti-clock"></i> 30 min</div>
-                            </div>
-                            <div class="pquiz-footer">
-                                <span class="diff-badge diff-medium">Medium</span>
-                                <span class="pquiz-attempts"><i class="ti ti-users"></i> 721 attempts</span>
-                            </div>
-                        </div>
-                    </a>
-
+                <div class="pquiz-footer">
+                    <span class="diff-badge diff-{{ $quiz->difficulty }}">{{ ucfirst($quiz->difficulty) }}</span>
+                    <span class="pquiz-take-btn">
+                        <i class="ti ti-player-play"></i> Start
+                    </span>
                 </div>
             </div>
+        </a>
+        @endforeach
+    </div>
+    @endif
+</div>
 
-        </div>
-    </main>
+@endsection
 
-    <script src="{{ asset('student-layout.js') }}"></script>
-    <script>
-        document.querySelectorAll('.category-chip').forEach(chip => {
-            chip.addEventListener('click', function() {
-                document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-    </script>
-</body>
+@push('scripts')
+<script>
+    // Debounced search
+    let searchTimer;
+    document.getElementById('searchInput').addEventListener('input', function() {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => document.getElementById('browseForm').submit(), 500);
+    });
 
-</html>
+    // Bookmark toggle
+    function toggleBookmark(e, btn, quizId) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        fetch(`/student/bookmarks/${quizId}/toggle`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json',
+                }
+            })
+            .then(r => r.json())
+            .then(data => {
+                const icon = btn.querySelector('i');
+                if (data.bookmarked) {
+                    btn.classList.add('bookmarked');
+                    icon.className = 'ti ti-bookmark-filled';
+                    btn.style.color = '#F59E0B';
+                    showToast('Bookmarked!', 'ti-bookmark-filled');
+                } else {
+                    btn.classList.remove('bookmarked');
+                    icon.className = 'ti ti-bookmark';
+                    btn.style.color = '';
+                    showToast('Bookmark removed', 'ti-bookmark-off');
+                }
+            })
+            .catch(() => showToast('Something went wrong', 'ti-alert-circle', true));
+    }
+
+    function showToast(msg, iconClass, isError = false) {
+        const existing = document.getElementById('browseToast');
+        if (existing) existing.remove();
+
+        const bg = isError ? 'rgba(248,113,113,0.15)' : 'rgba(52,211,153,0.15)';
+        const br = isError ? 'rgba(248,113,113,0.4)' : 'rgba(52,211,153,0.4)';
+        const col = isError ? '#F87171' : '#34D399';
+
+        const toast = document.createElement('div');
+        toast.id = 'browseToast';
+        toast.style.cssText = `
+            position:fixed; top:80px; left:50%; transform:translateX(-50%);
+            background:${bg}; border:1px solid ${br}; color:${col};
+            padding:11px 22px; border-radius:12px; font-size:13px; font-weight:600;
+            display:flex; align-items:center; gap:9px; z-index:9999;
+            backdrop-filter:blur(12px); box-shadow:0 8px 32px rgba(0,0,0,0.3);
+            transition:opacity 0.4s ease, transform 0.4s ease;
+        `;
+        toast.innerHTML = `<i class="ti ${iconClass}" style="font-size:16px;"></i> ${msg}`;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(-50%) translateY(-10px)';
+            setTimeout(() => toast.remove(), 400);
+        }, 2500);
+    }
+</script>
+@endpush

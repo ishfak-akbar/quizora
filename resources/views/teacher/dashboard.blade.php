@@ -592,7 +592,7 @@
     <div class="card">
       <div class="card-header">
         <h2>Recent Quizzes</h2>
-        <a href="#" class="view-all-link">View all</a>
+        <a href="{{ route('teacher.quizzes') }}" class="view-all-link">View all</a>
       </div>
       <table class="quiz-table">
         <thead>
@@ -665,7 +665,7 @@
           Select a quiz to view leaderboard
         </div>
       </div>
-      <button class="view-all-btn">View full leaderboard</button>
+      <a href="{{ route('teacher.leaderboard.page') }}" class="view-all-btn">View full leaderboard</a>
     </div>
   </div>
 </div>
@@ -757,40 +757,4 @@
     }
   }
 </script>
-@if(session('success'))
-<div id="toast" style="
-      position: fixed;
-      top: 80px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(52,211,153,0.15);
-      border: 1px solid rgba(52,211,153,0.4);
-      color: #34D399;
-      padding: 12px 24px;
-      border-radius: 12px;
-      font-size: 13px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      z-index: 9999;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-  ">
-  <i class="ti ti-circle-check" style="font-size:18px;"></i>
-  {{ session('success') }}
-</div>
-
-<script>
-  const toast = document.getElementById('toast');
-  if (toast) {
-    setTimeout(() => {
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateX(-50%) translateY(-12px)';
-      setTimeout(() => toast.remove(), 500);
-    }, 3000);
-  }
-</script>
-@endif
 @endpush

@@ -1,14 +1,28 @@
 <?php
+
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Quiz extends Model
 {
     protected $fillable = [
-        'teacher_id', 'title', 'description', 'type',
-        'status', 'visibility', 'category', 'difficulty', 'tags', 'passing_score',
-        'time_limit', 'max_attempts',
-        'starts_at', 'ends_at', 'show_results', 'shuffle_questions'
+        'teacher_id',
+        'title',
+        'description',
+        'type',
+        'status',
+        'visibility',
+        'category',
+        'difficulty',
+        'tags',
+        'passing_score',
+        'time_limit',
+        'max_attempts',
+        'starts_at',
+        'ends_at',
+        'show_results',
+        'shuffle_questions'
     ];
 
     protected $casts = [
@@ -38,5 +52,9 @@ class Quiz extends Model
         return $this->status === 'active'
             && ($this->starts_at === null || $this->starts_at->isPast())
             && ($this->ends_at === null || $this->ends_at->isFuture());
+    }
+    public function bookmarks()
+    {
+        return $this->hasMany(Bookmark::class);
     }
 }

@@ -36,7 +36,7 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->group(function (
     Route::get('/leaderboard/{quiz}', [TeacherDashboard::class, 'leaderboard'])->name('teacher.leaderboard');
 
     Route::get('/students', [TeacherDashboard::class, 'students'])->name('teacher.students');
-    Route::get('/question-bank', [QuizController::class, 'questionBank'])->name('teacher.questionbank');
+    Route::get('/question-bank', [QuizController::class, 'questionBank'])->name('teacher.question-bank');
     Route::get('/settings', [QuizController::class, 'settings'])->name('teacher.settings');
 });
 

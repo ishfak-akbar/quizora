@@ -510,10 +510,10 @@
 
     {{-- SIDEBAR --}}
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-logo">
+        <a href="{{ route('welcome') }}" class="sidebar-logo" style="text-decoration:none;">
             <div class="logo-icon">Q</div>
             <div class="logo-text">Quiz<span>ora</span></div>
-        </div>
+        </a>
         <nav class="sidebar-nav">
             <div class="nav-label">Main</div>
             <a href="{{ route('teacher.dashboard') }}"

@@ -467,39 +467,38 @@
 </style>
 @endpush
 @section('content')
-<div class="content">
-  <div class="stats-grid">
-    <!-- Total Quizzes -->
-    <div class="stat-card purple">
-      <div class="stat-icon"><i class="ti ti-file-description" aria-hidden="true"></i></div>
-      <div class="stat-value">{{ $totalQuizzes }}</div>
-      <div class="stat-label">Total Quizzes</div>
-    </div>
-    <!-- Active Quizzes -->
-    <div class="stat-card cyan">
-      <div class="stat-icon"><i class="ti ti-player-play" aria-hidden="true"></i></div>
-      <div class="stat-value">{{ $activeQuizzes }}</div>
-      <div class="stat-label">Active Quizzes</div>
-    </div>
-    <!-- Total Students -->
-    <div class="stat-card green">
-      <div class="stat-icon"><i class="ti ti-users" aria-hidden="true"></i></div>
-      <div class="stat-value">{{ $totalStudents }}</div>
-      <div class="stat-label">Total Students</div>
-    </div>
-    <!-- Total Submissions -->
-    <div class="stat-card pink">
-      <div class="stat-icon"><i class="ti ti-clipboard-check" aria-hidden="true"></i></div>
-      <div class="stat-value">{{ $totalSubmissions }}</div>
-      <div class="stat-label">Submissions</div>
-    </div>
+<div class="stats-grid">
+  <!-- Total Quizzes -->
+  <div class="stat-card purple">
+    <div class="stat-icon"><i class="ti ti-file-description" aria-hidden="true"></i></div>
+    <div class="stat-value">{{ $totalQuizzes }}</div>
+    <div class="stat-label">Total Quizzes</div>
   </div>
-  <!-- CREATE QUIZ CTA -->
-  <!-- QUICK ACTION CARDS -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+  <!-- Active Quizzes -->
+  <div class="stat-card cyan">
+    <div class="stat-icon"><i class="ti ti-player-play" aria-hidden="true"></i></div>
+    <div class="stat-value">{{ $activeQuizzes }}</div>
+    <div class="stat-label">Active Quizzes</div>
+  </div>
+  <!-- Total Students -->
+  <div class="stat-card green">
+    <div class="stat-icon"><i class="ti ti-users" aria-hidden="true"></i></div>
+    <div class="stat-value">{{ $totalStudents }}</div>
+    <div class="stat-label">Total Students</div>
+  </div>
+  <!-- Total Submissions -->
+  <div class="stat-card pink">
+    <div class="stat-icon"><i class="ti ti-clipboard-check" aria-hidden="true"></i></div>
+    <div class="stat-value">{{ $totalSubmissions }}</div>
+    <div class="stat-label">Submissions</div>
+  </div>
+</div>
+<!-- CREATE QUIZ CTA -->
+<!-- QUICK ACTION CARDS -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
 
-    <!-- CREATE QUIZ CARD -->
-    <div style="
+  <!-- CREATE QUIZ CARD -->
+  <div style="
     background: linear-gradient(135deg, #2E2570 0%, #4F46E5 50%, #818CF8 100%);
     border-radius: 16px;
     padding: 28px;
@@ -510,24 +509,24 @@
     justify-content: space-between;
     min-height: 160px;
   ">
-      <!-- background decoration -->
-      <div style="position:absolute;top:-30px;right:-30px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.06);"></div>
-      <div style="position:absolute;bottom:-40px;right:40px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.04);"></div>
-      <div style="position:absolute;top:20px;right:20px;opacity:0.15;font-size:80px;line-height:1;">
-        <i class="ti ti-pencil-plus"></i>
-      </div>
+    <!-- background decoration -->
+    <div style="position:absolute;top:-30px;right:-30px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.06);"></div>
+    <div style="position:absolute;bottom:-40px;right:40px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.04);"></div>
+    <div style="position:absolute;top:20px;right:20px;opacity:0.15;font-size:80px;line-height:1;">
+      <i class="ti ti-pencil-plus"></i>
+    </div>
 
-      <div>
-        <div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:6px;">
-          Create New Quiz
-        </div>
-        <div style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.5;">
-          Build tailored MCQ quizzes, customize your timers<br>and deadlines, and publish them to your classes<br>in just a click.
-        </div>
+    <div>
+      <div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:6px;">
+        Create New Quiz
       </div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.5;">
+        Build tailored MCQ quizzes, customize your timers<br>and deadlines, and publish them to your classes<br>in just a click.
+      </div>
+    </div>
 
-      <div style="margin-top:20px;">
-        <a href="{{ route('teacher.quiz.create') }}" style="
+    <div style="margin-top:20px;">
+      <a href="{{ route('teacher.quiz.create') }}" style="
               display: inline-flex;
               align-items: center;
               gap: 8px;
@@ -543,14 +542,14 @@
               transition: background 0.2s;
               font-family: var(--font);
             " onmouseover="this.style.background='rgba(255,255,255,0.25)'"
-          onmouseout="this.style.background='rgba(255,255,255,0.15)'">
-          <i class="ti ti-plus"></i> Create Quiz
-        </a>
-      </div>
+        onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+        <i class="ti ti-plus"></i> Create Quiz
+      </a>
     </div>
+  </div>
 
-    <!-- OVERALL RESULTS CARD -->
-    <div style="
+  <!-- OVERALL RESULTS CARD -->
+  <div style="
             background: var(--color-bg-card);
             border: 1px solid var(--color-border-light);
             border-radius: 16px;
@@ -559,116 +558,116 @@
             flex-direction: column;
             min-height: 160px;
         ">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-        <div>
-          <div style="font-size:15px;font-weight:700;color:#fff;">Quiz Results</div>
-          <div style="font-size:12px;color:var(--color-text-muted);margin-top:2px;">Overall performance</div>
-        </div>
-        <i class="ti ti-chart-bar" style="font-size:22px;color:var(--color-primary-glow);"></i>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div>
+        <div style="font-size:15px;font-weight:700;color:#fff;">Quiz Results</div>
+        <div style="font-size:12px;color:var(--color-text-muted);margin-top:2px;">Overall performance</div>
       </div>
-
-      <div id="resultSelectContainer" style="margin-bottom:16px;"></div>
-
-      <div id="resultStats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
-        <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:12px;text-align:center;">
-          <div style="font-size:20px;font-weight:700;color:#fff;" id="res-submissions">—</div>
-          <div style="font-size:11px;color:var(--color-text-muted);margin-top:3px;">Submissions</div>
-        </div>
-        <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:12px;text-align:center;">
-          <div style="font-size:20px;font-weight:700;color:var(--color-status-success);" id="res-avg">—</div>
-          <div style="font-size:11px;color:var(--color-text-muted);margin-top:3px;">Avg Score</div>
-        </div>
-        <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:12px;text-align:center;">
-          <div style="font-size:20px;font-weight:700;color:var(--color-primary-glow);" id="res-highest">—</div>
-          <div style="font-size:11px;color:var(--color-text-muted);margin-top:3px;">Highest</div>
-        </div>
-      </div>
+      <i class="ti ti-chart-bar" style="font-size:22px;color:var(--color-primary-glow);"></i>
     </div>
 
+    <div id="resultSelectContainer" style="margin-bottom:16px;"></div>
+
+    <div id="resultStats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+      <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:12px;text-align:center;">
+        <div style="font-size:20px;font-weight:700;color:#fff;" id="res-submissions">—</div>
+        <div style="font-size:11px;color:var(--color-text-muted);margin-top:3px;">Submissions</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:12px;text-align:center;">
+        <div style="font-size:20px;font-weight:700;color:var(--color-status-success);" id="res-avg">—</div>
+        <div style="font-size:11px;color:var(--color-text-muted);margin-top:3px;">Avg Score</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:12px;text-align:center;">
+        <div style="font-size:20px;font-weight:700;color:var(--color-primary-glow);" id="res-highest">—</div>
+        <div style="font-size:11px;color:var(--color-text-muted);margin-top:3px;">Highest</div>
+      </div>
+    </div>
   </div>
-  <!-- MAIN GRID -->
-  <div class="dashboard-grid">
-    <!-- QUIZ TABLE -->
-    <div class="card">
-      <div class="card-header">
-        <h2>Recent Quizzes</h2>
-        <a href="{{ route('teacher.quizzes') }}" class="view-all-link">View all</a>
-      </div>
-      <table class="quiz-table">
-        <thead>
-          <tr>
-            <th>Quiz</th>
-            <th>Students</th>
-            <th>Due Date</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          @forelse($recentQuizzes as $quiz)
-          <tr>
-            <td>
-              <div class="quiz-name">{{ $quiz->title }}</div>
-              <div class="quiz-type">
-                {{ strtoupper($quiz->type) }} ·
-                {{ $quiz->questions()->count() }} questions
-                @if($quiz->time_limit) · {{ $quiz->time_limit }} min @endif
-              </div>
-            </td>
-            <td>{{ $quiz->submitted_attempts }} / {{ $quiz->total_attempts }}</td>
-            <td>{{ $quiz->ends_at ? $quiz->ends_at->format('M d, Y') : 'No deadline' }}</td>
-            <td>
-              <span class="status-badge {{ $quiz->status }}">
-                <span class="status-dot"></span> {{ ucfirst($quiz->status) }}
-              </span>
-            </td>
-            <td>
-              <div class="action-btns">
-                <a href="{{ route('teacher.quiz.edit', $quiz->id) }}" class="action-btn" title="Edit">
-                  <i class="ti ti-edit"></i>
-                </a>
-                <a href="#" class="action-btn" title="Results">
-                  <i class="ti ti-chart-bar" aria-hidden="true"></i>
-                </a>
-                <form method="POST" action="{{ route('teacher.quiz.destroy', $quiz->id) }}">
-                  @csrf
-                  @method('DELETE')
-                  <button type="submit" class="action-btn" title="Delete"
-                    onclick="return confirm('Are you sure you want to delete this quiz?')">
-                    <i class="ti ti-trash"></i>
-                  </button>
-                </form>
-              </div>
-            </td>
-          </tr>
-          @empty
-          <tr>
-            <td colspan="5" style="text-align:center;padding:32px;color:var(--color-text-muted);">
-              No quizzes yet. Create your first quiz!
-            </td>
-          </tr>
-          @endforelse
-        </tbody>
-      </table>
+
+</div>
+<!-- MAIN GRID -->
+<div class="dashboard-grid">
+  <!-- QUIZ TABLE -->
+  <div class="card">
+    <div class="card-header">
+      <h2>Recent Quizzes</h2>
+      <a href="{{ route('teacher.quizzes') }}" class="view-all-link">View all</a>
     </div>
-    <!-- LEADERBOARD -->
-    <div class="card">
-      <div class="card-header">
-        <h2>Leaderboard</h2>
-        <i class="ti ti-trophy" style="color:#F59E0B;font-size:18px"></i>
-      </div>
-      <div style="padding:12px 16px;border-bottom:1px solid var(--color-border-light);">
-        <div id="lbSelectContainer"></div>
-      </div>
-      <div class="leaderboard-list" id="lbList">
-        <div style="text-align:center;padding:32px;color:var(--color-text-muted);font-size:13px;">
-          Select a quiz to view leaderboard
-        </div>
-      </div>
-      <a href="{{ route('teacher.leaderboard.page') }}" class="view-all-btn">View full leaderboard</a>
+    <table class="quiz-table">
+      <thead>
+        <tr>
+          <th>Quiz</th>
+          <th>Students</th>
+          <th>Due Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @forelse($recentQuizzes as $quiz)
+        <tr>
+          <td>
+            <div class="quiz-name">{{ $quiz->title }}</div>
+            <div class="quiz-type">
+              {{ strtoupper($quiz->type) }} ·
+              {{ $quiz->questions()->count() }} questions
+              @if($quiz->time_limit) · {{ $quiz->time_limit }} min @endif
+            </div>
+          </td>
+          <td>{{ $quiz->submitted_attempts }} / {{ $quiz->total_attempts }}</td>
+          <td>{{ $quiz->ends_at ? $quiz->ends_at->format('M d, Y') : 'No deadline' }}</td>
+          <td>
+            <span class="status-badge {{ $quiz->status }}">
+              <span class="status-dot"></span> {{ ucfirst($quiz->status) }}
+            </span>
+          </td>
+          <td>
+            <div class="action-btns">
+              <a href="{{ route('teacher.quiz.edit', $quiz->id) }}" class="action-btn" title="Edit">
+                <i class="ti ti-edit"></i>
+              </a>
+              <a href="#" class="action-btn" title="Results">
+                <i class="ti ti-chart-bar" aria-hidden="true"></i>
+              </a>
+              <form method="POST" action="{{ route('teacher.quiz.destroy', $quiz->id) }}">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="action-btn" title="Delete"
+                  onclick="return confirm('Are you sure you want to delete this quiz?')">
+                  <i class="ti ti-trash"></i>
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        @empty
+        <tr>
+          <td colspan="5" style="text-align:center;padding:32px;color:var(--color-text-muted);">
+            No quizzes yet. Create your first quiz!
+          </td>
+        </tr>
+        @endforelse
+      </tbody>
+    </table>
+  </div>
+  <!-- LEADERBOARD -->
+  <div class="card">
+    <div class="card-header">
+      <h2>Leaderboard</h2>
+      <i class="ti ti-trophy" style="color:#F59E0B;font-size:18px"></i>
     </div>
+    <div style="padding:12px 16px;border-bottom:1px solid var(--color-border-light);">
+      <div id="lbSelectContainer"></div>
+    </div>
+    <div class="leaderboard-list" id="lbList">
+      <div style="text-align:center;padding:32px;color:var(--color-text-muted);font-size:13px;">
+        Select a quiz to view leaderboard
+      </div>
+    </div>
+    <a href="{{ route('teacher.leaderboard.page') }}" class="view-all-btn">View full leaderboard</a>
   </div>
 </div>
+
 @endsection
 @push('scripts')
 <script>

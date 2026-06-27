@@ -400,7 +400,7 @@
 
         /* CONTENT WRAPPER */
         .content {
-            padding: 10px;
+            padding: 20px;
             flex: 1;
         }
 

@@ -313,7 +313,7 @@
         font-size: 12px;
         color: var(--color-status-error);
         text-align: center;
-        margin-top: 12px;
+        margin-top: 20px;
     }
 </style>
 @endpush

@@ -4,36 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-    <title>Quizora — Taking Quiz</title>
+    <link rel="stylesheet" href="{{ asset('quizora.css') }}">
+    <title>Quizora — {{ $quiz->title }}</title>
     <style>
-        :root {
-            --color-primary-glow: #818CF8;
-            --color-primary-solid: #4F46E5;
-            --color-bg-main: #0E0B20;
-            --color-bg-card: #1E1A3E;
-            --color-bg-row-hover: #241E47;
-            --color-border-light: rgba(255, 255, 255, 0.08);
-            --color-text-primary: #FFFFFF;
-            --color-text-secondary: #9CA3AF;
-            --color-text-muted: #6B7280;
-            --color-status-success: #34D399;
-            --color-status-error: #F87171;
-            --font: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
             font-family: var(--font);
             background: var(--color-bg-main);
             color: var(--color-text-primary);
             min-height: 100vh;
+            margin: 0;
         }
 
         /* TOP BAR */
@@ -54,6 +36,11 @@
             font-size: 14px;
             font-weight: 600;
             color: #fff;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 20px;
         }
 
         .timer-wrap {
@@ -64,6 +51,7 @@
             border: 1px solid rgba(248, 113, 113, 0.3);
             padding: 8px 18px;
             border-radius: 20px;
+            flex-shrink: 0;
         }
 
         .timer-wrap.warning {
@@ -91,6 +79,16 @@
             color: #F59E0B;
         }
 
+        .no-timer-tag {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            padding: 8px 16px;
+            border: 1px solid var(--color-border-light);
+            border-radius: 20px;
+            flex-shrink: 0;
+        }
+
         .exit-btn {
             display: flex;
             align-items: center;
@@ -106,6 +104,8 @@
             cursor: pointer;
             transition: all 0.2s;
             text-decoration: none;
+            margin-left: 16px;
+            flex-shrink: 0;
         }
 
         .exit-btn:hover {
@@ -238,7 +238,7 @@
             font-weight: 500;
         }
 
-        /* QUESTION NAV GRID (mobile floating panel could go here, simplified as bottom dots) */
+        /* QUESTION NAV DOTS */
         .qnav-dots {
             display: flex;
             gap: 8px;
@@ -344,55 +344,46 @@
 
 <body>
 
+    {{-- Hidden form that will be submitted with answers --}}
+    <form id="quizForm" method="POST" action="{{ route('student.quiz.submit', $quiz->id) }}">
+        @csrf
+        {{-- Answer inputs will be injected here by JS --}}
+    </form>
+
     <div class="quiz-topbar">
-        <div class="quiz-name-tag">BCS Preliminary — Bangladesh Affairs Full Set</div>
+        <div class="quiz-name-tag">{{ $quiz->title }}</div>
+
+        @if($quiz->time_limit)
         <div class="timer-wrap" id="timerWrap">
             <i class="ti ti-clock"></i>
-            <span class="timer-text" id="timerText">58:42</span>
+            <span class="timer-text" id="timerText">{{ str_pad($quiz->time_limit, 2, '0', STR_PAD_LEFT) }}:00</span>
         </div>
-        <a href="{{ route('student.quiz.detail') }}" class="exit-btn">
+        @else
+        <div class="no-timer-tag"><i class="ti ti-infinity"></i> No time limit</div>
+        @endif
+
+        <a href="{{ route('student.quiz.detail', $quiz->id) }}" class="exit-btn"
+            onclick="return confirm('Exit quiz? Your progress will be lost.')">
             <i class="ti ti-x"></i> Exit
         </a>
     </div>
 
     <div class="progress-section">
         <div class="progress-info">
-            <div class="progress-text">Question <strong id="currentQNum">1</strong> of <strong>50</strong></div>
+            <div class="progress-text">Question <strong id="currentQNum">1</strong> of <strong>{{ $totalQuestions }}</strong></div>
             <div class="progress-text"><strong id="answeredCount">0</strong> answered</div>
         </div>
         <div class="progress-track">
-            <div class="progress-fill" id="progressFill" style="width:2%"></div>
+            <div class="progress-fill" id="progressFill" style="width: {{ $totalQuestions > 0 ? round(1/$totalQuestions*100) : 0 }}%"></div>
         </div>
     </div>
 
-    <div class="quiz-body">
-
-        <span class="question-number-tag">Question 1</span>
-        <h2 class="question-text">
-            Which article of the Constitution of Bangladesh declares the country as a unitary state?
-        </h2>
-
-        <div class="options-list">
-            <div class="option-card" onclick="selectOption(this)">
-                <div class="option-letter">A</div>
-                <div class="option-text">Article 1</div>
-            </div>
-            <div class="option-card" onclick="selectOption(this)">
-                <div class="option-letter">B</div>
-                <div class="option-text">Article 2</div>
-            </div>
-            <div class="option-card" onclick="selectOption(this)">
-                <div class="option-letter">C</div>
-                <div class="option-text">Article 3</div>
-            </div>
-            <div class="option-card" onclick="selectOption(this)">
-                <div class="option-letter">D</div>
-                <div class="option-text">Article 4</div>
-            </div>
-        </div>
-
+    <div class="quiz-body" id="quizBody">
+        {{-- Questions rendered by JS from the data below --}}
+        <span class="question-number-tag" id="questionTag">Question 1</span>
+        <h2 class="question-text" id="questionText"></h2>
+        <div class="options-list" id="optionsList"></div>
         <div class="qnav-dots" id="qnavDots"></div>
-
     </div>
 
     <div class="quiz-bottom-bar">
@@ -408,39 +399,65 @@
     </div>
 
     <script>
-        let totalQuestions = 50;
-        let currentQuestion = 1;
-        let answered = new Set();
+        const questions = @json($questions);
+        const totalQuestions = {{ $totalQuestions }};
+        const submitUrl = "{{ route('student.quiz.submit', $quiz->id) }}";
+        const hasTimer = {{ $quiz->time_limit ? 'true' : 'false' }};
+        const timeLimitSeconds = {{ ($quiz->time_limit ?? 0) * 60 }};
 
-        function buildDots() {
-            const dotsContainer = document.getElementById('qnavDots');
+        let currentQuestion = 1;
+        // Map: questionIndex (1-based) => selected option_id
+        const answers = {};
+
+        function renderQuestion(num) {
+            const q = questions[num - 1];
+            const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+            document.getElementById('questionTag').textContent = 'Question ' + num;
+            document.getElementById('questionText').textContent = q.question_text;
+            document.getElementById('currentQNum').textContent = num;
+            document.getElementById('progressFill').style.width = (num / totalQuestions * 100) + '%';
+
+            document.getElementById('prevBtn').disabled = num === 1;
+            document.getElementById('nextBtn').style.display = num === totalQuestions ? 'none' : 'inline-flex';
+            document.getElementById('submitBtn').style.display = num === totalQuestions ? 'inline-flex' : 'none';
+
+            // Render options
+            const optList = document.getElementById('optionsList');
+            optList.innerHTML = q.options.map((opt, i) => `
+                <div class="option-card ${answers[num] === opt.id ? 'selected' : ''}"
+                     onclick="selectOption(this, ${num}, ${opt.id})">
+                    <div class="option-letter">${letters[i]}</div>
+                    <div class="option-text">${opt.option_text}</div>
+                </div>
+            `).join('');
+
+            buildDots(num);
+        }
+
+        function selectOption(el, qNum, optionId) {
+            document.querySelectorAll('.option-card').forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
+            answers[qNum] = optionId;
+            document.getElementById('answeredCount').textContent = Object.keys(answers).length;
+            buildDots(qNum);
+        }
+
+        function buildDots(current) {
+            const container = document.getElementById('qnavDots');
             let html = '';
             for (let i = 1; i <= totalQuestions; i++) {
                 let cls = 'qnav-dot';
-                if (i === currentQuestion) cls += ' current';
-                else if (answered.has(i)) cls += ' answered';
+                if (i === current) cls += ' current';
+                else if (answers[i] !== undefined) cls += ' answered';
                 html += `<div class="${cls}" onclick="goToQuestion(${i})">${i}</div>`;
             }
-            dotsContainer.innerHTML = html;
+            container.innerHTML = html;
         }
 
         function goToQuestion(num) {
             currentQuestion = num;
-            document.getElementById('currentQNum').textContent = num;
-            document.getElementById('progressFill').style.width = (num / totalQuestions * 100) + '%';
-            document.querySelector('.question-number-tag').textContent = 'Question ' + num;
-            document.getElementById('prevBtn').disabled = num === 1;
-            document.getElementById('nextBtn').style.display = num === totalQuestions ? 'none' : 'inline-flex';
-            document.getElementById('submitBtn').style.display = num === totalQuestions ? 'inline-flex' : 'none';
-            buildDots();
-        }
-
-        function selectOption(el) {
-            document.querySelectorAll('.option-card').forEach(o => o.classList.remove('selected'));
-            el.classList.add('selected');
-            answered.add(currentQuestion);
-            document.getElementById('answeredCount').textContent = answered.size;
-            buildDots();
+            renderQuestion(num);
         }
 
         document.getElementById('nextBtn').addEventListener('click', () => {
@@ -451,34 +468,52 @@
         });
 
         function confirmSubmit() {
-            if (confirm('Are you sure you want to submit the quiz?')) {
-                window.location.href = "{{ route('student.quiz.result') }}";
-            }
+            const unanswered = totalQuestions - Object.keys(answers).length;
+            const msg = unanswered > 0 ?
+                `You have ${unanswered} unanswered question(s). Submit anyway?` :
+                'Submit your quiz?';
+            if (!confirm(msg)) return;
+            submitQuiz();
         }
 
-        // Timer
-        let timeLeft = 60 * 60;
+        function submitQuiz() {
+            const form = document.getElementById('quizForm');
+            // Clear any previous inputs
+            form.querySelectorAll('input[name^="answers"]').forEach(el => el.remove());
+            // Inject selected answers
+            for (const [qNum, optId] of Object.entries(answers)) {
+                const qId = questions[parseInt(qNum) - 1].id;
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = `answers[${qId}]`;
+                input.value = optId;
+                form.appendChild(input);
+            }
+            form.submit();
+        }
+
+        @if($quiz -> time_limit)
+        let timeLeft = timeLimitSeconds;
 
         function updateTimer() {
             const m = Math.floor(timeLeft / 60);
             const s = timeLeft % 60;
             document.getElementById('timerText').textContent =
                 String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
-
-            if (timeLeft <= 300) {
-                document.getElementById('timerWrap').classList.add('warning');
-            }
+            if (timeLeft <= 300) document.getElementById('timerWrap').classList.add('warning');
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
-                alert('Time is up! Submitting your quiz.');
-                window.location.href = "{{ route('student.quiz.result') }}";
+                alert('Time is up! Your quiz will now be submitted.');
+                submitQuiz();
                 return;
             }
             timeLeft--;
         }
         const timerInterval = setInterval(updateTimer, 1000);
+        updateTimer();
+        @endif
 
-        buildDots();
+        renderQuestion(1);
     </script>
 </body>
 

@@ -56,6 +56,9 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->group(function (
 
     Route::get('/bookmarks', [StudentDashboard::class, 'bookmarks'])->name('student.bookmarks');
     Route::post('/bookmarks/{quiz}/toggle', [StudentDashboard::class, 'toggleBookmark'])->name('student.bookmark.toggle');
+
+    Route::get('/ai-tutor', [StudentDashboard::class, 'aiTutor'])->name('student.ai-tutor');
+    Route::post('/ai-tutor/chat', [StudentDashboard::class, 'aiChat'])->name('student.ai-tutor.chat');
 });
 
 require __DIR__ . '/auth.php';

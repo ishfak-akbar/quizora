@@ -796,6 +796,11 @@
                 <i class="ti ti-trophy nav-icon"></i>
                 <span class="nav-text">Leaderboard</span>
             </a>
+            <a href="{{ route('student.ai-tutor') }}"
+                class="nav-item {{ request()->routeIs('student.ai-tutor') ? 'active' : '' }}">
+                <i class="ti ti-brain nav-icon"></i>
+                <span class="nav-text">AI Tutor</span>
+            </a>
         </nav>
         <div class="sidebar-bottom">
             <a href="{{ route('profile.edit') }}"

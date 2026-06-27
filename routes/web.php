@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Teacher\DashboardController as TeacherDashboard;
 use App\Http\Controllers\Student\DashboardController as StudentDashboard;
@@ -8,6 +9,11 @@ use App\Http\Controllers\Teacher\QuizController;
 use App\Http\Controllers\Student\QuizController as StudentQuizController;
 
 Route::get('/', function () {
+    if (Auth::check()) {
+        return redirect()->route(
+            Auth::user()->role === 'teacher' ? 'teacher.dashboard' : 'student.dashboard'
+        );
+    }
     return view('welcome');
 })->name('welcome');
 

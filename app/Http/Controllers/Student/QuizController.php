@@ -199,4 +199,20 @@ class QuizController extends Controller
 
         return redirect()->route('student.quiz.result', $quiz->id);
     }
+    public function result(Quiz $quiz)
+    {
+        $student = Auth::user();
+
+        $attempt = Attempt::where('quiz_id', $quiz->id)
+            ->where('student_id', $student->id)
+            ->where('status', 'submitted')
+            ->latest('submitted_at')
+            ->firstOrFail();
+
+        $answers = $attempt->answers()
+            ->with(['question.options', 'option'])
+            ->get();
+
+        return view('student.quiz-result', compact('quiz', 'attempt', 'answers'));
+    }
 }

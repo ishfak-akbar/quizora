@@ -53,6 +53,7 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->group(function (
     Route::get('/results', [StudentDashboard::class, 'results'])->name('student.results');
 
     Route::get('/leaderboard', [StudentDashboard::class, 'leaderboard'])->name('student.leaderboard.page');
+    Route::get('/leaderboard/{quiz}', [StudentDashboard::class, 'leaderboardData'])->name('student.leaderboard.data');
 
     Route::get('/bookmarks', [StudentDashboard::class, 'bookmarks'])->name('student.bookmarks');
     Route::post('/bookmarks/{quiz}/toggle', [StudentDashboard::class, 'toggleBookmark'])->name('student.bookmark.toggle');

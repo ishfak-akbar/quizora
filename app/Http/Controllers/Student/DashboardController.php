@@ -231,4 +231,36 @@ class DashboardController extends Controller
 
         return response()->json(['reply' => $reply]);
     }
+    public function leaderboardData(Quiz $quiz)
+    {
+        if ($quiz->status !== 'active' || $quiz->visibility !== 'public') {
+            abort(404);
+        }
+
+        $student = Auth::user();
+
+        $entries = Attempt::where('quiz_id', $quiz->id)
+            ->where('status', 'submitted')
+            ->with('student')
+            ->orderByDesc('score')
+            ->get()
+            ->map(function ($attempt, $index) use ($student) {
+                return [
+                    'rank'      => $index + 1,
+                    'name'      => $attempt->student->name,
+                    'score'     => $attempt->score_percentage,
+                    'raw_score' => $attempt->score,
+                    'total'     => $attempt->total_marks,
+                    'is_me'     => $attempt->student_id === $student->id,
+                ];
+            });
+
+        $myEntry = $entries->firstWhere('is_me', true);
+
+        return response()->json([
+            'entries' => $entries,
+            'my_rank' => $myEntry ? $myEntry['rank'] : null,
+            'my_score' => $myEntry ? $myEntry['score'] : null,
+        ]);
+    }
 }

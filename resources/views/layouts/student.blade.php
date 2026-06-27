@@ -818,36 +818,40 @@
     {{-- MAIN --}}
     <main class="main" id="main">
         <header class="topbar">
-            <div>
-                <div class="topbar-title">Good morning, {{ auth()->user()->name }} 👋</div>
+            @php
+            $hour = now()->hour;
+            $greeting = $hour < 12 ? 'Good morning' : ($hour < 17 ? 'Good afternoon' : 'Good evening' );
+                @endphp
+                <div>
+                <div class="topbar-title">{{ $greeting }}, {{ auth()->user()->name }} 👋</div>
                 <div class="topbar-sub">{{ now()->format('l, F j, Y') }}</div>
-            </div>
-            <div class="topbar-right">
-                <button class="notif-btn" aria-label="Notifications">
-                    <i class="ti ti-bell" aria-hidden="true"></i>
-                    <span class="notif-dot"></span>
-                </button>
-                <div class="user-btn" id="userBtn" role="button" tabindex="0">
-                    <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
-                    <div>
-                        <div class="user-name">{{ auth()->user()->name }}</div>
-                        <div class="user-role">Student</div>
-                    </div>
-                    <i class="ti ti-chevron-down user-chevron" aria-hidden="true"></i>
-                    <div class="user-dropdown" id="userDropdown">
-                        <a href="#" class="dropdown-item"><i class="ti ti-user" aria-hidden="true"></i> Profile</a>
-                        <a href="#" class="dropdown-item"><i class="ti ti-settings" aria-hidden="true"></i> Settings</a>
-                        <a href="#" class="dropdown-item"><i class="ti ti-help-circle" aria-hidden="true"></i> Help</a>
-                        <div class="dropdown-divider"></div>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="dropdown-item danger" style="width:100%;border:none;text-align:left;">
-                                <i class="ti ti-logout" aria-hidden="true"></i> Logout
-                            </button>
-                        </form>
+                </div>
+                <div class="topbar-right">
+                    <button class="notif-btn" aria-label="Notifications">
+                        <i class="ti ti-bell" aria-hidden="true"></i>
+                        <span class="notif-dot"></span>
+                    </button>
+                    <div class="user-btn" id="userBtn" role="button" tabindex="0">
+                        <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+                        <div>
+                            <div class="user-name">{{ auth()->user()->name }}</div>
+                            <div class="user-role">Student</div>
+                        </div>
+                        <i class="ti ti-chevron-down user-chevron" aria-hidden="true"></i>
+                        <div class="user-dropdown" id="userDropdown">
+                            <a href="#" class="dropdown-item"><i class="ti ti-user" aria-hidden="true"></i> Profile</a>
+                            <a href="#" class="dropdown-item"><i class="ti ti-settings" aria-hidden="true"></i> Settings</a>
+                            <a href="#" class="dropdown-item"><i class="ti ti-help-circle" aria-hidden="true"></i> Help</a>
+                            <div class="dropdown-divider"></div>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="dropdown-item danger" style="width:100%;border:none;text-align:left;">
+                                    <i class="ti ti-logout" aria-hidden="true"></i> Logout
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
         </header>
 
         <div class="content">

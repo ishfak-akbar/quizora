@@ -572,8 +572,14 @@
     <main class="main" id="main">
         <header class="topbar">
             <div>
-                <div class="topbar-title">Good morning, {{ auth()->user()->name }} 👋</div>
-                <div class="topbar-sub">{{ now()->format('l, F j, Y') }}</div>
+                @php
+                $hour = now()->hour;
+                $greeting = $hour < 12 ? 'Good morning' : ($hour < 17 ? 'Good afternoon' : 'Good evening' );
+                    @endphp
+                    <div>
+                    <div class="topbar-title">{{ $greeting }}, {{ auth()->user()->name }} 👋</div>
+                    <div class="topbar-sub">{{ now()->format('l, F j, Y') }}</div>
+            </div>
             </div>
             <div class="topbar-right">
                 <button class="notif-btn" aria-label="Notifications">

@@ -2,48 +2,6 @@
 @section('title', 'Quizora — Bookmarks')
 @push('styles')
 <style>
-    .empty-state {
-        text-align: center;
-        padding: 70px 20px;
-        color: var(--color-text-muted);
-    }
-
-    .empty-state i {
-        font-size: 52px;
-        margin-bottom: 16px;
-        color: rgba(79, 70, 229, 0.3);
-        display: block;
-    }
-
-    .empty-state h3 {
-        font-size: 16px;
-        font-weight: 600;
-        color: var(--color-text-secondary);
-        margin-bottom: 8px;
-    }
-
-    .empty-state p {
-        font-size: 13px;
-        margin-bottom: 20px;
-    }
-
-    .empty-browse-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: var(--color-primary-solid);
-        color: #fff;
-        font-size: 13px;
-        font-weight: 600;
-        padding: 10px 20px;
-        border-radius: 10px;
-        text-decoration: none;
-        transition: background 0.2s;
-    }
-
-    .empty-browse-btn:hover {
-        background: #4338CA;
-    }
 </style>
 @endpush
 
@@ -97,11 +55,15 @@ return [$fallbacks[$index % count($fallbacks)], $fallbackIcons[$index % count($f
 
 @if($bookmarks->isEmpty())
 <div class="empty-state">
-    <i class="ti ti-bookmark-off"></i>
+    <div class="empty-icon">
+        <i class="ti ti-bookmark-off"></i>
+    </div>
     <h3>No bookmarks yet</h3>
     <p>Save quizzes you want to attempt later</p>
+
     <a href="{{ route('student.browse') }}" class="empty-browse-btn">
-        <i class="ti ti-compass"></i> Browse Quizzes
+        <i class="ti ti-compass" style="font-size: 20px;"></i>
+        Browse Quizzes
     </a>
 </div>
 @else

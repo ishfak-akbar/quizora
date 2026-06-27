@@ -703,6 +703,59 @@
             stroke: #FFFFFF;
             fill: #FFFFFF;
         }
+
+        .empty-state {
+            text-align: center;
+            padding: 90px 40px;
+            color: var(--color-text-muted);
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border-light);
+            border-radius: 20px;
+            margin-top: 40px;
+        }
+
+        .empty-icon {
+            font-size: 68px;
+            margin-bottom: 24px;
+            color: rgba(79, 70, 229, 0.4);
+            display: block;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            font-size: 14.5px;
+            max-width: 260px;
+            margin: 0 auto 32px;
+            line-height: 1.5;
+        }
+
+        /* Button */
+        .empty-browse-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--color-primary-solid), #6366F1);
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 16px 40px;
+            border-radius: 14px;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.35);
+        }
+
+        .empty-browse-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.45);
+            background: linear-gradient(135deg, #4338CA, #4F46E5);
+        }
     </style>
     @stack('styles')
 </head>

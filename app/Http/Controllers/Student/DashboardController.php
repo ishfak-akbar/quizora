@@ -42,6 +42,7 @@ class DashboardController extends Controller
             ->get();
 
         $bookmarkCount = Bookmark::where('student_id', $student->id)->count();
+
         $recommendedQuizzes = Quiz::where('status', 'active')
             ->where('visibility', 'public')
             ->withCount('questions')
@@ -58,15 +59,6 @@ class DashboardController extends Controller
             'bookmarkCount',
             'recommendedQuizzes'
         ));
-
-        return view('student.dashboard', compact(
-            'totalAttempts',
-            'avgScore',
-            'bestScore',
-            'quizzesPassed',
-            'recentAttempts',
-            'bookmarkCount'
-        ));
     }
 
     public function results()
@@ -80,12 +72,15 @@ class DashboardController extends Controller
             ->get();
 
         $totalAttempts = $attempts->count();
+
         $avgScore = $totalAttempts > 0
             ? round($attempts->avg(fn($a) => $a->total_marks > 0 ? ($a->score / $a->total_marks) * 100 : 0))
             : 0;
+
         $bestScore = $totalAttempts > 0
             ? round($attempts->max(fn($a) => $a->total_marks > 0 ? ($a->score / $a->total_marks) * 100 : 0))
             : 0;
+
         $quizzesPassed = $attempts->filter(
             fn($a) => $a->total_marks > 0 && ($a->score / $a->total_marks) * 100 >= 50
         )->count();

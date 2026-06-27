@@ -7,6 +7,7 @@ use App\Models\Quiz;
 use App\Models\Bookmark;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Attempt;
 
 class QuizController extends Controller
 {
@@ -46,8 +47,8 @@ class QuizController extends Controller
         $search = $request->get('search', '');
 
         $bookmarkedIds = Bookmark::where('student_id', Auth::id())
-        ->pluck('quiz_id')
-        ->toArray();
+            ->pluck('quiz_id')
+            ->toArray();
 
         return view('student.browse', compact(
             'trending',
@@ -56,6 +57,52 @@ class QuizController extends Controller
             'activeCategory',
             'search',
             'bookmarkedIds'
+        ));
+    }
+    public function detail(Quiz $quiz)
+    {
+        if ($quiz->status !== 'active' || $quiz->visibility !== 'public') {
+            abort(404);
+        }
+
+        $student = Auth::user();
+
+        $questionCount = $quiz->questions()->count();
+
+        $attemptCount = Attempt::where('quiz_id', $quiz->id)
+            ->where('status', 'submitted')
+            ->count();
+
+        $avgScore = $attemptCount > 0
+            ? round(
+                Attempt::where('quiz_id', $quiz->id)
+                    ->where('status', 'submitted')
+                    ->get()
+                    ->avg(fn($a) => $a->total_marks > 0 ? ($a->score / $a->total_marks) * 100 : 0)
+            )
+            : 0;
+
+        $studentAttempts = Attempt::where('quiz_id', $quiz->id)
+            ->where('student_id', $student->id)
+            ->where('status', 'submitted')
+            ->count();
+
+        $attemptsLeft = max(0, $quiz->max_attempts - $studentAttempts);
+
+        $isBookmarked = Bookmark::where('student_id', $student->id)
+            ->where('quiz_id', $quiz->id)
+            ->exists();
+
+        $bookmarkCount = Bookmark::where('student_id', $student->id)->count();
+
+        return view('student.quiz-detail', compact(
+            'quiz',
+            'questionCount',
+            'attemptCount',
+            'avgScore',
+            'attemptsLeft',
+            'isBookmarked',
+            'bookmarkCount'
         ));
     }
 }

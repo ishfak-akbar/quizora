@@ -5,9 +5,9 @@
 <style>
     .ai-layout {
         display: grid;
-        grid-template-columns: 260px 1fr;
-        gap: 20px;
-        height: calc(100vh - 64px - 56px);
+        grid-template-columns: 280px 1fr;
+        gap: 10px;
+        height: calc(100vh - 56px - 56px);
     }
 
     .ai-sidebar {

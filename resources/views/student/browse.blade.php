@@ -233,43 +233,6 @@
         left: 16px;
     }
 
-    /* ── BOOKMARK BTN ── */
-    .bookmark-btn {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        width: 32px;
-        height: 32px;
-        border-radius: 9px;
-        background: rgba(0, 0, 0, 0.35);
-        backdrop-filter: blur(8px);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 16px;
-        cursor: pointer;
-        z-index: 2;
-        transition: background 0.2s, color 0.2s, transform 0.15s;
-        text-decoration: none;
-    }
-
-    .bookmark-btn:hover {
-        background: rgba(0, 0, 0, 0.55);
-        color: #F59E0B;
-    }
-
-    .bookmark-btn.bookmarked {
-        color: #F59E0B;
-    }
-
-    .bookmark-btn.bookmarked i::before {
-        content: '\eac3';
-    }
-
-    /* filled bookmark tabler icon */
-
     /* ── CARD BODY ── */
     .pquiz-body {
         padding: 16px 18px 18px;
@@ -507,11 +470,14 @@ $fallbackIcons[$index % count($fallbackIcons)],
             </div>
 
             {{-- BOOKMARK --}}
-            <button class="bookmark-btn"
+            <button class="bookmark-btn {{ in_array($quiz->id, $bookmarkedIds ?? []) ? 'bookmarked' : '' }}"
                 onclick="toggleBookmark(event, this, {{ $quiz->id }})"
                 data-quiz-id="{{ $quiz->id }}"
-                title="Bookmark this quiz">
-                <i class="ti ti-bookmark"></i>
+                title="{{ in_array($quiz->id, $bookmarkedIds ?? []) ? 'Remove bookmark' : 'Bookmark this quiz' }}">
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2 2 2 0 0 1 2-2 2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1 2-2z"></path>
+                </svg>
             </button>
 
             {{-- BODY --}}
@@ -569,11 +535,14 @@ $fallbackIcons[$index % count($fallbackIcons)],
                 <i class="{{ $icon }} pquiz-banner-icon"></i>
             </div>
 
-            <button class="bookmark-btn"
+            <button class="bookmark-btn {{ in_array($quiz->id, $bookmarkedIds ?? []) ? 'bookmarked' : '' }}"
                 onclick="toggleBookmark(event, this, {{ $quiz->id }})"
                 data-quiz-id="{{ $quiz->id }}"
-                title="Bookmark this quiz">
-                <i class="ti ti-bookmark"></i>
+                title="{{ in_array($quiz->id, $bookmarkedIds ?? []) ? 'Remove bookmark' : 'Bookmark this quiz' }}">
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2 2 2 0 0 1 2-2 2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1 2-2z"></path>
+                </svg>
             </button>
 
             <div class="pquiz-body">
@@ -617,36 +586,6 @@ $fallbackIcons[$index % count($fallbackIcons)],
         clearTimeout(searchTimer);
         searchTimer = setTimeout(() => document.getElementById('browseForm').submit(), 500);
     });
-
-    // Bookmark toggle
-    function toggleBookmark(e, btn, quizId) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        fetch(`/student/bookmarks/${quizId}/toggle`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Accept': 'application/json',
-                }
-            })
-            .then(r => r.json())
-            .then(data => {
-                const icon = btn.querySelector('i');
-                if (data.bookmarked) {
-                    btn.classList.add('bookmarked');
-                    icon.className = 'ti ti-bookmark-filled';
-                    btn.style.color = '#F59E0B';
-                    showToast('Bookmarked!', 'ti-bookmark-filled');
-                } else {
-                    btn.classList.remove('bookmarked');
-                    icon.className = 'ti ti-bookmark';
-                    btn.style.color = '';
-                    showToast('Bookmark removed', 'ti-bookmark-off');
-                }
-            })
-            .catch(() => showToast('Something went wrong', 'ti-alert-circle', true));
-    }
 
     function showToast(msg, iconClass, isError = false) {
         const existing = document.getElementById('browseToast');

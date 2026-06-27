@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
     <link rel="stylesheet" href="{{ asset('quizora.css') }}">
@@ -388,7 +389,7 @@
 
         /* CONTENT WRAPPER */
         .content {
-            padding: 10px;
+            padding: 20px;
             flex: 1;
         }
 
@@ -489,6 +490,43 @@
 
         .view-all-link:hover {
             background: var(--color-bg-row-hover);
+        }
+
+        /* Professional Bookmark Button */
+        .bookmark-btn {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+            z-index: 20;
+            transition: all 0.25s ease;
+            cursor: pointer;
+        }
+
+        .bookmark-btn:hover {
+            background: rgba(0, 0, 0, 0.7);
+            transform: scale(1.08);
+        }
+
+        .bookmark-btn.bookmarked {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .bookmark-btn.bookmarked svg {
+            stroke: #FFFFFF;
+            fill: #FFFFFF;
         }
     </style>
     @stack('styles')
@@ -629,6 +667,44 @@
     </script>
     @endif
     <script src="{{ asset('quizora.js') }}"></script>
+    <script>
+        function toggleBookmark(e, btn, quizId) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            fetch(`/student/bookmarks/${quizId}/toggle`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
+                    }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.bookmarked) {
+                        btn.classList.add('bookmarked');
+                        btn.title = 'Remove bookmark';
+                    } else {
+                        btn.classList.remove('bookmarked');
+                        btn.title = 'Bookmark this quiz';
+                    }
+
+                    // Update all cards with same quiz
+                    document.querySelectorAll(`.bookmark-btn[data-quiz-id="${quizId}"]`).forEach(b => {
+                        if (b !== btn) {
+                            if (data.bookmarked) {
+                                b.classList.add('bookmarked');
+                            } else {
+                                b.classList.remove('bookmarked');
+                            }
+                        }
+                    });
+                })
+                .catch(() => {
+                    alert('Failed to update bookmark. Please try again.');
+                });
+        }
+    </script>
     @stack('scripts')
 </body>
 

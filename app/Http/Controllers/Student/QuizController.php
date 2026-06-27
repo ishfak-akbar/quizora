@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use App\Models\Quiz;
+use App\Models\Bookmark;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class QuizController extends Controller
 {
@@ -43,12 +45,17 @@ class QuizController extends Controller
         $activeCategory = $request->get('category', 'all');
         $search = $request->get('search', '');
 
+        $bookmarkedIds = Bookmark::where('student_id', Auth::id())
+        ->pluck('quiz_id')
+        ->toArray();
+
         return view('student.browse', compact(
             'trending',
             'latest',
             'categories',
             'activeCategory',
-            'search'
+            'search',
+            'bookmarkedIds'
         ));
     }
 }

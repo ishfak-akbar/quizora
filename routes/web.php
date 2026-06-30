@@ -71,6 +71,7 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->group(function (
     Route::patch('/settings', [StudentDashboard::class, 'updateSettings'])->name('student.settings.update');
     Route::put('/settings/password', [StudentDashboard::class, 'updatePassword'])->name('student.settings.password');
     Route::delete('/settings/account', [StudentDashboard::class, 'deleteAccount'])->name('student.settings.delete');
+    Route::get('/profile', [StudentDashboard::class, 'profile'])->name('student.profile');
 });
 
 require __DIR__ . '/auth.php';

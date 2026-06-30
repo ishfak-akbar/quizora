@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use App\Models\User;
 
 class DashboardController extends Controller
 {
@@ -268,64 +269,65 @@ class DashboardController extends Controller
 
     public function settings()
     {
-        return view('student.settings', ['user' => Auth::user()]);
+        $user = User::findOrFail(Auth::id());
+
+        return view('student.settings', ['user' => $user]);
     }
 
     public function updateSettings(Request $request)
     {
-        $user = Auth::user();
+        $user = User::findOrFail(Auth::id());
 
-        $request->validate([
-            'name'               => 'required|string|max:255',
-            'email'              => 'required|email|unique:users,email,' . $user->id,
-            'phone'              => 'nullable|string|max:20',
-            'date_of_birth'      => 'nullable|date|before:today',
-            'gender'             => 'nullable|in:male,female,other,prefer_not_to_say',
-            'location'           => 'nullable|string|max:100',
-            'bio'                => 'nullable|string|max:300',
-            'institution'        => 'nullable|string|max:200',
-            'class_level'        => 'nullable|string|max:100',
-            'education_level'    => 'nullable|in:ssc,hsc,bachelor,master,other',
-            'study_goal'         => 'nullable|in:exam_prep,self_learning,bcs,university_admission,other',
-            'preparing_for'      => 'nullable|string|max:200',
-            'preferred_language' => 'nullable|in:english,bangla',
-            'target_score'       => 'nullable|integer|min:1|max:100',
-            'avatar_color'       => 'nullable|string|max:7',
-        ]);
+        $section = $request->input('section', 'profile');
 
-        $user->update($request->only([
-            'name',
-            'email',
-            'phone',
-            'date_of_birth',
-            'gender',
-            'location',
-            'bio',
-            'institution',
-            'class_level',
-            'education_level',
-            'study_goal',
-            'preparing_for',
-            'preferred_language',
-            'target_score',
-            'avatar_color',
-        ]));
+        if ($section === 'profile') {
+            $validated = $request->validate([
+                'name'         => 'required|string|max:255',
+                'email'        => 'required|email|unique:users,email,' . $user->id,
+                'phone'        => 'nullable|string|max:20',
+                'date_of_birth' => 'nullable|date|before:today',
+                'gender'       => 'nullable|in:male,female,other,prefer_not_to_say',
+                'location'     => 'nullable|string|max:100',
+                'bio'          => 'nullable|string|max:300',
+                'avatar_color' => 'nullable|string|max:7',
+            ]);
+        } elseif ($section === 'academic') {
+            $validated = $request->validate([
+                'institution'     => 'nullable|string|max:200',
+                'class_level'     => 'nullable|string|max:100',
+                'education_level' => 'nullable|in:ssc,hsc,bachelor,master,other',
+                'study_goal'      => 'nullable|in:exam_prep,self_learning,bcs,university_admission,other',
+                'preparing_for'   => 'nullable|string|max:200',
+            ]);
+        } elseif ($section === 'preferences') {
+            $validated = $request->validate([
+                'preferred_language' => 'nullable|in:english,bangla',
+                'target_score'       => 'nullable|integer|min:1|max:100',
+            ]);
+        } else {
+            return back()->withErrors(['section' => 'Invalid settings section.']);
+        }
 
-        return back()->with('success', 'Profile updated successfully.');
+        $user->fill($validated);
+        $user->save();
+
+        return redirect()->route('student.settings', ['tab' => $section])
+            ->with('success', ucfirst($section) . ' updated successfully.');
     }
 
     public function updatePassword(Request $request)
     {
+        $user = User::findOrFail(Auth::id());
+
         $request->validate([
             'current_password' => 'required|current_password',
             'password'         => ['required', 'confirmed', Password::min(8)],
         ]);
 
-        Auth::user()->update([
-            'password' => Hash::make($request->password),
-        ]);
+        $user->password = Hash::make($request->password);
+        $user->save();
 
-        return back()->with('success', 'Password updated successfully.');
+        return redirect()->route('student.settings')->with('success', 'Password updated successfully.');
     }
 
     public function deleteAccount(Request $request)
@@ -334,7 +336,7 @@ class DashboardController extends Controller
             'password' => 'required|current_password',
         ]);
 
-        $user = Auth::user();
+        $user = User::findOrFail(Auth::id());
         Auth::logout();
         $user->delete();
 
@@ -342,5 +344,42 @@ class DashboardController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/')->with('success', 'Account deleted.');
+    }
+
+    public function profile()
+    {
+        $student = User::findOrFail(Auth::id());
+
+        $attempts = Attempt::where('student_id', $student->id)
+            ->where('status', 'submitted')
+            ->get();
+
+        $totalAttempts = $attempts->count();
+
+        $avgScore = $totalAttempts > 0
+            ? round($attempts->avg(fn($a) => $a->total_marks > 0 ? ($a->score / $a->total_marks) * 100 : 0))
+            : 0;
+
+        $bestScore = $totalAttempts > 0
+            ? round($attempts->max(fn($a) => $a->total_marks > 0 ? ($a->score / $a->total_marks) * 100 : 0))
+            : 0;
+
+        $quizzesPassed = $attempts->filter(
+            fn($a) => $a->total_marks > 0 && ($a->score / $a->total_marks) * 100 >= 50
+        )->count();
+
+        $bookmarkCount = Bookmark::where('student_id', $student->id)->count();
+
+        $memberSince = $student->created_at;
+
+        return view('student.profile', compact(
+            'student',
+            'totalAttempts',
+            'avgScore',
+            'bestScore',
+            'quizzesPassed',
+            'bookmarkCount',
+            'memberSince'
+        ));
     }
 }

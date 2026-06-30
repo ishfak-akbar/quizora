@@ -354,6 +354,18 @@
 @endpush
 
 @section('content')
+@php
+$activeTab = 'profile';
+if ($errors->has('institution') || $errors->has('class_level') || $errors->has('education_level') || $errors->has('study_goal') || $errors->has('preparing_for')) {
+$activeTab = 'academic';
+} elseif ($errors->has('preferred_language') || $errors->has('target_score')) {
+$activeTab = 'preferences';
+} elseif ($errors->has('current_password') || $errors->has('password')) {
+$activeTab = 'password';
+} elseif (request()->query('tab')) {
+$activeTab = request()->query('tab');
+}
+@endphp
 
 <div class="page-header">
     <h1>Settings</h1>
@@ -364,23 +376,23 @@
 
     {{-- LEFT NAV --}}
     <div class="settings-nav">
-        <a href="#" class="settings-nav-item active" onclick="switchTab('profile', this); return false;">
+        <a href="#" class="settings-nav-item {{ $activeTab === 'profile' ? 'active' : '' }}" onclick="switchTab('profile', this); return false;">
             <i class="ti ti-user"></i> Profile Info
         </a>
         <div class="settings-nav-divider"></div>
-        <a href="#" class="settings-nav-item" onclick="switchTab('academic', this); return false;">
+        <a href="#" class="settings-nav-item {{ $activeTab === 'academic' ? 'active' : '' }}" onclick="switchTab('academic', this); return false;">
             <i class="ti ti-school"></i> Academic Info
         </a>
         <div class="settings-nav-divider"></div>
-        <a href="#" class="settings-nav-item" onclick="switchTab('preferences', this); return false;">
+        <a href="#" class="settings-nav-item {{ $activeTab === 'preferences' ? 'active' : '' }}" onclick="switchTab('preferences', this); return false;">
             <i class="ti ti-adjustments"></i> Preferences
         </a>
         <div class="settings-nav-divider"></div>
-        <a href="#" class="settings-nav-item" onclick="switchTab('password', this); return false;">
+        <a href="#" class="settings-nav-item {{ $activeTab === 'password' ? 'active' : '' }}" onclick="switchTab('password', this); return false;">
             <i class="ti ti-lock"></i> Change Password
         </a>
         <div class="settings-nav-divider"></div>
-        <a href="#" class="settings-nav-item" onclick="switchTab('danger', this); return false;">
+        <a href="#" class="settings-nav-item {{ $activeTab === 'danger' ? 'active' : '' }}" onclick="switchTab('danger', this); return false;">
             <i class="ti ti-trash"></i> Delete Account
         </a>
     </div>
@@ -389,7 +401,7 @@
     <div class="settings-content">
 
         {{-- PROFILE INFO --}}
-        <div class="settings-card" id="tab-profile">
+        <div class="settings-card" id="tab-profile" style="{{ $activeTab === 'profile' ? '' : 'display:none;' }}">
             <div class="settings-card-header">
                 <h2>Profile Information</h2>
                 <p>Your basic info and how others see you</p>
@@ -412,6 +424,7 @@
 
                 <form method="POST" action="{{ route('student.settings.update') }}">
                     @csrf @method('PATCH')
+                    <input type="hidden" name="section" value="profile">
 
                     <div class="fields-grid">
                         <div class="field">
@@ -503,7 +516,7 @@
         </div>
 
         {{-- ACADEMIC INFO --}}
-        <div class="settings-card" id="tab-academic" style="display:none;">
+        <div class="settings-card" id="tab-academic" style="{{ $activeTab === 'academic' ? '' : 'display:none;' }}">
             <div class="settings-card-header">
                 <h2>Academic Information</h2>
                 <p>Your educational background and learning goals</p>
@@ -511,6 +524,7 @@
             <div class="settings-card-body">
                 <form method="POST" action="{{ route('student.settings.update') }}">
                     @csrf @method('PATCH')
+                    <input type="hidden" name="section" value="academic">
 
                     <div class="fields-grid">
                         <div class="field field-full">
@@ -574,7 +588,7 @@
         </div>
 
         {{-- PREFERENCES --}}
-        <div class="settings-card" id="tab-preferences" style="display:none;">
+        <div class="settings-card" id="tab-preferences" style="{{ $activeTab === 'preferences' ? '' : 'display:none;' }}">
             <div class="settings-card-header">
                 <h2>Preferences</h2>
                 <p>Customize your learning experience</p>
@@ -582,6 +596,7 @@
             <div class="settings-card-body">
                 <form method="POST" action="{{ route('student.settings.update') }}">
                     @csrf @method('PATCH')
+                    <input type="hidden" name="section" value="preferences">
 
                     <div class="fields-grid">
                         <div class="field">
@@ -616,7 +631,7 @@
         </div>
 
         {{-- CHANGE PASSWORD --}}
-        <div class="settings-card" id="tab-password" style="display:none;">
+        <div class="settings-card" id="tab-password" style="{{ $activeTab === 'password' ? '' : 'display:none;' }}">
             <div class="settings-card-header">
                 <h2>Change Password</h2>
                 <p>Use a strong password to keep your account secure</p>
@@ -652,7 +667,7 @@
         </div>
 
         {{-- DANGER ZONE --}}
-        <div class="settings-card danger-card" id="tab-danger" style="display:none;">
+        <div class="settings-card danger-card" id="tab-danger" style="{{ $activeTab === 'danger' ? '' : 'display:none;' }}">
             <div class="settings-card-header">
                 <h2>Delete Account</h2>
                 <p>This action is permanent and cannot be undone.</p>

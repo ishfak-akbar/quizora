@@ -15,12 +15,13 @@
             min-height: 100vh;
             font-family: var(--font);
             color: var(--color-text-primary);
+            overflow-x: hidden;
         }
 
         .profile-page {
-            max-width: 760px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 40px 24px 60px;
+            padding: 36px 24px 70px;
         }
 
         .profile-back {
@@ -32,375 +33,536 @@
             color: var(--color-text-secondary);
             text-decoration: none;
             margin-bottom: 24px;
-            transition: color 0.2s;
+            padding: 9px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--color-border-light);
+            background: rgba(255, 255, 255, .03);
+            transition: all 0.2s;
         }
 
         .profile-back:hover {
             color: #fff;
+            background: var(--color-bg-row-hover);
+            border-color: rgba(79, 70, 229, 0.4);
         }
 
-        .profile-hero {
-            background: linear-gradient(135deg, #2E2570 0%, #4F46E5 50%, #818CF8 100%);
-            border-radius: 20px;
-            padding: 36px 32px;
+        .card {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border-light);
+            border-radius: 12px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, .20);
+            margin-bottom: 16px;
+        }
+
+        /* ===== IDENTITY HEADER ===== */
+        .identity-card {
             display: flex;
             align-items: center;
-            gap: 24px;
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 24px;
+            gap: 22px;
+            padding: 28px 30px;
+            background:
+                radial-gradient(circle at top right, rgba(129, 140, 248, .14), transparent 45%),
+                linear-gradient(180deg, #1f1a45 0%, #161233 100%);
+            border: 1px solid rgba(129, 140, 248, .18);
         }
 
-        .profile-hero::before {
-            content: '';
-            position: absolute;
-            top: -40px;
-            right: -40px;
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.06);
-        }
-
-        .profile-avatar-xl {
-            width: 92px;
-            height: 92px;
+        .identity-avatar {
+            width: 88px;
+            height: 88px;
             border-radius: 22px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(8px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
-            font-weight: 800;
+            font-size: 34px;
+            font-weight: 700;
             color: #fff;
             flex-shrink: 0;
-            position: relative;
-            z-index: 1;
+            border: 4px solid rgba(255, 255, 255, .12);
+            box-shadow: 0 0 0 8px rgba(129, 140, 248, .08);
         }
 
-        .profile-hero-info {
-            position: relative;
-            z-index: 1;
+        .identity-info {
             flex: 1;
+            min-width: 0;
         }
 
-        .profile-hero-info h1 {
-            font-size: 24px;
-            font-weight: 800;
+        .identity-name {
+            font-size: 22px;
+            font-weight: 700;
             color: #fff;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
 
-        .profile-hero-info p {
-            font-size: 13.5px;
-            color: rgba(255, 255, 255, 0.75);
+        .identity-email {
+            font-size: 13px;
+            color: var(--color-text-muted);
             margin-bottom: 10px;
         }
 
-        .profile-role-badge {
+        .identity-role-pill {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: rgba(255, 255, 255, 0.18);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #fff;
+            background: rgba(34, 211, 238, 0.12);
+            border: 1px solid rgba(34, 211, 238, 0.25);
+            color: var(--color-stat-cyan);
             font-size: 11px;
             font-weight: 700;
-            padding: 5px 14px;
+            padding: 4px 12px;
             border-radius: 20px;
         }
 
         .edit-btn {
-            position: relative;
-            z-index: 1;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, #4F46E5, #818CF8);
+            border: none;
             color: #fff;
             font-size: 13px;
             font-weight: 600;
-            padding: 10px 18px;
-            border-radius: 10px;
+            padding: 11px 22px;
+            border-radius: 12px;
             text-decoration: none;
-            transition: background 0.2s;
-            white-space: nowrap;
+            box-shadow: 0 12px 30px rgba(79, 70, 229, .35);
+            transition: transform 0.2s;
             flex-shrink: 0;
         }
 
         .edit-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
         }
 
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 14px;
-            margin-bottom: 24px;
+        /* ===== BIO ===== */
+        .bio-card {
+            padding: 22px 26px;
         }
 
-        .mini-stat {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border-light);
-            border-radius: 14px;
-            padding: 18px;
-            text-align: center;
-        }
-
-        .mini-stat-value {
-            font-size: 22px;
-            font-weight: 700;
-            color: #fff;
-        }
-
-        .mini-stat-label {
+        .section-label {
             font-size: 11px;
+            font-weight: 700;
             color: var(--color-text-muted);
-            margin-top: 4px;
-        }
-
-        .info-card {
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border-light);
-            border-radius: 16px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-
-        .info-card-header {
-            padding: 18px 24px;
-            border-bottom: 1px solid var(--color-border-light);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .info-card-header i {
-            font-size: 18px;
-            color: var(--color-primary-glow);
-        }
-
-        .info-card-header h2 {
+        .bio-text {
             font-size: 14px;
-            font-weight: 700;
-            color: #fff;
+            color: var(--color-text-secondary);
+            line-height: 1.7;
         }
 
-        .info-card-body {
-            padding: 24px;
+        .bio-text.empty {
+            color: var(--color-text-muted);
+            font-style: italic;
+        }
+
+        /* ===== INFO GRID ===== */
+        .info-card {
+            padding: 26px;
         }
 
         .info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 18px 24px;
+            gap: 20px 28px;
         }
 
-        .info-item-full {
-            grid-column: 1 / -1;
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
         }
 
-        .info-label {
-            font-size: 11px;
-            font-weight: 600;
+        .info-item i {
+            font-size: 17px;
+            color: var(--color-primary-glow);
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+
+        .info-item-text {
+            min-width: 0;
+        }
+
+        .info-item-label {
+            font-size: 10.5px;
+            font-weight: 700;
             color: var(--color-text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.6px;
-            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
         }
 
-        .info-value {
+        .info-item-value {
             font-size: 14px;
+            font-weight: 600;
             color: #fff;
-            font-weight: 500;
-            line-height: 1.5;
         }
 
-        .info-value.empty {
+        .info-item-value.empty {
             color: var(--color-text-muted);
             font-weight: 400;
             font-style: italic;
         }
 
-        @media (max-width: 640px) {
-            .stats-row {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        /* ===== HEATMAP ===== */
+        .heatmap-card {
+            padding: 24px;
+            background:
+                radial-gradient(circle at top right, rgba(129, 140, 248, .10), transparent 40%),
+                var(--color-bg-card);
+        }
 
+        .heatmap-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .heatmap-title {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        .heatmap-title strong {
+            color: #fff;
+            font-weight: 700;
+            font-size: 17px;
+        }
+
+        .heatmap-meta {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        .heatmap-meta strong {
+            color: #fff;
+        }
+
+        .heatmap-scroll {
+            overflow-x: auto;
+            max-width: 100%;
+            padding-bottom: 8px;
+        }
+
+        .heatmap-wrap {
+            display: flex;
+            gap: 4px;
+            width: max-content;
+        }
+
+        .heatmap-week {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .heatmap-day {
+            width: 16px;
+            height: 16px;
+            border-radius: 3.5px;
+            background: rgba(255, 255, 255, 0.05);
+            transition: transform 0.15s;
+        }
+
+        .heatmap-day:hover {
+            transform: scale(1.25);
+        }
+
+        .heatmap-day.is-today {
+            box-shadow: 0 0 0 1.5px #fff;
+        }
+
+        .heatmap-day[data-level="1"] {
+            background: #312984;
+        }
+
+        .heatmap-day[data-level="2"] {
+            background: #4F46E5;
+            box-shadow: 0 0 6px rgba(79, 70, 229, .5);
+        }
+
+        .heatmap-day[data-level="3"] {
+            background: #6366F1;
+            box-shadow: 0 0 9px rgba(99, 102, 241, .7);
+        }
+
+        .heatmap-day[data-level="4"] {
+            background: #818CF8;
+            box-shadow: 0 0 12px rgba(129, 140, 248, .8);
+        }
+
+        .heatmap-months {
+            display: flex;
+            font-size: 10.5px;
+            color: var(--color-text-muted);
+            margin-top: 8px;
+            width: max-content;
+        }
+
+        @media (max-width: 700px) {
             .info-grid {
                 grid-template-columns: 1fr;
             }
 
-            .profile-hero {
-                flex-wrap: wrap;
+            .identity-card {
+                flex-direction: column;
+                text-align: center;
             }
         }
     </style>
 </head>
 
 <body>
+
+    @php
+    $backUrl = url()->previous();
+    if ($backUrl === url()->current() || !str_contains($backUrl, url('/student'))) {
+    $backUrl = route('student.dashboard');
+    }
+
+    $educationLabels = [
+    'ssc' => 'SSC', 'hsc' => 'HSC', 'bachelor' => "Bachelor's", 'master' => "Master's", 'other' => 'Other',
+    ];
+    $studyGoalLabels = [
+    'exam_prep' => 'Exam Preparation', 'self_learning' => 'Self Learning', 'bcs' => 'BCS Preparation',
+    'university_admission' => 'University Admission', 'other' => 'Other',
+    ];
+    $genderLabels = [
+    'male' => 'Male', 'female' => 'Female', 'other' => 'Other', 'prefer_not_to_say' => 'Prefer not to say',
+    ];
+    @endphp
+
     <div class="profile-page">
 
-        <a href="{{ route('student.dashboard') }}" class="profile-back">
-            <i class="ti ti-arrow-left"></i> Back to Dashboard
+        <a href="{{ $backUrl }}" class="profile-back">
+            <i class="ti ti-arrow-left"></i> Back
         </a>
 
-        {{-- HERO --}}
-        <div class="profile-hero">
-            <div class="profile-avatar-xl" style="background: {{ $student->avatar_color ?? 'rgba(255,255,255,0.15)' }}">
+        {{-- IDENTITY HEADER --}}
+        <div class="identity-card card">
+            <div class="identity-avatar" style="background: {{ $student->avatar_color ?? 'var(--color-primary-solid)' }}">
                 {{ strtoupper(substr($student->name, 0, 1)) }}
             </div>
-            <div class="profile-hero-info">
-                <h1>{{ $student->name }}</h1>
-                <p>{{ $student->email }}</p>
-                <span class="profile-role-badge"><i class="ti ti-school"></i> Student</span>
+            <div class="identity-info">
+                <div class="identity-name">{{ $student->name }}</div>
+                <div class="identity-email">{{ $student->email }}</div>
+                <span class="identity-role-pill"><i class="ti ti-school"></i> Student</span>
             </div>
             <a href="{{ route('student.settings') }}" class="edit-btn">
                 <i class="ti ti-pencil"></i> Edit Profile
             </a>
         </div>
 
-        {{-- QUIZ STATS --}}
-        <div class="stats-row">
-            <div class="mini-stat">
-                <div class="mini-stat-value">{{ $totalAttempts }}</div>
-                <div class="mini-stat-label">Quizzes Taken</div>
-            </div>
-            <div class="mini-stat">
-                <div class="mini-stat-value" style="color:#22D3EE">{{ $avgScore }}%</div>
-                <div class="mini-stat-label">Average Score</div>
-            </div>
-            <div class="mini-stat">
-                <div class="mini-stat-value" style="color:#34D399">{{ $bestScore }}%</div>
-                <div class="mini-stat-label">Best Score</div>
-            </div>
-            <div class="mini-stat">
-                <div class="mini-stat-value" style="color:#F59E0B">{{ $quizzesPassed }}</div>
-                <div class="mini-stat-label">Quizzes Passed</div>
-            </div>
+        {{-- BIO --}}
+        <div class="bio-card card">
+            <div class="section-label"><i class="ti ti-quote"></i> Bio</div>
+            <p class="bio-text {{ $student->bio ? '' : 'empty' }}">
+                {{ $student->bio ?? 'No bio added yet.' }}
+            </p>
         </div>
 
         {{-- PERSONAL INFO --}}
-        <div class="info-card">
-            <div class="info-card-header">
-                <i class="ti ti-user"></i>
-                <h2>Personal Information</h2>
-            </div>
-            <div class="info-card-body">
-                <div class="info-grid">
-                    <div>
-                        <div class="info-label">Phone</div>
-                        <div class="info-value {{ $student->phone ? '' : 'empty' }}">
-                            {{ $student->phone ?? 'Not set' }}
-                        </div>
+        <div class="info-card card">
+            <div class="section-label"><i class="ti ti-user"></i> Personal Information</div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <i class="ti ti-phone"></i>
+                    <div class="info-item-text">
+                        <div class="info-item-label">Phone</div>
+                        <div class="info-item-value {{ $student->phone ? '' : 'empty' }}">{{ $student->phone ?? 'Not set' }}</div>
                     </div>
-                    <div>
-                        <div class="info-label">Date of Birth</div>
-                        <div class="info-value {{ $student->date_of_birth ? '' : 'empty' }}">
+                </div>
+                <div class="info-item">
+                    <i class="ti ti-cake"></i>
+                    <div class="info-item-text">
+                        <div class="info-item-label">Date of Birth</div>
+                        <div class="info-item-value {{ $student->date_of_birth ? '' : 'empty' }}">
                             {{ $student->date_of_birth?->format('M d, Y') ?? 'Not set' }}
                         </div>
                     </div>
-                    <div>
-                        <div class="info-label">Gender</div>
-                        <div class="info-value {{ $student->gender ? '' : 'empty' }}">
-                            {{ $student->gender ? ucfirst(str_replace('_', ' ', $student->gender)) : 'Not set' }}
+                </div>
+                <div class="info-item">
+                    <i class="ti ti-gender-bigender"></i>
+                    <div class="info-item-text">
+                        <div class="info-item-label">Gender</div>
+                        <div class="info-item-value {{ $student->gender ? '' : 'empty' }}">
+                            {{ $genderLabels[$student->gender] ?? 'Not set' }}
                         </div>
                     </div>
-                    <div>
-                        <div class="info-label">Location</div>
-                        <div class="info-value {{ $student->location ? '' : 'empty' }}">
-                            {{ $student->location ?? 'Not set' }}
-                        </div>
-                    </div>
-                    <div class="info-item-full">
-                        <div class="info-label">Bio</div>
-                        <div class="info-value {{ $student->bio ? '' : 'empty' }}">
-                            {{ $student->bio ?? 'No bio added yet.' }}
-                        </div>
+                </div>
+                <div class="info-item">
+                    <i class="ti ti-map-pin"></i>
+                    <div class="info-item-text">
+                        <div class="info-item-label">Location</div>
+                        <div class="info-item-value {{ $student->location ? '' : 'empty' }}">{{ $student->location ?? 'Not set' }}</div>
                     </div>
                 </div>
             </div>
         </div>
 
         {{-- ACADEMIC INFO --}}
-        <div class="info-card">
-            <div class="info-card-header">
-                <i class="ti ti-school"></i>
-                <h2>Academic Information</h2>
-            </div>
-            <div class="info-card-body">
-                <div class="info-grid">
-                    <div class="info-item-full">
-                        <div class="info-label">Institution</div>
-                        <div class="info-value {{ $student->institution ? '' : 'empty' }}">
-                            {{ $student->institution ?? 'Not set' }}
+        <div class="info-card card">
+            <div class="section-label"><i class="ti ti-school"></i> Academic Information</div>
+            <div class="info-grid">
+                <div class="info-item" style="grid-column: 1 / -1;">
+                    <i class="ti ti-building-bank"></i>
+                    <div class="info-item-text">
+                        <div class="info-item-label">Institution</div>
+                        <div class="info-item-value {{ $student->institution ? '' : 'empty' }}">{{ $student->institution ?? 'Not set' }}</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="ti ti-stairs-up"></i>
+                    <div class="info-item-text">
+                        <div class="info-item-label">Class / Year</div>
+                        <div class="info-item-value {{ $student->class_level ? '' : 'empty' }}">{{ $student->class_level ?? 'Not set' }}</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="ti ti-certificate"></i>
+                    <div class="info-item-text">
+                        <div class="info-item-label">Education Level</div>
+                        <div class="info-item-value {{ $student->education_level ? '' : 'empty' }}">
+                            {{ $educationLabels[$student->education_level] ?? 'Not set' }}
                         </div>
                     </div>
-                    <div>
-                        <div class="info-label">Class / Year Level</div>
-                        <div class="info-value {{ $student->class_level ? '' : 'empty' }}">
-                            {{ $student->class_level ?? 'Not set' }}
+                </div>
+                <div class="info-item">
+                    <i class="ti ti-flag"></i>
+                    <div class="info-item-text">
+                        <div class="info-item-label">Study Goal</div>
+                        <div class="info-item-value {{ $student->study_goal ? '' : 'empty' }}">
+                            {{ $studyGoalLabels[$student->study_goal] ?? 'Not set' }}
                         </div>
                     </div>
-                    <div>
-                        <div class="info-label">Education Level</div>
-                        <div class="info-value {{ $student->education_level ? '' : 'empty' }}">
-                            {{ $student->education_level ? strtoupper($student->education_level) : 'Not set' }}
-                        </div>
-                    </div>
-                    <div>
-                        <div class="info-label">Study Goal</div>
-                        <div class="info-value {{ $student->study_goal ? '' : 'empty' }}">
-                            {{ $student->study_goal ? ucfirst(str_replace('_', ' ', $student->study_goal)) : 'Not set' }}
-                        </div>
-                    </div>
-                    <div>
-                        <div class="info-label">Preparing For</div>
-                        <div class="info-value {{ $student->preparing_for ? '' : 'empty' }}">
-                            {{ $student->preparing_for ?? 'Not set' }}
-                        </div>
+                </div>
+                <div class="info-item">
+                    <i class="ti ti-target-arrow"></i>
+                    <div class="info-item-text">
+                        <div class="info-item-label">Preparing For</div>
+                        <div class="info-item-value {{ $student->preparing_for ? '' : 'empty' }}">{{ $student->preparing_for ?? 'Not set' }}</div>
                     </div>
                 </div>
             </div>
         </div>
 
         {{-- PREFERENCES --}}
-        <div class="info-card">
-            <div class="info-card-header">
-                <i class="ti ti-adjustments"></i>
-                <h2>Preferences</h2>
-            </div>
-            <div class="info-card-body">
-                <div class="info-grid">
-                    <div>
-                        <div class="info-label">Preferred Language</div>
-                        <div class="info-value">
-                            {{ $student->preferred_language === 'bangla' ? 'বাংলা' : 'English' }}
-                        </div>
+        <div class="info-card card">
+            <div class="section-label"><i class="ti ti-adjustments"></i> Preferences</div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <i class="ti ti-language"></i>
+                    <div class="info-item-text">
+                        <div class="info-item-label">Preferred Language</div>
+                        <div class="info-item-value">{{ $student->preferred_language === 'bangla' ? 'বাংলা' : 'English' }}</div>
                     </div>
-                    <div>
-                        <div class="info-label">Target Score</div>
-                        <div class="info-value {{ $student->target_score ? '' : 'empty' }}">
+                </div>
+                <div class="info-item">
+                    <i class="ti ti-trophy"></i>
+                    <div class="info-item-text">
+                        <div class="info-item-label">Target Score</div>
+                        <div class="info-item-value {{ $student->target_score ? '' : 'empty' }}">
                             {{ $student->target_score ? $student->target_score . '%' : 'Not set' }}
                         </div>
                     </div>
-                    <div>
-                        <div class="info-label">Bookmarked Quizzes</div>
-                        <div class="info-value">{{ $bookmarkCount }}</div>
-                    </div>
-                    <div>
-                        <div class="info-label">Member Since</div>
-                        <div class="info-value">{{ $memberSince->format('M d, Y') }}</div>
+                </div>
+                <div class="info-item">
+                    <i class="ti ti-calendar"></i>
+                    <div class="info-item-text">
+                        <div class="info-item-label">Member Since</div>
+                        <div class="info-item-value">{{ $memberSince->format('M Y') }}</div>
                     </div>
                 </div>
             </div>
         </div>
 
+        {{-- HEATMAP --}}
+        <div class="heatmap-card card">
+            <div class="heatmap-card-header">
+                <div class="heatmap-title">
+                    <strong>{{ $totalAttempts }}</strong> quiz attempts logged
+                </div>
+                <div class="heatmap-meta">
+                    <span>Active days: <strong>{{ $totalActiveDays }}</strong></span>
+                    <span>Max streak: <strong>{{ $maxStreak }}</strong></span>
+                    <span><i class="ti ti-flame" style="color:#F59E0B;"></i> Current: <strong>{{ $currentStreak }}</strong></span>
+                </div>
+            </div>
+            <div class="heatmap-scroll">
+                <div class="heatmap-wrap" id="heatmapWrap"></div>
+                <div class="heatmap-months" id="heatmapMonths"></div>
+            </div>
+        </div>
+
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const heatmapData = @json($heatmapData);
+            const wrap = document.getElementById('heatmapWrap');
+            const monthsRow = document.getElementById('heatmapMonths');
+            const today = new Date();
+            const weeks = 47;
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const todayKey = today.toISOString().split('T')[0];
+
+            let html = '';
+            let monthsHtml = '';
+            let lastMonth = null;
+
+            for (let w = weeks - 1; w >= 0; w--) {
+                const weekStartDate = new Date(today);
+                weekStartDate.setDate(weekStartDate.getDate() - (w * 7 + 6));
+                const m = weekStartDate.getMonth();
+
+                if (m !== lastMonth) {
+                    monthsHtml += `<div style="width:14px;flex-shrink:0;">${monthNames[m]}</div>`;
+                    lastMonth = m;
+                } else {
+                    monthsHtml += `<div style="width:14px;flex-shrink:0;"></div>`;
+                }
+
+                html += '<div class="heatmap-week">';
+                for (let d = 6; d >= 0; d--) {
+                    const date = new Date(today);
+                    date.setDate(date.getDate() - (w * 7 + d));
+                    const key = date.toISOString().split('T')[0];
+                    const count = heatmapData[key] || 0;
+                    let level = 0;
+                    if (count >= 1) level = 1;
+                    if (count >= 2) level = 2;
+                    if (count >= 3) level = 3;
+                    if (count >= 5) level = 4;
+                    const isToday = key === todayKey ? ' is-today' : '';
+                    html += `<div class="heatmap-day${isToday}" data-level="${level}" title="${key}: ${count} quiz${count !== 1 ? 'zes' : ''}"></div>`;
+                }
+                html += '</div>';
+            }
+
+            wrap.innerHTML = html;
+            monthsRow.innerHTML = monthsHtml;
+        });
+    </script>
+
 </body>
 
 </html>

@@ -498,6 +498,8 @@ class DashboardController extends Controller
 
         $attempts = Attempt::where('student_id', $student->id)
             ->where('status', 'submitted')
+            ->with('quiz')
+            ->latest('submitted_at')
             ->get();
 
         $totalAttempts = $attempts->count();
@@ -514,9 +516,33 @@ class DashboardController extends Controller
             fn($a) => $a->total_marks > 0 && ($a->score / $a->total_marks) * 100 >= 50
         )->count();
 
-        $bookmarkCount = Bookmark::where('student_id', $student->id)->count();
+        $bookmarks = Bookmark::where('student_id', $student->id)
+            ->with('quiz')
+            ->latest()
+            ->get();
+
+        $bookmarkCount = $bookmarks->count();
 
         $memberSince = $student->created_at;
+
+        $heatmapData = Attempt::where('student_id', $student->id)
+            ->where('status', 'submitted')
+            ->where('submitted_at', '>=', now()->subWeeks(53))
+            ->selectRaw('DATE(submitted_at) as day, COUNT(*) as count')
+            ->groupBy('day')
+            ->pluck('count', 'day');
+
+        $currentStreak = self::getCachedStreak($student->id);
+
+        $totalActiveDays = Attempt::where('student_id', $student->id)
+            ->where('status', 'submitted')
+            ->selectRaw('DATE(submitted_at) as day')
+            ->distinct()
+            ->count();
+
+        $maxStreak = $this->calculateMaxStreak($student->id);
+
+        $recentAttempts = $attempts->take(10);
 
         return view('student.profile', compact(
             'student',
@@ -525,7 +551,63 @@ class DashboardController extends Controller
             'bestScore',
             'quizzesPassed',
             'bookmarkCount',
-            'memberSince'
+            'bookmarks',
+            'memberSince',
+            'heatmapData',
+            'currentStreak',
+            'totalActiveDays',
+            'maxStreak',
+            'recentAttempts'
         ));
+    }
+
+    private function calculateMaxStreak($studentId)
+    {
+        $activeDates = Attempt::where('student_id', $studentId)
+            ->where('status', 'submitted')
+            ->selectRaw('DATE(submitted_at) as day')
+            ->distinct()
+            ->pluck('day')
+            ->map(fn($d) => \Carbon\Carbon::parse($d))
+            ->sort()
+            ->values();
+
+        if ($activeDates->isEmpty()) {
+            return 0;
+        }
+
+        $maxStreak = 1;
+        $currentRun = 1;
+
+        for ($i = 1; $i < $activeDates->count(); $i++) {
+            $diff = $activeDates[$i]->diffInDays($activeDates[$i - 1]);
+            if ($diff === 1) {
+                $currentRun++;
+                $maxStreak = max($maxStreak, $currentRun);
+            } else {
+                $currentRun = 1;
+            }
+        }
+
+        return $maxStreak;
+    }
+    public static function getCachedStreak($studentId)
+    {
+        $cached = Cache::get("student_streak_{$studentId}");
+
+        if ($cached !== null) {
+            return $cached;
+        }
+
+        //Cache miss — calculate and store
+        $controller = new \App\Http\Controllers\Student\QuizController();
+        $reflection = new \ReflectionClass($controller);
+        $method = $reflection->getMethod('calculateStreak');
+        $method->setAccessible(true);
+        $streak = $method->invoke($controller, $studentId);
+
+        Cache::put("student_streak_{$studentId}", $streak, now()->addDays(7));
+
+        return $streak;
     }
 }

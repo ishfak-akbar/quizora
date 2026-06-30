@@ -196,7 +196,7 @@ class QuizController extends Controller
         foreach ($answerRows as $row) {
             $attempt->answers()->create($row);
         }
-
+        $this->updateStreakCache($student->id);
         return redirect()->route('student.quiz.result', $quiz->id);
     }
     public function result(Quiz $quiz)
@@ -214,5 +214,46 @@ class QuizController extends Controller
             ->get();
 
         return view('student.quiz-result', compact('quiz', 'attempt', 'answers'));
+    }
+    private function updateStreakCache($studentId)
+    {
+        $streak = $this->calculateStreak($studentId);
+        \Illuminate\Support\Facades\Cache::put("student_streak_{$studentId}", $streak, now()->addDays(7));
+    }
+
+    private function calculateStreak($studentId)
+    {
+        $activeDates = Attempt::where('student_id', $studentId)
+            ->where('status', 'submitted')
+            ->selectRaw('DATE(submitted_at) as day')
+            ->distinct()
+            ->pluck('day')
+            ->map(fn($d) => \Carbon\Carbon::parse($d)->format('Y-m-d'))
+            ->sort()
+            ->values();
+
+        if ($activeDates->isEmpty()) {
+            return 0;
+        }
+
+        $today = \Carbon\Carbon::today();
+        $yesterday = \Carbon\Carbon::yesterday()->format('Y-m-d');
+        $todayStr = $today->format('Y-m-d');
+
+        if (!$activeDates->contains($todayStr) && !$activeDates->contains($yesterday)) {
+            return 0;
+        }
+
+        $streak = 0;
+        $cursor = $activeDates->contains($todayStr) ? $today->copy() : $today->copy()->subDay();
+
+        $dateSet = $activeDates->flip();
+
+        while ($dateSet->has($cursor->format('Y-m-d'))) {
+            $streak++;
+            $cursor->subDay();
+        }
+
+        return $streak;
     }
 }

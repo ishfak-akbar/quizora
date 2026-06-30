@@ -756,6 +756,25 @@
             box-shadow: 0 10px 25px rgba(79, 70, 229, 0.45);
             background: linear-gradient(135deg, #4338CA, #4F46E5);
         }
+
+        .streak-badge {
+            display: flex;
+            align-items: center;
+            height: 36px;
+            gap: 5px;
+            padding: 0 7px;
+            border-radius: 10px;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            background: rgba(245, 158, 11, 0.1);
+            color: #F59E0B;
+            font-size: 13px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .streak-badge i {
+            font-size: 16px;
+        }
     </style>
     @stack('styles')
 </head>
@@ -823,7 +842,7 @@
             $greeting = $hour < 12 ? 'Good morning' : ($hour < 17 ? 'Good afternoon' : 'Good evening' );
                 @endphp
                 <div>
-                <div class="topbar-title">{{ $greeting }}, {{ auth()->user()->name }} 👋</div>
+                <div class="topbar-title">{{ $greeting }}, {{ auth()->user()->name }}</div>
                 <div class="topbar-sub">{{ now()->format('l, F j, Y') }}</div>
                 </div>
                 <div class="topbar-right">
@@ -831,6 +850,10 @@
                         <i class="ti ti-bell" aria-hidden="true"></i>
                         <span class="notif-dot"></span>
                     </button>
+                    <div class="streak-badge" title="{{ \App\Http\Controllers\Student\DashboardController::getCachedStreak(auth()->id()) }} day streak">
+                        <i class="ti ti-flame" aria-hidden="true"></i>
+                        <span>{{ \App\Http\Controllers\Student\DashboardController::getCachedStreak(auth()->id()) }}</span>
+                    </div>
                     <div class="user-btn" id="userBtn" role="button" tabindex="0">
                         <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
                         <div>

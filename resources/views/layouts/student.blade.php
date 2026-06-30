@@ -803,8 +803,8 @@
             </a>
         </nav>
         <div class="sidebar-bottom">
-            <a href="{{ route('profile.edit') }}"
-                class="nav-item {{ request()->routeIs('profile.edit') ? 'active' : '' }}">
+            <a href="{{ route('student.settings') }}"
+                class="nav-item {{ request()->routeIs('student.settings') ? 'active' : '' }}">
                 <i class="ti ti-settings nav-icon" aria-hidden="true"></i>
                 <span class="nav-text">Settings</span>
             </a>

@@ -8,6 +8,8 @@ use App\Models\Quiz;
 use App\Models\Bookmark;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class DashboardController extends Controller
 {
@@ -262,5 +264,83 @@ class DashboardController extends Controller
             'my_rank' => $myEntry ? $myEntry['rank'] : null,
             'my_score' => $myEntry ? $myEntry['score'] : null,
         ]);
+    }
+
+    public function settings()
+    {
+        return view('student.settings', ['user' => Auth::user()]);
+    }
+
+    public function updateSettings(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'name'               => 'required|string|max:255',
+            'email'              => 'required|email|unique:users,email,' . $user->id,
+            'phone'              => 'nullable|string|max:20',
+            'date_of_birth'      => 'nullable|date|before:today',
+            'gender'             => 'nullable|in:male,female,other,prefer_not_to_say',
+            'location'           => 'nullable|string|max:100',
+            'bio'                => 'nullable|string|max:300',
+            'institution'        => 'nullable|string|max:200',
+            'class_level'        => 'nullable|string|max:100',
+            'education_level'    => 'nullable|in:ssc,hsc,bachelor,master,other',
+            'study_goal'         => 'nullable|in:exam_prep,self_learning,bcs,university_admission,other',
+            'preparing_for'      => 'nullable|string|max:200',
+            'preferred_language' => 'nullable|in:english,bangla',
+            'target_score'       => 'nullable|integer|min:1|max:100',
+            'avatar_color'       => 'nullable|string|max:7',
+        ]);
+
+        $user->update($request->only([
+            'name',
+            'email',
+            'phone',
+            'date_of_birth',
+            'gender',
+            'location',
+            'bio',
+            'institution',
+            'class_level',
+            'education_level',
+            'study_goal',
+            'preparing_for',
+            'preferred_language',
+            'target_score',
+            'avatar_color',
+        ]));
+
+        return back()->with('success', 'Profile updated successfully.');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required|current_password',
+            'password'         => ['required', 'confirmed', Password::min(8)],
+        ]);
+
+        Auth::user()->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        return back()->with('success', 'Password updated successfully.');
+    }
+
+    public function deleteAccount(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|current_password',
+        ]);
+
+        $user = Auth::user();
+        Auth::logout();
+        $user->delete();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('success', 'Account deleted.');
     }
 }

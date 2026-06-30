@@ -66,6 +66,11 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->group(function (
 
     Route::get('/ai-tutor', [StudentDashboard::class, 'aiTutor'])->name('student.ai-tutor');
     Route::post('/ai-tutor/chat', [StudentDashboard::class, 'aiChat'])->name('student.ai-tutor.chat');
+
+    Route::get('/settings', [StudentDashboard::class, 'settings'])->name('student.settings');
+    Route::patch('/settings', [StudentDashboard::class, 'updateSettings'])->name('student.settings.update');
+    Route::put('/settings/password', [StudentDashboard::class, 'updatePassword'])->name('student.settings.password');
+    Route::delete('/settings/account', [StudentDashboard::class, 'deleteAccount'])->name('student.settings.delete');
 });
 
 require __DIR__ . '/auth.php';

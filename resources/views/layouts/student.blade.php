@@ -799,6 +799,11 @@
                 <i class="ti ti-compass nav-icon"></i>
                 <span class="nav-text">Browse Quizzes</span>
             </a>
+            <a href="{{ route('student.private-quizzes') }}"
+                class="nav-item {{ request()->routeIs('student.private-quizzes') ? 'active' : '' }}">
+                <i class="ti ti-lock nav-icon" aria-hidden="true"></i>
+                <span class="nav-text">Private Quizzes</span>
+            </a>
             <a href="{{ route('student.bookmarks') }}"
                 class="nav-item {{ request()->routeIs('student.bookmarks') ? 'active' : '' }}">
                 <i class="ti ti-bookmark nav-icon"></i>

@@ -256,4 +256,34 @@ class QuizController extends Controller
     {
         return view('teacher.settings');
     }
+    public function generateAccessCode(Quiz $quiz)
+    {
+        if ($quiz->teacher_id !== Auth::id()) {
+            abort(403);
+        }
+
+        if ($quiz->visibility !== 'private') {
+            return back()->with('error', 'Only private quizzes can have an access code.');
+        }
+
+        $code = $this->createUniqueCode();
+
+        $quiz->update(['access_code' => $code]);
+
+        return back()->with('success', "Access code generated: {$code}");
+    }
+
+    private function createUniqueCode()
+    {
+        $chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+
+        do {
+            $code = '';
+            for ($i = 0; $i < 6; $i++) {
+                $code .= $chars[random_int(0, strlen($chars) - 1)];
+            }
+        } while (Quiz::where('access_code', $code)->exists());
+
+        return $code;
+    }
 }

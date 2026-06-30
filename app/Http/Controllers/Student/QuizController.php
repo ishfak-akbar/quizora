@@ -61,8 +61,18 @@ class QuizController extends Controller
     }
     public function detail(Quiz $quiz)
     {
-        if ($quiz->status !== 'active' || $quiz->visibility !== 'public') {
+        if ($quiz->status !== 'active') {
             abort(404);
+        }
+
+        if ($quiz->visibility === 'private') {
+            $unlocked = \App\Models\QuizUnlock::where('student_id', Auth::id())
+                ->where('quiz_id', $quiz->id)
+                ->exists();
+
+            if (!$unlocked) {
+                abort(404);
+            }
         }
 
         $student = Auth::user();
@@ -107,8 +117,18 @@ class QuizController extends Controller
     }
     public function take(Quiz $quiz)
     {
-        if ($quiz->status !== 'active' || $quiz->visibility !== 'public') {
+        if ($quiz->status !== 'active') {
             abort(404);
+        }
+
+        if ($quiz->visibility === 'private') {
+            $unlocked = \App\Models\QuizUnlock::where('student_id', Auth::id())
+                ->where('quiz_id', $quiz->id)
+                ->exists();
+
+            if (!$unlocked) {
+                abort(404);
+            }
         }
 
         $student = Auth::user();
@@ -148,6 +168,20 @@ class QuizController extends Controller
     public function submit(Request $request, Quiz $quiz)
     {
         $student = Auth::user();
+
+        if ($quiz->status !== 'active') {
+            abort(404);
+        }
+
+        if ($quiz->visibility === 'private') {
+            $unlocked = \App\Models\QuizUnlock::where('student_id', $student->id)
+                ->where('quiz_id', $quiz->id)
+                ->exists();
+
+            if (!$unlocked) {
+                abort(404);
+            }
+        }
 
         $attemptCount = Attempt::where('quiz_id', $quiz->id)
             ->where('student_id', $student->id)
@@ -255,5 +289,46 @@ class QuizController extends Controller
         }
 
         return $streak;
+    }
+    public function unlockByCode(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|string|size:6',
+        ]);
+
+        $student = Auth::user();
+        $code = strtoupper(trim($request->code));
+
+        $quiz = Quiz::where('access_code', $code)
+            ->where('visibility', 'private')
+            ->where('status', 'active')
+            ->first();
+
+        if (!$quiz) {
+            return back()->with('error', 'Invalid or expired code.');
+        }
+
+        \App\Models\QuizUnlock::firstOrCreate([
+            'student_id' => $student->id,
+            'quiz_id'    => $quiz->id,
+        ]);
+
+        return redirect()->route('student.quiz.detail', $quiz->id)
+            ->with('success', 'Quiz unlocked! You now have permanent access.');
+    }
+    public function privateQuizzes()
+    {
+        $student = Auth::user();
+
+        $unlockedQuizIds = \App\Models\QuizUnlock::where('student_id', $student->id)
+            ->pluck('quiz_id');
+
+        $unlockedQuizzes = Quiz::whereIn('id', $unlockedQuizIds)
+            ->where('status', 'active')
+            ->withCount('questions')
+            ->latest()
+            ->get();
+
+        return view('student.private-quizzes', compact('unlockedQuizzes'));
     }
 }

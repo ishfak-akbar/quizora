@@ -57,4 +57,8 @@ class Quiz extends Model
     {
         return $this->hasMany(Bookmark::class);
     }
+    public function unlocks()
+    {
+        return $this->hasMany(QuizUnlock::class);
+    }
 }

@@ -44,6 +44,8 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->group(function (
     Route::get('/students', [TeacherDashboard::class, 'students'])->name('teacher.students');
     Route::get('/question-bank', [QuizController::class, 'questionBank'])->name('teacher.question-bank');
     Route::get('/settings', [QuizController::class, 'settings'])->name('teacher.settings');
+
+    Route::post('/quiz/{quiz}/generate-code', [QuizController::class, 'generateAccessCode'])->name('teacher.quiz.generate-code');
 });
 
 Route::middleware(['auth', 'role:student'])->prefix('student')->group(function () {
@@ -72,6 +74,9 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->group(function (
     Route::put('/settings/password', [StudentDashboard::class, 'updatePassword'])->name('student.settings.password');
     Route::delete('/settings/account', [StudentDashboard::class, 'deleteAccount'])->name('student.settings.delete');
     Route::get('/profile', [StudentDashboard::class, 'profile'])->name('student.profile');
+
+    Route::post('/browse/unlock', [StudentQuizController::class, 'unlockByCode'])->name('student.quiz.unlock');
+    Route::get('/private-quizzes', [StudentQuizController::class, 'privateQuizzes'])->name('student.private-quizzes');
 });
 
 require __DIR__ . '/auth.php';

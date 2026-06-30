@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use App\Models\User;
 
 class DashboardController extends Controller
@@ -47,12 +49,7 @@ class DashboardController extends Controller
 
         $bookmarkCount = Bookmark::where('student_id', $student->id)->count();
 
-        $recommendedQuizzes = Quiz::where('status', 'active')
-            ->where('visibility', 'public')
-            ->withCount('questions')
-            ->inRandomOrder()
-            ->take(4)
-            ->get();
+        [$recommendedQuizzes, $isAiRecommended] = $this->getRecommendedQuizzes($student);
 
         return view('student.dashboard', compact(
             'totalAttempts',
@@ -61,7 +58,8 @@ class DashboardController extends Controller
             'quizzesPassed',
             'recentAttempts',
             'bookmarkCount',
-            'recommendedQuizzes'
+            'recommendedQuizzes',
+            'isAiRecommended'
         ));
     }
 
@@ -96,6 +94,154 @@ class DashboardController extends Controller
             'bestScore',
             'quizzesPassed'
         ));
+    }
+    private function getRecommendedQuizzes($student)
+    {
+        $totalAttempts = Attempt::where('student_id', $student->id)
+            ->where('status', 'submitted')
+            ->count();
+
+        if ($totalAttempts === 0) {
+            $fallback = Quiz::where('status', 'active')
+                ->where('visibility', 'public')
+                ->withCount('questions')
+                ->inRandomOrder()
+                ->take(4)
+                ->get();
+
+            return [$fallback, false];
+        }
+
+        $cacheKey = "recommended_quizzes_{$student->id}";
+        $cached = Cache::get($cacheKey);
+
+        //Reuse cache if it's still valid for today AND no new attempts since it was generated
+        if ($cached && $cached['attempt_count'] === $totalAttempts && now()->lt($cached['expires_at'])) {
+            $quizzes = Quiz::whereIn('id', $cached['quiz_ids'])
+                ->where('status', 'active')
+                ->where('visibility', 'public')
+                ->withCount('questions')
+                ->get()
+                ->sortBy(fn($q) => array_search($q->id, $cached['quiz_ids']))
+                ->values();
+
+            if ($quizzes->count() > 0) {
+                return [$quizzes, true];
+            }
+        }
+
+        //Generate fresh AI recommendations
+        $aiResult = $this->generateAiRecommendations($student);
+
+        if ($aiResult === null) {
+            //Groq failed — fall back to random
+            $fallback = Quiz::where('status', 'active')
+                ->where('visibility', 'public')
+                ->withCount('questions')
+                ->inRandomOrder()
+                ->take(4)
+                ->get();
+
+            return [$fallback, false];
+        }
+
+        Cache::put($cacheKey, [
+            'quiz_ids'      => $aiResult->pluck('id')->toArray(),
+            'attempt_count' => $totalAttempts,
+            'expires_at'    => now()->addDay(),
+        ], now()->addDay());
+
+        return [$aiResult, true];
+    }
+
+    private function generateAiRecommendations($student)
+    {
+        //Build category performance summary
+        $attempts = Attempt::where('student_id', $student->id)
+            ->where('status', 'submitted')
+            ->with('quiz')
+            ->get();
+
+        $categoryStats = $attempts
+            ->filter(fn($a) => $a->quiz && $a->total_marks > 0)
+            ->groupBy(fn($a) => $a->quiz->category ?? 'General')
+            ->map(function ($group) {
+                return round($group->avg(fn($a) => ($a->score / $a->total_marks) * 100));
+            })
+            ->sortBy(fn($score) => $score) // weakest first
+            ->take(5);
+
+        $attemptedQuizIds = $attempts->pluck('quiz_id')->unique();
+
+        $availableQuizzes = Quiz::where('status', 'active')
+            ->where('visibility', 'public')
+            ->whereNotIn('id', $attemptedQuizIds) // don't recommend already-attempted quizzes
+            ->get(['id', 'title', 'category', 'difficulty', 'tags']);
+
+        if ($availableQuizzes->isEmpty()) {
+            return null;
+        }
+
+        $performanceLines = $categoryStats->isEmpty()
+            ? "No category performance data available."
+            : $categoryStats->map(fn($score, $cat) => "- {$cat}: {$score}% average")->implode("\n");
+
+        $quizListLines = $availableQuizzes->map(function ($q) {
+            return "ID:{$q->id} | Title: {$q->title} | Category: " . ($q->category ?? 'General') . " | Difficulty: {$q->difficulty}";
+        })->implode("\n");
+
+        $prompt = <<<PROMPT
+            You are a quiz recommendation engine for a student learning platform called Quizora.
+
+            Student's performance by category (weakest first):
+            {$performanceLines}
+
+            Available quizzes the student has NOT yet attempted:
+            {$quizListLines}
+
+            Pick exactly 4 quiz IDs that would best help this student improve, prioritizing categories where their score is lowest. If they have no weak categories or insufficient data, pick a varied, sensible set.
+
+            Respond with ONLY raw JSON, no markdown, no explanation, in this exact format:
+            {"recommendations": [{"id": 12, "reason": "short reason"}, ...]}
+            PROMPT;
+
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . config('services.groq.key'),
+                'Content-Type'  => 'application/json',
+            ])->timeout(10)->post('https://api.groq.com/openai/v1/chat/completions', [
+                'model'      => 'llama-3.3-70b-versatile',
+                'messages'   => [['role' => 'user', 'content' => $prompt]],
+                'max_tokens' => 500,
+            ]);
+
+            if ($response->failed()) {
+                return null;
+            }
+
+            $raw = $response->json('choices.0.message.content', '');
+            $raw = trim(preg_replace('/```json|```/', '', $raw));
+
+            $parsed = json_decode($raw, true);
+
+            if (!isset($parsed['recommendations']) || !is_array($parsed['recommendations'])) {
+                return null;
+            }
+
+            $ids = collect($parsed['recommendations'])->pluck('id')->take(4)->toArray();
+
+            $validQuizzes = Quiz::whereIn('id', $ids)
+                ->where('status', 'active')
+                ->where('visibility', 'public')
+                ->withCount('questions')
+                ->get()
+                ->sortBy(fn($q) => array_search($q->id, $ids))
+                ->values();
+
+            return $validQuizzes->count() > 0 ? $validQuizzes : null;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     public function leaderboard()

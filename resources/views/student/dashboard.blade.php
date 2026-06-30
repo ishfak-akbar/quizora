@@ -76,13 +76,9 @@
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 14px 20px;
+    padding: 8px 20px;
     border-bottom: 1px solid var(--color-border-light);
     transition: background 0.15s;
-  }
-
-  .quiz-row:last-child {
-    border-bottom: none;
   }
 
   .quiz-row:hover {
@@ -200,6 +196,11 @@
     color: var(--color-text-muted);
     margin-top: 2px;
   }
+
+  .card-header h2{
+    font-size: 15px;
+  }
+
 </style>
 @endpush
 @section('content')
@@ -245,7 +246,17 @@
   {{-- RECOMMENDED QUIZZES --}}
   <div class="card">
     <div class="card-header">
-      <h2>Recommended For You</h2>
+      <div>
+        <h2 style="display:flex;align-items:center;gap:6px;">
+          @if($isAiRecommended)
+          <i class="ti ti-sparkles" style="font-size:15px;color:var(--color-primary-glow);"></i>
+          @endif
+          {{ $isAiRecommended ? 'AI Picks For You' : 'Recommended For You' }}
+        </h2>
+        <p style="font-size:11px;color:var(--color-text-muted);margin-top:2px;">
+          {{ $isAiRecommended ? 'Based on your quiz performance' : 'Explore something new' }}
+        </p>
+      </div>
       <a href="{{ route('student.browse') }}" class="view-all-link">View all</a>
     </div>
     <div>

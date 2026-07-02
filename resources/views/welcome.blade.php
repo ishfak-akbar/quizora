@@ -137,7 +137,7 @@
         .btn-primary {
             background: linear-gradient(135deg, var(--color-primary-solid) 0%, #6366F1 100%);
             color: #fff;
-            padding: 13px 26px;
+            padding: 12px 20px;
             box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -239,18 +239,6 @@
             gap: 12px;
         }
 
-        .btn-nav-ghost {
-            font-size: 14px;
-            font-weight: 600;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 10px;
-            transition: color 0.2s;
-        }
-
-        .btn-nav-ghost:hover {
-            color: var(--color-primary-glow);
-        }
 
         /* HERO */
         .hero {
@@ -1002,8 +990,7 @@
                 <a href="#how-it-works" class="nav-link">How it works</a>
             </div>
             <div class="nav-actions">
-                <a href="{{ route('login') }}" class="btn-nav-ghost">Sign In</a>
-                <a href="{{ route('register') }}" class="btn btn-primary">Get Started Free</a>
+                <a href="{{ route('login') }}" class="btn btn-primary">Start Learning</a>
             </div>
         </div>
     </nav>
@@ -1291,11 +1278,8 @@
                 <h2>Ready to quiz smarter?</h2>
                 <p>Join thousands of students and teachers already using Quizora — free forever, no credit card needed.</p>
                 <div class="cta-actions">
-                    <a href="{{ route('register') }}" class="btn btn-primary btn-lg">
-                        <i class="ti ti-rocket"></i> Create Free Account
-                    </a>
-                    <a href="{{ route('login') }}" class="btn btn-outline btn-lg">
-                        <i class="ti ti-login"></i> Sign In
+                    <a href="{{ route('login') }}" class="btn btn-primary btn-lg">
+                        <i class="ti ti-rocket"></i> Join Our Community
                     </a>
                 </div>
             </div>
@@ -1307,7 +1291,7 @@
         <div class="container footer-inner">
             <div class="footer-logo">
                 <div class="footer-logo-icon">Q</div>
-                Quiz<span>ora</span>
+                <div class="footer-logo-text">Quiz<span>ora</span></div>
             </div>
             <div class="footer-links">
                 <a href="#audiences" class="footer-link">Solutions</a>

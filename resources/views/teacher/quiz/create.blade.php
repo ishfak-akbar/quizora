@@ -36,6 +36,14 @@
             background: #0E0B20;
             color: var(--color-text-primary);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #quizForm {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
         }
 
         /* TOP NAV */
@@ -85,7 +93,7 @@
 
         /* STEPPER */
         .stepper-wrap {
-            max-width: 720px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 32px 24px 0;
         }
@@ -150,6 +158,7 @@
             background: var(--color-border-light);
             margin: 0 12px;
             transition: background 0.3s;
+            min-width: 30px;
         }
 
         .step-line.done {
@@ -414,7 +423,7 @@
             background: rgba(14, 11, 32, 0.95);
             backdrop-filter: blur(12px);
             border-top: 1px solid var(--color-border-light);
-            padding: 16px 32px;
+            padding: 10px 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -679,12 +688,12 @@
                     <div class="step-line" id="line-2"></div>
                     <div class="step" id="step-indicator-3">
                         <div class="step-circle" id="circle-3">3</div>
-                        <div class="step-label">Visibility & Access</div>
+                        <div class="step-label">Visibility&nbsp;& Access</div>
                     </div>
                     <div class="step-line" id="line-3"></div>
                     <div class="step" id="step-indicator-4">
                         <div class="step-circle" id="circle-4">4</div>
-                        <div class="step-label">Review & Publish</div>
+                        <div class="step-label">Review&nbsp;& Publish</div>
                     </div>
                 </div>
 
@@ -795,7 +804,6 @@
                     </div>
                 </div>
 
-                <!-- STEP 3: REVIEW -->
                 <!-- STEP 3: VISIBILITY & ACCESS -->
                 <div id="step3" style="display:none;">
                     <div class="form-card">

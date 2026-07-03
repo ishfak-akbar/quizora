@@ -172,7 +172,7 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 80px;
+            height: 70px;
             z-index: 1000;
             background: rgba(14, 11, 32, 0.8);
             backdrop-filter: blur(20px);
@@ -188,6 +188,7 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
+            position: relative;
         }
 
         .nav-logo {
@@ -220,6 +221,10 @@
             display: flex;
             align-items: center;
             gap: 36px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
         }
 
         .nav-link {
@@ -242,7 +247,11 @@
 
         /* HERO */
         .hero {
-            padding: 180px 0 100px;
+            min-height: 100vh;
+            padding: 80px 0 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -333,6 +342,11 @@
         /* AUDIENCES */
         .audiences {
             padding: 120px 0;
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse 750px 450px at 12% 0%, rgba(79, 70, 229, 0.14) 0%, transparent 60%),
+                radial-gradient(ellipse 750px 450px at 88% 100%, rgba(34, 211, 238, 0.10) 0%, transparent 60%);
         }
 
         .audiences-grid {
@@ -485,7 +499,12 @@
         /* FEATURES */
         .features {
             padding: 100px 0;
-            background: #070514;
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse 800px 450px at 85% 0%, rgba(129, 140, 248, 0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 800px 450px at 5% 100%, rgba(52, 211, 153, 0.08) 0%, transparent 60%),
+                #070514;
             border-top: 1px solid var(--color-border-light);
         }
 
@@ -572,6 +591,11 @@
         /* HOW IT WORKS */
         .hiw {
             padding: 120px 0;
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse 700px 500px at 15% 20%, rgba(79, 70, 229, 0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 700px 500px at 90% 80%, rgba(167, 139, 250, 0.08) 0%, transparent 60%);
         }
 
         .hiw-inner {
@@ -841,7 +865,9 @@
 
         /* FOOTER */
         footer {
-            background: #070514;
+            background:
+                radial-gradient(ellipse 900px 300px at 50% 100%, rgba(79, 70, 229, 0.10) 0%, transparent 70%),
+                #070514;
             border-top: 1px solid var(--color-border-light);
             padding: 48px 0;
         }

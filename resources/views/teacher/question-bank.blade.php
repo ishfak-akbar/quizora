@@ -594,18 +594,8 @@ $quizNames = $allQuestions->pluck('quiz.title','quiz_id')->unique();
         <i class="ti ti-search"></i>
         <input type="text" id="searchInput" placeholder="Search questions...">
     </div>
-    <select class="filter-select" id="quizFilter" onchange="applyFilters()">
-        <option value="all">All Quizzes</option>
-        @foreach($quizNames as $qId => $qTitle)
-        <option value="{{ $qId }}">{{ $qTitle }}</option>
-        @endforeach
-    </select>
-    <select class="filter-select" id="typeFilter" onchange="applyFilters()">
-        <option value="all">All Types</option>
-        <option value="mcq">MCQ</option>
-        <option value="true_false">True / False</option>
-        <option value="short_answer">Short Answer</option>
-    </select>
+    <div id="quizFilterWrap" style="min-width:180px;"></div>
+    <div id="typeFilterWrap" style="min-width:160px;"></div>
 </div>
 
 <div class="table-card">
@@ -736,16 +726,67 @@ $quizNames = $allQuestions->pluck('quiz.title','quiz_id')->unique();
     }
 
     document.getElementById('searchInput').addEventListener('input', applyFilters);
+    let selectedQuiz = 'all';
+    let selectedType = 'all';
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const quizOptions = [{
+                value: 'all',
+                label: 'All Quizzes'
+            },
+            @foreach($quizNames as $qId => $qTitle) {
+                value: '{{ $qId }}',
+                label: @json($qTitle)
+            },
+            @endforeach
+        ];
+
+        createCustomSelect(
+            document.getElementById('quizFilterWrap'),
+            quizOptions,
+            'All Quizzes',
+            (val) => {
+                selectedQuiz = val;
+                applyFilters();
+            }
+        );
+
+        const typeOptions = [{
+                value: 'all',
+                label: 'All Types'
+            },
+            {
+                value: 'mcq',
+                label: 'MCQ'
+            },
+            {
+                value: 'true_false',
+                label: 'True / False'
+            },
+            {
+                value: 'short_answer',
+                label: 'Short Answer'
+            },
+        ];
+
+        createCustomSelect(
+            document.getElementById('typeFilterWrap'),
+            typeOptions,
+            'All Types',
+            (val) => {
+                selectedType = val;
+                applyFilters();
+            }
+        );
+    });
 
     function applyFilters() {
         const q = document.getElementById('searchInput').value.toLowerCase();
-        const quiz = document.getElementById('quizFilter').value;
-        const type = document.getElementById('typeFilter').value;
         document.querySelectorAll('#questionsBody tr').forEach(row => {
             if (!row.dataset.q) return;
             const match = (!q || row.dataset.q.includes(q)) &&
-                (quiz === 'all' || row.dataset.quiz === quiz) &&
-                (type === 'all' || row.dataset.type === type);
+                (selectedQuiz === 'all' || row.dataset.quiz === selectedQuiz) &&
+                (selectedType === 'all' || row.dataset.type === selectedType);
             row.style.display = match ? '' : 'none';
         });
         clearSelection();

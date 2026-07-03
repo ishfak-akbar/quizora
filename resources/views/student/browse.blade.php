@@ -168,6 +168,12 @@
         margin-bottom: 12px;
         color: rgba(79, 70, 229, 0.3);
     }
+
+    #difficultyFilterWrap .custom-select-trigger {
+        height: 44px;
+        box-sizing: border-box;
+        border-radius: 12px;
+    }
 </style>
 @endpush
 
@@ -186,20 +192,12 @@
             <input type="text" name="search" placeholder="Search quizzes, topics, or tags..."
                 value="{{ $search }}" id="searchInput" autocomplete="off" />
         </div>
-        <select name="difficulty" class="filter-pill" onchange="document.getElementById('browseForm').submit()">
-            <option value="">All Difficulties</option>
-            <option value="easy" {{ request('difficulty') === 'easy'   ? 'selected' : '' }}>🟢 Easy</option>
-            <option value="medium" {{ request('difficulty') === 'medium' ? 'selected' : '' }}>🟡 Medium</option>
-            <option value="hard" {{ request('difficulty') === 'hard'   ? 'selected' : '' }}>🔴 Hard</option>
-        </select>
+        <input type="hidden" name="difficulty" id="difficultyInput" value="{{ request('difficulty') }}">
+        <div id="difficultyFilterWrap" style="min-width:170px;"></div>
     </div>
 
     {{-- CATEGORY CHIPS --}}
     <div class="category-scroll">
-        <a href="{{ route('student.browse') }}"
-            class="category-chip {{ $activeCategory === 'all' ? 'active' : '' }}">
-            <i class="ti ti-apps"></i> All
-        </a>
         @foreach($categories as $cat)
         <a href="{{ route('student.browse', ['category' => $cat, 'difficulty' => request('difficulty')]) }}"
             class="category-chip {{ $activeCategory === $cat ? 'active' : '' }}">
@@ -431,5 +429,49 @@ $fallbackIcons[$index % count($fallbackIcons)],
             setTimeout(() => toast.remove(), 400);
         }, 2500);
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const difficultyOptions = [{
+                value: '',
+                label: 'All Difficulties'
+            },
+            {
+                value: 'easy',
+                label: '🟢 Easy'
+            },
+            {
+                value: 'medium',
+                label: '🟡 Medium'
+            },
+            {
+                value: 'hard',
+                label: '🔴 Hard'
+            },
+        ];
+
+        createCustomSelect(
+            document.getElementById('difficultyFilterWrap'),
+            difficultyOptions,
+            'All Difficulties',
+            (val) => {
+                document.getElementById('difficultyInput').value = val;
+                document.getElementById('browseForm').submit();
+            }
+        );
+
+        const currentDifficulty = "{{ request('difficulty') }}";
+        if (currentDifficulty) {
+            const wrap = document.getElementById('difficultyFilterWrap');
+            const trigger = wrap.querySelector('.custom-select-trigger span');
+            const opts = wrap.querySelectorAll('.custom-select-option');
+            const match = [...opts].find(o => o.dataset.value === currentDifficulty);
+            if (match) {
+                opts.forEach(o => o.classList.remove('selected'));
+                match.classList.add('selected');
+                trigger.textContent = match.textContent.trim();
+                trigger.classList.add('selected');
+            }
+        }
+    });
 </script>
 @endpush

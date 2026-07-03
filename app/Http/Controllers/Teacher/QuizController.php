@@ -39,7 +39,12 @@ class QuizController extends Controller
             'difficulty'     => 'required|in:easy,medium,hard',
             'tags'           => 'nullable|string|max:255',
             'passing_score'  => 'nullable|integer|min:0|max:100',
+            'proposed_code'  => 'nullable|string|size:6',
         ]);
+
+        $accessCode = $request->visibility === 'private'
+            ? $this->resolveAccessCode($request->proposed_code)
+            : null;
 
         $quiz = Quiz::create([
             'teacher_id'        => Auth::id(),
@@ -54,6 +59,7 @@ class QuizController extends Controller
             'shuffle_questions'  => $request->boolean('shuffle_questions'),
             'show_results'      => $request->boolean('show_results'),
             'visibility'        => $request->visibility,
+            'access_code'       => $accessCode,
             'category'          => $request->category,
             'difficulty'        => $request->difficulty,
             'tags'              => $request->tags,
@@ -91,7 +97,7 @@ class QuizController extends Controller
 
         $quiz->delete();
 
-        return redirect()->route('teacher.dashboard')
+        return redirect()->back()
             ->with('success', 'Quiz deleted successfully.');
     }
 
@@ -285,5 +291,15 @@ class QuizController extends Controller
         } while (Quiz::where('access_code', $code)->exists());
 
         return $code;
+    }
+    private function resolveAccessCode(?string $proposed): string
+    {
+        $code = strtoupper(trim((string) $proposed));
+
+        if (preg_match('/^[A-HJ-NP-Z2-9]{6}$/', $code) && !Quiz::where('access_code', $code)->exists()) {
+            return $code;
+        }
+
+        return $this->createUniqueCode();
     }
 }

@@ -13,6 +13,7 @@ class Quiz extends Model
         'type',
         'status',
         'visibility',
+        'access_code',
         'category',
         'difficulty',
         'tags',

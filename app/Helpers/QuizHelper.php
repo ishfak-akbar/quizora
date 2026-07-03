@@ -45,4 +45,20 @@ class QuizHelper
 
         return 'ti ti-tag';
     }
+    public static function bookmarkBannerConfig(?string $category, int $index = 0): array
+    {
+        $gradients = [
+            'linear-gradient(135deg, #4F46E5 0%, #818CF8 100%)',
+            'linear-gradient(135deg, #7C3AED 0%, #C084FC 100%)',
+            'linear-gradient(135deg, #0891B2 0%, #67E8F9 100%)',
+            'linear-gradient(135deg, #DB2777 0%, #F472B6 100%)',
+            'linear-gradient(135deg, #059669 0%, #6EE7B7 100%)',
+            'linear-gradient(135deg, #D97706 0%, #FCD34D 100%)',
+        ];
+
+        $bg = $gradients[$index % count($gradients)];
+        $icon = self::categoryIcon($category);
+
+        return [$bg, $icon];
+    }
 }

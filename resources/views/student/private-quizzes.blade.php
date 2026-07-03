@@ -200,7 +200,7 @@
 <div class="quiz-grid">
     @foreach($unlockedQuizzes as $quiz)
     @php
-    [$bg, $icon] = bookmarkBannerConfig($quiz->category ?? '', $loop->index);
+    [$bg, $icon] = \App\Helpers\QuizHelper::bookmarkBannerConfig($quiz->category ?? '', $loop->index);
     @endphp
     <a href="{{ route('student.quiz.detail', $quiz->id) }}" class="pquiz-card">
         <div class="pquiz-banner" style="background: {{ $bg }};">

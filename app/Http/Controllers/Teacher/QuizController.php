@@ -139,6 +139,10 @@ class QuizController extends Controller
             'passing_score'  => 'nullable|integer|min:0|max:100',
         ]);
 
+        $accessCode = $request->visibility === 'private'
+            ? $this->resolveAccessCode($quiz->access_code)
+            : null;
+
         $quiz->update([
             'title'             => $request->title,
             'description'       => $request->description,
@@ -150,6 +154,7 @@ class QuizController extends Controller
             'show_results'      => $request->boolean('show_results'),
             'status'            => $request->status,
             'visibility'        => $request->visibility,
+            'access_code'       => $accessCode,
             'category'          => $request->category,
             'difficulty'        => $request->difficulty,
             'tags'              => $request->tags,

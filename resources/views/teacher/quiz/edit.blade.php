@@ -627,6 +627,7 @@
                         <div class="field">
                             <label>Category *</label>
                             <input type="text" class="input" name="category"
+                                value="{{ old('category', $quiz->category) }}"
                                 placeholder="e.g. Mathematics, BCS, Science" required />
                         </div>
                         <div class="field">
@@ -639,6 +640,7 @@
                     <div class="field">
                         <label>Tags (comma separated)</label>
                         <input type="text" class="input" name="tags"
+                            value="{{ old('tags', $quiz->tags) }}"
                             placeholder="e.g. algebra, geometry, mcq" />
                     </div>
 
@@ -651,6 +653,7 @@
                         <div class="field">
                             <label>Passing Score (%)</label>
                             <input type="number" class="input" name="passing_score"
+                                value="{{ old('passing_score', $quiz->passing_score) }}"
                                 placeholder="e.g. 50" min="0" max="100" />
                         </div>
                     </div>

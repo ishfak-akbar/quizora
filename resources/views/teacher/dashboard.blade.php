@@ -618,7 +618,7 @@
           <td>{{ $quiz->ends_at ? $quiz->ends_at->format('M d, Y') : 'No deadline' }}</td>
           <td>
             <span class="status-badge {{ $quiz->status }}">
-              <span class="status-dot"></span> {{ ucfirst($quiz->status) }}
+              <span class="status-dot"></span> {{ ucfirst($quiz->display_status) }}
             </span>
           </td>
           <td>

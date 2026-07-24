@@ -234,7 +234,7 @@
                 <div class="quiz-list-icon"><i class="ti ti-file-description"></i></div>
                 <div style="flex:1;overflow:hidden;">
                     <div class="quiz-list-name">{{ $quiz->title }}</div>
-                    <div class="quiz-list-meta">{{ $quiz->submitted_count }} submitted · {{ ucfirst($quiz->status) }}</div>
+                    <div class="quiz-list-meta">{{ $quiz->submitted_count }} submitted · {{ ucfirst($quiz->display_status) }}</div>
                 </div>
             </div>
             @empty

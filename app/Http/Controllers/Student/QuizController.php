@@ -61,7 +61,7 @@ class QuizController extends Controller
     }
     public function detail(Quiz $quiz)
     {
-        if ($quiz->status !== 'active') {
+        if (!$quiz->isActive()) {
             abort(404);
         }
 
@@ -117,7 +117,7 @@ class QuizController extends Controller
     }
     public function take(Quiz $quiz)
     {
-        if ($quiz->status !== 'active') {
+        if (!$quiz->isActive()) {
             abort(404);
         }
 
@@ -162,6 +162,7 @@ class QuizController extends Controller
         ])->values();
 
         $totalQuestions = $questions->count();
+        session(["quiz_started_at_{$quiz->id}" => now()]);
 
         return view('student.take-quiz', compact('quiz', 'questions', 'totalQuestions'));
     }
@@ -169,7 +170,7 @@ class QuizController extends Controller
     {
         $student = Auth::user();
 
-        if ($quiz->status !== 'active') {
+        if (!$quiz->isActive()) {
             abort(404);
         }
 
@@ -190,6 +191,13 @@ class QuizController extends Controller
 
         if ($attemptCount >= $quiz->max_attempts) {
             return redirect()->route('student.quiz.detail', $quiz->id);
+        }
+        if ($quiz->time_limit) {
+            $startedAt = session("quiz_started_at_{$quiz->id}");
+            if ($startedAt && now()->diffInMinutes($startedAt) > $quiz->time_limit + 1) {
+                return redirect()->route('student.quiz.detail', $quiz->id)
+                    ->with('error', 'Time limit exceeded. This attempt was not submitted.');
+            }
         }
 
         $questions = $quiz->questions()->with('options')->get()->keyBy('id');
@@ -223,9 +231,11 @@ class QuizController extends Controller
             'status'       => 'submitted',
             'score'        => $score,
             'total_marks'  => $totalMarks,
-            'started_at'   => now(),
+            'started_at'   => session("quiz_started_at_{$quiz->id}") ?? now(),
             'submitted_at' => now(),
         ]);
+
+        session()->forget("quiz_started_at_{$quiz->id}");
 
         foreach ($answerRows as $row) {
             $attempt->answers()->create($row);

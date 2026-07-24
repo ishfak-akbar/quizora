@@ -62,4 +62,20 @@ class Quiz extends Model
     {
         return $this->hasMany(QuizUnlock::class);
     }
+    public function getDisplayStatusAttribute(): string
+    {
+        if ($this->status !== 'active') {
+            return $this->status; 
+        }
+
+        if ($this->starts_at && $this->starts_at->isFuture()) {
+            return 'scheduled';
+        }
+
+        if ($this->ends_at && $this->ends_at->isPast()) {
+            return 'ended';
+        }
+
+        return 'active';
+    }
 }

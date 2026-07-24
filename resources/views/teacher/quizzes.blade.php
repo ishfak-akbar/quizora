@@ -269,7 +269,7 @@
                     @endif
                 </div>
                 <span class="status-badge {{ $quiz->status }}">
-                    <span class="status-dot"></span>{{ ucfirst($quiz->status) }}
+                    <span class="status-dot"></span>{{ ucfirst($quiz->display_status) }}
                 </span>
             </div>
             <div class="quiz-meta">

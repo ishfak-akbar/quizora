@@ -19,6 +19,9 @@ class DashboardController extends Controller
         $activeQuizzes = Quiz::where('teacher_id', $teacher->id)
             ->where('status', 'active')
             ->where(function ($q) {
+                $q->whereNull('starts_at')->orWhere('starts_at', '<=', now());
+            })
+            ->where(function ($q) {
                 $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
             })
             ->count();

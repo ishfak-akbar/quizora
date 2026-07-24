@@ -15,6 +15,12 @@ class QuizController extends Controller
     {
         $query = Quiz::where('status', 'active')
             ->where('visibility', 'public')
+            ->where(function ($q) {
+                $q->whereNull('starts_at')->orWhere('starts_at', '<=', now());
+            })
+            ->where(function ($q) {
+                $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
+            })
             ->withCount(['questions', 'attempts']);
 
         if ($request->filled('search')) {
@@ -335,6 +341,12 @@ class QuizController extends Controller
 
         $unlockedQuizzes = Quiz::whereIn('id', $unlockedQuizIds)
             ->where('status', 'active')
+            ->where(function ($q) {
+                $q->whereNull('starts_at')->orWhere('starts_at', '<=', now());
+            })
+            ->where(function ($q) {
+                $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
+            })
             ->withCount('questions')
             ->latest()
             ->get();

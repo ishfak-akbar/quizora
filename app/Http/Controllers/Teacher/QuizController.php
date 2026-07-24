@@ -307,4 +307,21 @@ class QuizController extends Controller
 
         return $this->createUniqueCode();
     }
+    public function print(Quiz $quiz)
+    {
+        if ($quiz->teacher_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $quiz->load(['questions' => function ($q) {
+            $q->orderBy('order');
+        }, 'questions.options' => function ($q) {
+            $q->orderBy('order');
+        }]);
+
+        $totalMarks = $quiz->questions->sum('marks');
+        $includeAnswers = request()->boolean('with_answers');
+
+        return view('teacher.quiz.print', compact('quiz', 'totalMarks', 'includeAnswers'));
+    }
 }

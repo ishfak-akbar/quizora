@@ -46,6 +46,7 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->group(function (
     Route::get('/settings', [QuizController::class, 'settings'])->name('teacher.settings');
 
     Route::post('/quiz/{quiz}/generate-code', [QuizController::class, 'generateAccessCode'])->name('teacher.quiz.generate-code');
+    Route::get('/quiz/{quiz}/print', [QuizController::class, 'print'])->name('teacher.quiz.print');
 });
 
 Route::middleware(['auth', 'role:student'])->prefix('student')->group(function () {

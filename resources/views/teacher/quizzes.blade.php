@@ -297,6 +297,7 @@
             </div>
             <div class="action-btns" style="margin-left:12px;">
                 <a href="{{ route('teacher.quiz.edit', $quiz->id) }}" class="action-btn" title="Edit"><i class="ti ti-edit"></i></a>
+                <a href="{{ route('teacher.quiz.print', $quiz->id) }}" class="action-btn" title="Print Question Paper" target="_blank"><i class="ti ti-printer"></i></a>
                 <form method="POST" action="{{ route('teacher.quiz.destroy', $quiz->id) }}" style="display:inline;">
                     @csrf @method('DELETE')
                     <button type="submit" class="action-btn danger" title="Delete" onclick="return confirm('Delete this quiz?')">

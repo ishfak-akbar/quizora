@@ -258,11 +258,6 @@ class QuizController extends Controller
         return view('teacher.students');
     }
 
-    public function questionBank()
-    {
-        return view('teacher.question-bank');
-    }
-
     public function settings()
     {
         return view('teacher.settings');

@@ -42,11 +42,16 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->group(function (
     Route::get('/leaderboard/{quiz}', [TeacherDashboard::class, 'leaderboard'])->name('teacher.leaderboard');
 
     Route::get('/students', [TeacherDashboard::class, 'students'])->name('teacher.students');
-    Route::get('/question-bank', [QuizController::class, 'questionBank'])->name('teacher.question-bank');
     Route::get('/settings', [QuizController::class, 'settings'])->name('teacher.settings');
 
     Route::post('/quiz/{quiz}/generate-code', [QuizController::class, 'generateAccessCode'])->name('teacher.quiz.generate-code');
     Route::get('/quiz/{quiz}/print', [QuizController::class, 'print'])->name('teacher.quiz.print');
+
+    Route::get('/question-bank', [\App\Http\Controllers\Teacher\QuestionBankController::class, 'index'])->name('teacher.question-bank');
+    Route::post('/question-bank', [\App\Http\Controllers\Teacher\QuestionBankController::class, 'store'])->name('teacher.question-bank.store');
+    Route::delete('/question-bank/{bankQuestion}', [\App\Http\Controllers\Teacher\QuestionBankController::class, 'destroy'])->name('teacher.question-bank.destroy');
+    Route::post('/question-bank/bulk-delete', [\App\Http\Controllers\Teacher\QuestionBankController::class, 'bulkDestroy'])->name('teacher.question-bank.bulk-delete');
+    Route::post('/question-bank/fetch-by-ids', [\App\Http\Controllers\Teacher\QuestionBankController::class, 'fetchByIds'])->name('teacher.question-bank.fetch-by-ids');
 });
 
 Route::middleware(['auth', 'role:student'])->prefix('student')->group(function () {

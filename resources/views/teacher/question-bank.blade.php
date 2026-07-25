@@ -24,7 +24,7 @@
 
     .stats-row {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 14px;
         margin-bottom: 24px;
     }
@@ -53,10 +53,6 @@
 
     .stat-card.cyan::before {
         background: linear-gradient(90deg, #0891B2, #22D3EE);
-    }
-
-    .stat-card.green::before {
-        background: linear-gradient(90deg, #059669, #34D399);
     }
 
     .stat-card.amber::before {
@@ -94,7 +90,7 @@
         border-radius: 10px;
         padding: 0 14px;
         flex: 1;
-        max-width: 400px;
+        max-width: 360px;
     }
 
     .search-wrap:focus-within {
@@ -121,180 +117,44 @@
         color: var(--color-text-muted);
     }
 
-    .filter-select {
+    .select-toggle-btn {
         height: 38px;
-        padding: 0 14px;
+        padding: 0 16px;
         border-radius: 10px;
         border: 1.5px solid var(--color-border-light);
-        background: var(--color-bg-card);
-        color: var(--color-text-secondary);
-        font-size: 13px;
-        font-family: var(--font);
-        cursor: pointer;
-        outline: none;
-    }
-
-    .table-card {
-        background: var(--color-bg-card);
-        border: 1px solid var(--color-border-light);
-        border-radius: 14px;
-        overflow: hidden;
-    }
-
-    .table-card table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .table-card th {
-        padding: 12px 16px;
-        text-align: left;
-        font-size: 11px;
-        font-weight: 600;
-        color: var(--color-text-muted);
-        letter-spacing: 0.8px;
-        text-transform: uppercase;
-        border-bottom: 1px solid var(--color-border-light);
-    }
-
-    .table-card td {
-        padding: 14px 16px;
-        font-size: 13px;
-        color: var(--color-text-secondary);
-        border-bottom: 1px solid var(--color-border-light);
-        vertical-align: middle;
-    }
-
-    .table-card tr:last-child td {
-        border-bottom: none;
-    }
-
-    .table-card tr:hover td {
-        background: var(--color-bg-row-hover);
-    }
-
-    .q-text {
-        font-size: 13px;
-        font-weight: 600;
-        color: #fff;
-        margin-bottom: 3px;
-    }
-
-    .q-options {
-        font-size: 11px;
-        color: var(--color-text-muted);
-    }
-
-    .type-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        font-size: 11px;
-        font-weight: 600;
-        padding: 3px 10px;
-        border-radius: 20px;
-    }
-
-    .type-mcq {
-        background: rgba(79, 70, 229, 0.15);
-        color: var(--color-primary-glow);
-    }
-
-    .type-tf {
-        background: rgba(34, 211, 238, 0.15);
-        color: #22D3EE;
-    }
-
-    .type-short {
-        background: rgba(245, 158, 11, 0.15);
-        color: #F59E0B;
-    }
-
-    .points-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        font-size: 11px;
-        font-weight: 600;
-        padding: 3px 10px;
-        border-radius: 20px;
-        background: rgba(167, 139, 250, 0.15);
-        color: var(--color-stat-purple);
-    }
-
-    .bulk-bar {
-        display: none;
-        align-items: center;
-        gap: 12px;
-        padding: 10px 16px;
-        background: rgba(79, 70, 229, 0.1);
-        border-bottom: 1px solid rgba(79, 70, 229, 0.2);
-        font-size: 13px;
-    }
-
-    .bulk-bar.visible {
-        display: flex;
-    }
-
-    .bulk-count {
-        font-weight: 600;
-        color: var(--color-primary-glow);
-    }
-
-    .btn-danger-sm {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: rgba(248, 113, 113, 0.15);
-        color: var(--color-status-error);
-        border: 1px solid rgba(248, 113, 113, 0.3);
-        padding: 6px 14px;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: 600;
-        font-family: var(--font);
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .btn-danger-sm:hover {
-        background: rgba(248, 113, 113, 0.25);
-    }
-
-    .btn-secondary {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
         background: transparent;
         color: var(--color-text-secondary);
-        border: 1px solid var(--color-border-light);
-        padding: 6px 14px;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: 600;
+        font-size: 13px;
+        font-weight: 500;
         font-family: var(--font);
         cursor: pointer;
         transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
     }
 
-    .btn-secondary:hover {
-        background: var(--color-bg-row-hover);
+    .select-toggle-btn:hover,
+    .select-toggle-btn.active {
+        background: rgba(79, 70, 229, 0.15);
+        border-color: rgba(79, 70, 229, 0.4);
         color: #fff;
     }
 
     .btn-primary {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
         background: var(--color-primary-solid);
         color: #fff;
-        border: none;
-        padding: 10px 18px;
-        border-radius: 10px;
         font-size: 13px;
         font-weight: 600;
-        font-family: var(--font);
+        padding: 10px 18px;
+        border-radius: 10px;
+        text-decoration: none;
+        border: none;
         cursor: pointer;
+        font-family: var(--font);
         transition: background 0.2s;
     }
 
@@ -302,23 +162,110 @@
         background: #4338CA;
     }
 
+    .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--color-text-secondary);
+        border: 1px solid var(--color-border-light);
+        padding: 9px 16px;
+        border-radius: 9px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: var(--font);
+    }
+
     .btn-danger {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: rgba(248, 113, 113, 0.15);
-        color: var(--color-status-error);
-        border: 1px solid rgba(248, 113, 113, 0.3);
-        padding: 10px 18px;
-        border-radius: 10px;
+        background: #EF4444;
+        color: #fff;
+        border: none;
+        padding: 9px 16px;
+        border-radius: 9px;
         font-size: 13px;
-        font-weight: 600;
+        font-weight: 700;
+        cursor: pointer;
         font-family: var(--font);
+    }
+
+    .bank-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .bank-row {
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border-light);
+        border-radius: 14px;
+        padding: 16px 20px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        transition: all 0.15s;
+        cursor: default;
+    }
+
+    .bank-row.selectable {
         cursor: pointer;
     }
 
-    .btn-danger:hover {
-        background: rgba(248, 113, 113, 0.25);
+    .bank-row.selectable:hover {
+        border-color: rgba(79, 70, 229, 0.35);
+    }
+
+    .bank-row.selected {
+        background: rgba(79, 70, 229, 0.12);
+        border-color: var(--color-primary-solid);
+    }
+
+    .bank-q-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 6px;
+    }
+
+    .bank-meta {
+        font-size: 11px;
+        color: var(--color-text-muted);
+        margin-bottom: 10px;
+    }
+
+    .bank-opts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5px 20px;
+        font-size: 13px;
+        color: var(--color-text-secondary);
+    }
+
+    .bank-opts .correct {
+        color: var(--color-status-success);
+        font-weight: 600;
+    }
+
+    .bank-row-actions {
+        flex-shrink: 0;
+    }
+
+    .action-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--color-border-light);
+        color: var(--color-text-secondary);
+        cursor: pointer;
+        transition: all 0.2s;
     }
 
     .action-btn.danger:hover {
@@ -329,222 +276,140 @@
 
     .empty-state {
         text-align: center;
-        padding: 48px;
+        padding: 60px 20px;
         color: var(--color-text-muted);
     }
 
     .empty-state i {
-        font-size: 40px;
+        font-size: 48px;
         display: block;
-        margin-bottom: 12px;
+        margin-bottom: 16px;
         color: rgba(79, 70, 229, 0.3);
     }
 
+    .empty-state h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #9ca3af;
+        margin-bottom: 8px;
+    }
+
+    .empty-state p {
+        font-size: 13px;
+    }
+
+    /* FLOATING SELECTION BAR */
+    .selection-bar {
+        position: fixed;
+        bottom: 28px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #1e1a3e;
+        border: 1px solid rgba(79, 70, 229, 0.4);
+        padding: 14px 20px;
+        border-radius: 14px;
+        font-size: 13px;
+        display: none;
+        align-items: center;
+        gap: 14px;
+        z-index: 9999;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        white-space: nowrap;
+    }
+
+    .selection-bar.visible {
+        display: flex;
+    }
+
+    .selection-count {
+        color: #fff;
+        font-weight: 600;
+    }
+
+    /* MODAL */
     .modal-overlay {
+        display: none;
         position: fixed;
         inset: 0;
         background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(4px);
-        display: flex;
         align-items: center;
         justify-content: center;
         z-index: 1000;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.2s;
     }
 
     .modal-overlay.open {
-        opacity: 1;
-        pointer-events: all;
+        display: flex;
     }
 
     .modal {
         background: var(--color-bg-card);
         border: 1px solid var(--color-border-light);
-        border-radius: 20px;
-        padding: 28px;
-        width: 500px;
-        max-width: 95vw;
-        max-height: 90vh;
+        border-radius: 16px;
+        padding: 26px;
+        max-width: 520px;
+        width: 92%;
+        max-height: 88vh;
         overflow-y: auto;
     }
 
-    .modal-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 20px;
-    }
-
-    .modal-title {
+    .modal h2 {
         font-size: 16px;
         font-weight: 700;
         color: #fff;
+        margin-bottom: 16px;
     }
 
-    .modal-close {
-        background: transparent;
-        border: none;
+    .field {
+        margin-bottom: 16px;
+    }
+
+    .field label {
+        display: block;
+        font-size: 11px;
+        font-weight: 600;
         color: var(--color-text-muted);
-        font-size: 20px;
-        cursor: pointer;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        margin-bottom: 7px;
     }
 
-    .modal-close:hover {
+    .input,
+    textarea.input {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1.5px solid var(--color-border-light);
+        border-radius: 10px;
+        padding: 10px 14px;
         color: #fff;
+        font-size: 13px;
+        font-family: var(--font);
+        outline: none;
+    }
+
+    textarea.input {
+        resize: vertical;
+        min-height: 64px;
+    }
+
+    .row-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    .opt-row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 10px;
     }
 
     .modal-footer {
         display: flex;
         gap: 10px;
         justify-content: flex-end;
-        margin-top: 20px;
-        padding-top: 20px;
-        border-top: 1px solid var(--color-border-light);
-    }
-
-    .form-group {
-        margin-bottom: 16px;
-    }
-
-    .form-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
-    }
-
-    .form-label {
-        display: block;
-        font-size: 12px;
-        font-weight: 600;
-        color: var(--color-text-muted);
-        margin-bottom: 7px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .form-input,
-    .form-select,
-    .form-textarea {
-        width: 100%;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1.5px solid var(--color-border-light);
-        border-radius: 10px;
-        color: #fff;
-        font-size: 13px;
-        font-family: var(--font);
-        padding: 10px 14px;
-        outline: none;
-        transition: border-color 0.2s;
-    }
-
-    .form-input:focus,
-    .form-select:focus,
-    .form-textarea:focus {
-        border-color: rgba(79, 70, 229, 0.6);
-    }
-
-    .form-textarea {
-        min-height: 80px;
-        resize: vertical;
-    }
-
-    .options-builder {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        margin-bottom: 10px;
-    }
-
-    .option-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .option-row input[type="radio"] {
-        flex-shrink: 0;
-        accent-color: var(--color-primary-solid);
-        width: 16px;
-        height: 16px;
-    }
-
-    .option-row .form-input {
-        flex: 1;
-    }
-
-    .option-remove {
-        background: transparent;
-        border: none;
-        color: var(--color-text-muted);
-        cursor: pointer;
-        font-size: 16px;
-        padding: 4px;
-        display: flex;
-        align-items: center;
-    }
-
-    .option-remove:hover {
-        color: var(--color-status-error);
-    }
-
-    .add-option-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: transparent;
-        border: 1px dashed var(--color-border-light);
-        color: var(--color-text-muted);
-        font-size: 12px;
-        font-weight: 500;
-        padding: 7px 14px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-family: var(--font);
-        transition: all 0.2s;
-    }
-
-    .add-option-btn:hover {
-        border-color: rgba(79, 70, 229, 0.4);
-        color: var(--color-primary-glow);
-    }
-
-    .delete-modal {
-        text-align: center;
-        max-width: 380px;
-    }
-
-    .delete-icon {
-        width: 56px;
-        height: 56px;
-        border-radius: 50%;
-        background: rgba(248, 113, 113, 0.15);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 26px;
-        color: var(--color-status-error);
-        margin: 0 auto 16px;
-    }
-
-    .delete-title {
-        font-size: 18px;
-        font-weight: 700;
-        color: #fff;
-        margin-bottom: 8px;
-    }
-
-    .delete-desc {
-        font-size: 13px;
-        color: var(--color-text-muted);
-        margin-bottom: 24px;
-    }
-
-    .delete-footer {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
+        margin-top: 8px;
     }
 </style>
 @endpush
@@ -554,248 +419,275 @@
 <div class="page-header">
     <div>
         <h1>Question Bank</h1>
-        <p>All questions across your quizzes in one place</p>
+        <p>Save questions once, reuse them across any quiz</p>
     </div>
-    <button class="btn-primary" onclick="openAddModal()"><i class="ti ti-plus"></i> Add Question</button>
+    <button class="btn-primary" onclick="document.getElementById('addModal').classList.add('open')">
+        <i class="ti ti-plus"></i> Add Question
+    </button>
 </div>
-
-@php
-use App\Models\Question;
-$allQuestions = Question::whereHas('quiz', fn($q) => $q->where('teacher_id', auth()->id()))
-->with('quiz')->get();
-$totalQ = $allQuestions->count();
-$mcqCount = $allQuestions->where('type','mcq')->count();
-$tfCount = $allQuestions->where('type','true_false')->count();
-$shortCount = $allQuestions->where('type','short_answer')->count();
-$quizNames = $allQuestions->pluck('quiz.title','quiz_id')->unique();
-@endphp
 
 <div class="stats-row">
     <div class="stat-card purple">
-        <div class="stat-value">{{ $totalQ }}</div>
+        <div class="stat-value">{{ $totalQuestions }}</div>
         <div class="stat-label">Total Questions</div>
     </div>
     <div class="stat-card cyan">
-        <div class="stat-value">{{ $mcqCount }}</div>
-        <div class="stat-label">MCQ</div>
-    </div>
-    <div class="stat-card green">
-        <div class="stat-value">{{ $tfCount }}</div>
-        <div class="stat-label">True / False</div>
+        <div class="stat-value">{{ $totalCategories }}</div>
+        <div class="stat-label">Categories</div>
     </div>
     <div class="stat-card amber">
-        <div class="stat-value">{{ $shortCount }}</div>
-        <div class="stat-label">Short Answer</div>
+        <div class="stat-value">{{ $addedThisWeek }}</div>
+        <div class="stat-label">Added This Week</div>
     </div>
 </div>
 
 <div class="filters">
-    <div class="search-wrap">
+    <form method="GET" class="search-wrap">
         <i class="ti ti-search"></i>
-        <input type="text" id="searchInput" placeholder="Search questions...">
-    </div>
-    <div id="quizFilterWrap" style="min-width:180px;"></div>
-    <div id="typeFilterWrap" style="min-width:160px;"></div>
+        <input type="text" name="search" placeholder="Search questions..." value="{{ request('search') }}" onchange="this.form.submit()">
+    </form>
+    <div id="categoryFilterWrap" style="min-width:180px;"></div>
+    <button type="button" class="select-toggle-btn" id="selectModeBtn" onclick="toggleSelectMode()">
+        <i class="ti ti-checkbox"></i> Select Multiple
+    </button>
 </div>
 
-<div class="table-card">
-    <div class="bulk-bar" id="bulkBar">
-        <span class="bulk-count" id="bulkCount">0 selected</span>
-        <button class="btn-danger-sm" onclick="openBulkDelete()"><i class="ti ti-trash"></i> Delete Selected</button>
-        <button class="btn-secondary" onclick="clearSelection()">Cancel</button>
+@if($questions->isEmpty())
+<div class="empty-state">
+    <i class="ti ti-database-off"></i>
+    <h3>No saved questions yet</h3>
+    <p>Add your first question to start building your reusable bank</p>
+</div>
+@else
+<div class="bank-list" id="bankList">
+    @foreach($questions as $q)
+    <div class="bank-row" data-id="{{ $q->id }}" data-category="{{ $q->category }}" onclick="handleRowClick(event, this)">
+        <div style="flex:1;">
+            <div class="bank-q-text">{{ $q->question_text }}</div>
+            <div class="bank-meta">{{ $q->category ?? 'Uncategorized' }} · {{ $q->marks }} mark(s){{ $q->tags ? ' · ' . $q->tags : '' }}</div>
+            <div class="bank-opts">
+                @foreach($q->options as $i => $opt)
+                <div class="{{ $opt->is_correct ? 'correct' : '' }}">
+                    {{ chr(65+$i) }}. {{ $opt->option_text }} {{ $opt->is_correct ? '✓' : '' }}
+                </div>
+                @endforeach
+            </div>
+        </div>
+        <div class="bank-row-actions">
+            <button class="action-btn danger" title="Delete" onclick="event.stopPropagation(); openSingleDelete({{ $q->id }})">
+                <i class="ti ti-trash"></i>
+            </button>
+        </div>
     </div>
-    <table id="questionsTable">
-        <thead>
-            <tr>
-                <th style="width:40px;"><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)"></th>
-                <th>Question</th>
-                <th>Type</th>
-                <th>Quiz</th>
-                <th>Points</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="questionsBody">
-            @forelse($allQuestions as $question)
-            @php
-            $typeClass = ['mcq'=>'type-mcq','true_false'=>'type-tf','short_answer'=>'type-short'][$question->type] ?? 'type-mcq';
-            $typeLabel = ['mcq'=>'MCQ','true_false'=>'True/False','short_answer'=>'Short Answer'][$question->type] ?? $question->type;
-            $typeIcon = ['mcq'=>'ti-list-check','true_false'=>'ti-toggle-left','short_answer'=>'ti-writing'][$question->type] ?? 'ti-help-circle';
-            $optionsPreview = $question->options->pluck('option_text')->take(4)->implode(' · ');
-            @endphp
-            <tr data-type="{{ $question->type }}" data-quiz="{{ $question->quiz_id }}" data-q="{{ strtolower($question->question_text) }}">
-                <td><input type="checkbox" class="row-check" onchange="updateBulkBar()"></td>
-                <td>
-                    <div class="q-text">{{ Str::limit($question->question_text, 80) }}</div>
-                    @if($optionsPreview)
-                    <div class="q-options">{{ $optionsPreview }}</div>
-                    @endif
-                </td>
-                <td><span class="type-badge {{ $typeClass }}"><i class="ti {{ $typeIcon }}"></i> {{ $typeLabel }}</span></td>
-                <td style="color:#fff;font-size:12px;">{{ $question->quiz->title ?? '—' }}</td>
-                <td><span class="points-pill"><i class="ti ti-star-filled" style="font-size:11px;"></i> {{ $question->marks }}</span></td>
-                <td>
-                    <div class="action-btns">
-                        <button class="action-btn danger" title="Delete" onclick="openDeleteModal(this)"><i class="ti ti-trash"></i></button>
-                    </div>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="6">
-                    <div class="empty-state"><i class="ti ti-database-off"></i>
-                        <p>No questions yet. Create a quiz to add questions.</p>
-                    </div>
-                </td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
-    <div class="empty-state" id="emptyState" style="display:none;">
-        <i class="ti ti-database-off"></i>
-        <p>No questions match your filters.</p>
+    @endforeach
+</div>
+@endif
+
+{{-- FLOATING SELECTION BAR --}}
+<div class="selection-bar" id="selectionBar">
+    <span class="selection-count" id="selectionCount">0 selected</span>
+    <button class="btn-secondary" onclick="selectAll()">Select All</button>
+    <button class="btn-primary" onclick="useSelectedInQuiz()"><i class="ti ti-plus"></i> Use in Quiz</button>
+    <button class="btn-danger" onclick="deleteSelected()"><i class="ti ti-trash"></i> Delete</button>
+    <button class="btn-secondary" onclick="cancelSelection()">Cancel</button>
+</div>
+
+{{-- ADD QUESTION MODAL --}}
+<div class="modal-overlay" id="addModal">
+    <div class="modal">
+        <h2>Add Question to Bank</h2>
+        <form method="POST" action="{{ route('teacher.question-bank.store') }}">
+            @csrf
+            <div class="field">
+                <label>Question Text *</label>
+                <textarea class="input" name="question_text" required></textarea>
+            </div>
+            <div class="row-2">
+                <div class="field">
+                    <label>Category</label>
+                    <input class="input" name="category" placeholder="e.g. Mathematics">
+                </div>
+                <div class="field">
+                    <label>Marks</label>
+                    <input type="number" class="input" name="marks" value="1" min="1" required>
+                </div>
+            </div>
+            <div class="field">
+                <label>Tags (comma separated)</label>
+                <input class="input" name="tags" placeholder="e.g. algebra, geometry">
+            </div>
+            <div class="field">
+                <label>Options — select the correct one</label>
+                @foreach(['A','B','C','D'] as $i => $letter)
+                <div class="opt-row">
+                    <input type="radio" name="correct" value="{{ $i }}" {{ $i == 0 ? 'checked' : '' }} required>
+                    <input class="input" name="options[]" placeholder="Option {{ $letter }}" required>
+                </div>
+                @endforeach
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="document.getElementById('addModal').classList.remove('open')">Cancel</button>
+                <button type="submit" class="btn-primary">Save Question</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- DELETE CONFIRM MODAL --}}
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal" style="max-width:420px; text-align:center;">
+        <h2 id="deleteModalTitle">Delete Question?</h2>
+        <p style="font-size:13px; color:var(--color-text-muted); margin-bottom:20px;" id="deleteModalDesc">
+            This will permanently remove it from your bank.
+        </p>
+        <div class="modal-footer" style="justify-content:center;">
+            <button class="btn-secondary" onclick="document.getElementById('deleteModal').classList.remove('open')">Cancel</button>
+            <button class="btn-danger" onclick="confirmDelete()">Delete</button>
+        </div>
     </div>
 </div>
 
 @endsection
 
 @push('scripts')
-
-{{-- DELETE MODAL --}}
-<div class="modal-overlay" id="deleteModal">
-    <div class="modal delete-modal">
-        <div class="delete-icon"><i class="ti ti-trash"></i></div>
-        <div class="delete-title">Delete Question?</div>
-        <div class="delete-desc" id="deleteDesc">This question will be permanently removed.</div>
-        <div class="delete-footer">
-            <button class="btn-secondary" onclick="closeModal('deleteModal')">Cancel</button>
-            <button class="btn-danger" onclick="confirmDelete()"><i class="ti ti-trash"></i> Delete</button>
-        </div>
-    </div>
-</div>
-
 <script>
-    function closeModal(id) {
-        document.getElementById(id).classList.remove('open');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    let selectMode = false;
+    let selectedIds = new Set();
+    let deleteTarget = null; // single id or '__bulk__'
+
+    createCustomSelect(
+        document.getElementById('categoryFilterWrap'),
+        [{
+                value: 'all',
+                label: 'All Categories'
+            },
+            @foreach($categories as $cat) {
+                value: '{{ $cat }}',
+                label: @json($cat)
+            },
+            @endforeach
+        ],
+        '{{ request("category", "All Categories") }}',
+        (val) => {
+            const url = new URL(window.location);
+            url.searchParams.set('category', val);
+            window.location = url;
+        }
+    );
+
+    function toggleSelectMode() {
+        selectMode = !selectMode;
+        document.getElementById('selectModeBtn').classList.toggle('active', selectMode);
+        document.querySelectorAll('.bank-row').forEach(row => row.classList.toggle('selectable', selectMode));
+        if (!selectMode) cancelSelection();
     }
-    document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => {
-        if (e.target === o) o.classList.remove('open');
-    }));
 
-    let rowToDelete = null;
+    function handleRowClick(e, row) {
+        if (!selectMode) return;
+        const id = row.dataset.id;
+        if (selectedIds.has(id)) {
+            selectedIds.delete(id);
+            row.classList.remove('selected');
+        } else {
+            selectedIds.add(id);
+            row.classList.add('selected');
+        }
+        updateSelectionBar();
+    }
 
-    function openDeleteModal(btn) {
-        rowToDelete = btn.closest('tr');
+    function selectAll() {
+        document.querySelectorAll('.bank-row').forEach(row => {
+            selectedIds.add(row.dataset.id);
+            row.classList.add('selected');
+        });
+        updateSelectionBar();
+    }
+
+    function cancelSelection() {
+        selectedIds.clear();
+        document.querySelectorAll('.bank-row').forEach(row => row.classList.remove('selected'));
+        updateSelectionBar();
+    }
+
+    function updateSelectionBar() {
+        const bar = document.getElementById('selectionBar');
+        bar.classList.toggle('visible', selectedIds.size > 0);
+        document.getElementById('selectionCount').textContent = `${selectedIds.size} selected`;
+    }
+
+    function openSingleDelete(id) {
+        deleteTarget = String(id);
+        document.getElementById('deleteModalTitle').textContent = 'Delete Question?';
+        document.getElementById('deleteModalDesc').textContent = 'This will permanently remove it from your bank.';
+        document.getElementById('deleteModal').classList.add('open');
+    }
+
+    function deleteSelected() {
+        deleteTarget = '__bulk__';
+        document.getElementById('deleteModalTitle').textContent = `Delete ${selectedIds.size} Questions?`;
+        document.getElementById('deleteModalDesc').textContent = 'This will permanently remove all selected questions from your bank.';
         document.getElementById('deleteModal').classList.add('open');
     }
 
     function confirmDelete() {
-        if (rowToDelete === '__bulk__') {
-            document.querySelectorAll('.row-check:checked').forEach(cb => cb.closest('tr').remove());
-            clearSelection();
-        } else if (rowToDelete) {
-            rowToDelete.remove();
-            rowToDelete = null;
+        if (deleteTarget === '__bulk__') {
+            fetch("{{ route('teacher.question-bank.bulk-delete') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ids: Array.from(selectedIds)
+                    })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        selectedIds.forEach(id => document.querySelector(`.bank-row[data-id="${id}"]`)?.remove());
+                        cancelSelection();
+                        checkEmpty();
+                    }
+                })
+                .catch(() => alert('Failed to delete selected questions.'));
+        } else if (deleteTarget) {
+            fetch(`/teacher/question-bank/${deleteTarget}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        document.querySelector(`.bank-row[data-id="${deleteTarget}"]`)?.remove();
+                        deleteTarget = null;
+                        checkEmpty();
+                    }
+                })
+                .catch(() => alert('Failed to delete question.'));
         }
-        closeModal('deleteModal');
-        checkEmpty();
+        document.getElementById('deleteModal').classList.remove('open');
     }
 
-    function openBulkDelete() {
-        rowToDelete = '__bulk__';
-        document.getElementById('deleteModal').classList.add('open');
-    }
-
-    function toggleSelectAll(master) {
-        document.querySelectorAll('.row-check').forEach(cb => {
-            if (cb.closest('tr').style.display !== 'none') cb.checked = master.checked;
-        });
-        updateBulkBar();
-    }
-
-    function updateBulkBar() {
-        const checked = document.querySelectorAll('.row-check:checked').length;
-        document.getElementById('bulkBar').classList.toggle('visible', checked > 0);
-        document.getElementById('bulkCount').textContent = `${checked} selected`;
-    }
-
-    function clearSelection() {
-        document.querySelectorAll('.row-check').forEach(cb => cb.checked = false);
-        document.getElementById('selectAll').checked = false;
-        updateBulkBar();
-    }
-
-    document.getElementById('searchInput').addEventListener('input', applyFilters);
-    let selectedQuiz = 'all';
-    let selectedType = 'all';
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const quizOptions = [{
-                value: 'all',
-                label: 'All Quizzes'
-            },
-            @foreach($quizNames as $qId => $qTitle) {
-                value: '{{ $qId }}',
-                label: @json($qTitle)
-            },
-            @endforeach
-        ];
-
-        createCustomSelect(
-            document.getElementById('quizFilterWrap'),
-            quizOptions,
-            'All Quizzes',
-            (val) => {
-                selectedQuiz = val;
-                applyFilters();
-            }
-        );
-
-        const typeOptions = [{
-                value: 'all',
-                label: 'All Types'
-            },
-            {
-                value: 'mcq',
-                label: 'MCQ'
-            },
-            {
-                value: 'true_false',
-                label: 'True / False'
-            },
-            {
-                value: 'short_answer',
-                label: 'Short Answer'
-            },
-        ];
-
-        createCustomSelect(
-            document.getElementById('typeFilterWrap'),
-            typeOptions,
-            'All Types',
-            (val) => {
-                selectedType = val;
-                applyFilters();
-            }
-        );
-    });
-
-    function applyFilters() {
-        const q = document.getElementById('searchInput').value.toLowerCase();
-        document.querySelectorAll('#questionsBody tr').forEach(row => {
-            if (!row.dataset.q) return;
-            const match = (!q || row.dataset.q.includes(q)) &&
-                (selectedQuiz === 'all' || row.dataset.quiz === selectedQuiz) &&
-                (selectedType === 'all' || row.dataset.type === selectedType);
-            row.style.display = match ? '' : 'none';
-        });
-        clearSelection();
-        checkEmpty();
+    function useSelectedInQuiz() {
+        sessionStorage.setItem('bank_import_ids', JSON.stringify(Array.from(selectedIds)));
+        window.location.href = "{{ route('teacher.quiz.create') }}?import_from_bank=1";
     }
 
     function checkEmpty() {
-        const visible = [...document.querySelectorAll('#questionsBody tr')].filter(r => r.style.display !== 'none' && r.dataset.q);
-        document.getElementById('emptyState').style.display = visible.length === 0 ? '' : 'none';
+        if (document.querySelectorAll('.bank-row').length === 0) {
+            document.getElementById('bankList')?.remove();
+            document.querySelector('.filters').insertAdjacentHTML('afterend', `
+                <div class="empty-state">
+                    <i class="ti ti-database-off"></i>
+                    <h3>No saved questions yet</h3>
+                    <p>Add your first question to start building your reusable bank</p>
+                </div>`);
+        }
     }
 </script>
 @endpush

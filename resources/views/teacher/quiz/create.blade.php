@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
     <link rel="stylesheet" href="{{ asset('quizora.css') }}">
@@ -798,9 +799,14 @@
 
                         <div id="questionsContainer"></div>
 
-                        <button type="button" class="btn btn-secondary" onclick="addQuestion()" style="width:100%;justify-content:center;">
-                            <i class="ti ti-plus"></i> Add Question
-                        </button>
+                        <div style="display:flex; gap:10px;">
+                            <button type="button" class="btn btn-secondary" onclick="addQuestion()" style="flex:1;justify-content:center;">
+                                <i class="ti ti-plus"></i> Add Question
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ route('teacher.question-bank') }}?pick_for_quiz=1'" style="flex:1;justify-content:center;">
+                                <i class="ti ti-database"></i> Import from Bank
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -1172,8 +1178,45 @@
                 document.getElementById('quizForm').submit();
             }
 
-            //Add first question by default
-            addQuestion();
+            //Add first question by default, or import from bank if redirected here with selections
+            const importIds = JSON.parse(sessionStorage.getItem('bank_import_ids') || '[]');
+
+            if (importIds.length > 0) {
+                fetch("{{ route('teacher.question-bank.fetch-by-ids') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            ids: importIds
+                        })
+                    })
+                    .then(r => r.json())
+                    .then(questions => {
+                        questions.forEach(q => {
+                            addQuestion();
+                            const index = questionCount - 1;
+                            const card = document.getElementById('question-' + index);
+                            card.querySelector('.q-text').value = q.text;
+                            card.querySelector('input[name*="marks"]').value = q.marks;
+                            q.options.forEach((opt, i) => {
+                                card.querySelector(`[name="questions[${index}][options][${i}]"]`).value = opt.text;
+                                if (opt.is_correct) {
+                                    document.getElementById(`opt-radio-${index}-${i}`).checked = true;
+                                    markCorrect(index, i);
+                                }
+                            });
+                        });
+                        sessionStorage.removeItem('bank_import_ids');
+                    })
+                    .catch(() => {
+                        addQuestion();
+                    });
+            } else {
+                addQuestion();
+            }
         </script>
 </body>
 

@@ -365,4 +365,21 @@ class QuizController extends Controller
 
         return view('teacher.quiz.print', compact('quiz', 'totalMarks', 'includeAnswers'));
     }
+    public function view(Quiz $quiz)
+    {
+        if ($quiz->teacher_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $quiz->load(['questions' => function ($q) {
+            $q->orderBy('order');
+        }, 'questions.options' => function ($q) {
+            $q->orderBy('order');
+        }]);
+
+        $totalMarks = $quiz->questions->sum('marks');
+        $submittedCount = Attempt::where('quiz_id', $quiz->id)->where('status', 'submitted')->count();
+
+        return view('teacher.quiz.view', compact('quiz', 'totalMarks', 'submittedCount'));
+    }
 }

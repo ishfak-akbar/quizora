@@ -262,7 +262,7 @@
     @php
     $filterStatus = in_array($quiz->display_status, ['closed', 'ended']) ? 'closed' : $quiz->display_status;
     @endphp
-    <div class="quiz-card" data-status="{{ $filterStatus }}" data-title="{{ strtolower($quiz->title) }}">
+    <div class="quiz-card" data-status="{{ $filterStatus }}" data-title="{{ strtolower($quiz->title) }}" onclick="window.location.href='{{ route('teacher.quiz.view', $quiz->id) }}'" style="cursor:pointer;">
         <div class="quiz-card-top">
             <div class="quiz-card-header">
                 <div>
@@ -298,12 +298,12 @@
                 </div>
                 <div class="progress-text">{{ $submitted }} submitted</div>
             </div>
-            <div class="action-btns" style="margin-left:12px;">
+            <div class="action-btns" style="margin-left:12px;" onclick="event.stopPropagation();">
                 <a href="{{ route('teacher.quiz.edit', $quiz->id) }}" class="action-btn" title="Edit"><i class="ti ti-edit"></i></a>
                 <a href="{{ route('teacher.quiz.print', $quiz->id) }}" class="action-btn" title="Print Question Paper" target="_blank"><i class="ti ti-printer"></i></a>
                 <form method="POST" action="{{ route('teacher.quiz.destroy', $quiz->id) }}" style="display:inline;">
                     @csrf @method('DELETE')
-                    <button type="submit" class="action-btn danger" title="Delete" onclick="return confirm('Delete this quiz?')">
+                    <button type="submit" class="action-btn danger" title="Delete" onclick="event.stopPropagation(); return confirm('Delete this quiz?')">
                         <i class="ti ti-trash"></i>
                     </button>
                 </form>

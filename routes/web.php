@@ -52,6 +52,8 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->group(function (
     Route::delete('/question-bank/{bankQuestion}', [\App\Http\Controllers\Teacher\QuestionBankController::class, 'destroy'])->name('teacher.question-bank.destroy');
     Route::post('/question-bank/bulk-delete', [\App\Http\Controllers\Teacher\QuestionBankController::class, 'bulkDestroy'])->name('teacher.question-bank.bulk-delete');
     Route::post('/question-bank/fetch-by-ids', [\App\Http\Controllers\Teacher\QuestionBankController::class, 'fetchByIds'])->name('teacher.question-bank.fetch-by-ids');
+
+    Route::get('/quiz/{quiz}/view', [QuizController::class, 'view'])->name('teacher.quiz.view');
 });
 
 Route::middleware(['auth', 'role:student'])->prefix('student')->group(function () {

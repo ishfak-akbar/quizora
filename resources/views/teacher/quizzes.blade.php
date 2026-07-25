@@ -259,7 +259,10 @@
 
 <div class="quiz-grid" id="quizGrid">
     @forelse($quizzes as $quiz)
-    <div class="quiz-card" data-status="{{ $quiz->status }}" data-title="{{ strtolower($quiz->title) }}">
+    @php
+    $filterStatus = in_array($quiz->display_status, ['closed', 'ended']) ? 'closed' : $quiz->display_status;
+    @endphp
+    <div class="quiz-card" data-status="{{ $filterStatus }}" data-title="{{ strtolower($quiz->title) }}">
         <div class="quiz-card-top">
             <div class="quiz-card-header">
                 <div>

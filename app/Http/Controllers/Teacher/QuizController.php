@@ -83,6 +83,29 @@ class QuizController extends Controller
                     'order'       => $optIndex,
                 ]);
             }
+
+            $alreadyInBank = \App\Models\BankQuestion::where('teacher_id', $quiz->teacher_id)
+                ->where('question_text', $q['text'])
+                ->exists();
+
+            if (!$alreadyInBank) {
+                $bankQuestion = \App\Models\BankQuestion::create([
+                    'teacher_id'    => $quiz->teacher_id,
+                    'question_text' => $q['text'],
+                    'marks'         => $q['marks'],
+                    'category'      => $quiz->category,
+                    'tags'          => $quiz->tags,
+                ]);
+
+                foreach ($q['options'] as $optIndex => $optText) {
+                    \App\Models\BankOption::create([
+                        'bank_question_id' => $bankQuestion->id,
+                        'option_text'      => $optText,
+                        'is_correct'       => $optIndex == $q['correct'],
+                        'order'            => $optIndex,
+                    ]);
+                }
+            }
         }
 
         return redirect()->route('teacher.dashboard')
@@ -179,6 +202,29 @@ class QuizController extends Controller
                     'is_correct'  => $optIndex == $q['correct'],
                     'order'       => $optIndex,
                 ]);
+            }
+
+            $alreadyInBank = \App\Models\BankQuestion::where('teacher_id', $quiz->teacher_id)
+                ->where('question_text', $q['text'])
+                ->exists();
+
+            if (!$alreadyInBank) {
+                $bankQuestion = \App\Models\BankQuestion::create([
+                    'teacher_id'    => $quiz->teacher_id,
+                    'question_text' => $q['text'],
+                    'marks'         => $q['marks'],
+                    'category'      => $quiz->category,
+                    'tags'          => $quiz->tags,
+                ]);
+
+                foreach ($q['options'] as $optIndex => $optText) {
+                    \App\Models\BankOption::create([
+                        'bank_question_id' => $bankQuestion->id,
+                        'option_text'      => $optText,
+                        'is_correct'       => $optIndex == $q['correct'],
+                        'order'            => $optIndex,
+                    ]);
+                }
             }
         }
 

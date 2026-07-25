@@ -119,12 +119,154 @@
         border-radius: 14px;
         display: flex;
         flex-direction: column;
+        position: relative;
+        overflow: hidden;
         transition: border-color 0.2s, transform 0.2s;
     }
 
     .quiz-card:hover {
-        border-color: rgba(79, 70, 229, 0.4);
-        transform: translateY(-2px);
+        border-color: rgba(129, 140, 248, 0.55);
+        transform: translateY(-4px);
+        box-shadow:
+            0 0 0 1px rgba(129, 140, 248, 0.15),
+            0 12px 32px rgba(79, 70, 229, 0.28),
+            0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .quiz-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 14px;
+        background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgba(129, 140, 248, 0.14), transparent 60%);
+        opacity: 0;
+        transition: opacity 0.25s;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .quiz-card:hover::after {
+        opacity: 1;
+    }
+
+    .quiz-card-accent {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 4px;
+        z-index: 2;
+    }
+
+    /* .quiz-card-accent.status-active {
+        background: linear-gradient(180deg, #34D399, #059669);
+    }
+
+    .quiz-card-accent.status-draft {
+        background: linear-gradient(180deg, #9CA3AF, #6B7280);
+    }
+
+    .quiz-card-accent.status-scheduled {
+        background: linear-gradient(180deg, #22D3EE, #0891B2);
+    }
+
+    .quiz-card-accent.status-ended,
+    .quiz-card-accent.status-closed {
+        background: linear-gradient(180deg, #F59E0B, #B45309);
+    } */
+
+    .qc-banner {
+        height: 60px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 18px;
+        gap: 10px;
+    }
+
+    .qc-banner-icon {
+        font-size: 22px;
+        color: rgba(255, 255, 255, 0.9);
+        position: relative;
+        z-index: 1;
+        flex-shrink: 0;
+    }
+
+    .qc-banner-deco {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    .qc-banner-deco.d1 {
+        width: 70px;
+        height: 70px;
+        top: -28px;
+        left: -10px;
+    }
+
+    .qc-banner-deco.d2 {
+        width: 38px;
+        height: 38px;
+        bottom: -18px;
+        right: 40px;
+    }
+
+    .qc-banner::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0) 55%);
+        z-index: 0;
+    }
+
+    .qc-banner-title {
+        position: relative;
+        z-index: 1;
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.3;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .qc-stat-row {
+        display: flex;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--color-border-light);
+        border-radius: 10px;
+        padding: 10px 4px;
+        margin-top: 12px;
+    }
+
+    .qc-stat {
+        flex: 1;
+        text-align: center;
+        padding: 0 6px;
+        border-right: 1px solid var(--color-border-light);
+    }
+
+    .qc-stat:last-child {
+        border-right: none;
+    }
+
+    .qc-stat-value {
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.2;
+    }
+
+    .qc-stat-label {
+        font-size: 10px;
+        color: var(--color-text-muted);
+        margin-top: 2px;
     }
 
     .quiz-card-top {
@@ -171,40 +313,40 @@
     }
 
     .quiz-card-footer {
-        padding: 12px 20px;
+        padding: 9px 20px;
         border-top: 1px solid var(--color-border-light);
         display: flex;
         align-items: center;
         justify-content: space-between;
     }
 
-    .quiz-progress {
-        flex: 1;
+    .quiz-card .action-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(79, 70, 229, 0.14);
+        border: none;
+        color: #A5B4FC;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.18s;
     }
 
-    .progress-bar {
-        height: 5px;
-        background: rgba(255, 255, 255, 0.06);
-        border-radius: 3px;
-        overflow: hidden;
-        margin-bottom: 4px;
+    .quiz-card .action-btn:hover {
+        background: rgba(79, 70, 229, 0.28);
+        transform: translateY(-1px);
     }
 
-    .progress-fill {
-        height: 100%;
-        background: var(--color-primary-solid);
-        border-radius: 3px;
+    .quiz-card .action-btn.danger {
+        background: rgba(248, 113, 113, 0.14);
+        color: #FCA5A5;
     }
 
-    .progress-text {
-        font-size: 11px;
-        color: var(--color-text-muted);
-    }
-
-    .action-btn.danger:hover {
-        background: rgba(248, 113, 113, 0.15);
-        color: var(--color-status-error);
-        border-color: rgba(248, 113, 113, 0.3);
+    .quiz-card .action-btn.danger:hover {
+        background: rgba(248, 113, 113, 0.28);
     }
 
     .empty-state {
@@ -262,11 +404,23 @@
     @php
     $filterStatus = in_array($quiz->display_status, ['closed', 'ended']) ? 'closed' : $quiz->display_status;
     @endphp
+    @php
+    [$bannerBg, $bannerIcon] = \App\Helpers\QuizHelper::bookmarkBannerConfig($quiz->category ?? '', $loop->index);
+    @endphp
     <div class="quiz-card" data-status="{{ $filterStatus }}" data-title="{{ strtolower($quiz->title) }}" onclick="window.location.href='{{ route('teacher.quiz.view', $quiz->id) }}'" style="cursor:pointer;">
+
+        <div class="quiz-card-accent status-{{ $quiz->display_status }}"></div>
+
+        <div class="qc-banner" style="background: {{ $bannerBg }};">
+            <div class="qc-banner-deco d1"></div>
+            <div class="qc-banner-deco d2"></div>
+            <div class="qc-banner-title">{{ $quiz->title }}</div>
+            <i class="{{ $bannerIcon }} qc-banner-icon"></i>
+        </div>
+
         <div class="quiz-card-top">
             <div class="quiz-card-header">
                 <div>
-                    <div class="quiz-card-title">{{ $quiz->title }}</div>
                     @if($quiz->description)
                     <div class="quiz-card-desc">{{ Str::limit($quiz->description, 60) }}</div>
                     @endif
@@ -285,20 +439,25 @@
                 @endif
                 <div class="quiz-meta-item"><i class="ti ti-refresh"></i> {{ $quiz->max_attempts }} attempt(s)</div>
             </div>
-        </div>
-        <div class="quiz-card-footer">
-            <div class="quiz-progress">
-                @php
-                $total = $quiz->attempts_count ?? 0;
-                $submitted = $quiz->submitted_count ?? 0;
-                $percent = $total > 0 ? round(($submitted / $total) * 100) : 0;
-                @endphp
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width:{{ $percent }}%"></div>
+
+            <div class="qc-stat-row">
+                <div class="qc-stat">
+                    <div class="qc-stat-value">{{ $quiz->questions_count }}</div>
+                    <div class="qc-stat-label">Questions</div>
                 </div>
-                <div class="progress-text">{{ $submitted }} submitted</div>
+                <div class="qc-stat">
+                    <div class="qc-stat-value">{{ $quiz->submitted_count }}</div>
+                    <div class="qc-stat-label">Submitted</div>
+                </div>
+                <div class="qc-stat">
+                    <div class="qc-stat-value">{{ $quiz->avg_score !== null ? $quiz->avg_score . '%' : '—' }}</div>
+                    <div class="qc-stat-label">Avg Score</div>
+                </div>
             </div>
-            <div class="action-btns" style="margin-left:12px;" onclick="event.stopPropagation();">
+        </div>
+
+        <div class="quiz-card-footer">
+            <div class="action-btns" style="margin-left:auto;" onclick="event.stopPropagation();">
                 <a href="{{ route('teacher.quiz.edit', $quiz->id) }}" class="action-btn" title="Edit"><i class="ti ti-edit"></i></a>
                 <a href="{{ route('teacher.quiz.print', $quiz->id) }}" class="action-btn" title="Print Question Paper" target="_blank"><i class="ti ti-printer"></i></a>
                 <form method="POST" action="{{ route('teacher.quiz.destroy', $quiz->id) }}" style="display:inline;">
@@ -338,5 +497,12 @@
             card.style.display = (status === 'all' || card.dataset.status === status) ? 'flex' : 'none';
         });
     }
+    document.querySelectorAll('.quiz-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            card.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+            card.style.setProperty('--my', `${e.clientY - rect.top}px`);
+        });
+    });
 </script>
 @endpush

@@ -241,12 +241,20 @@ class QuizController extends Controller
                     $q->where('status', 'submitted');
                 }
             ])
+            ->with(['attempts' => function ($q) {
+                $q->where('status', 'submitted');
+            }])
             ->latest()
-            ->get();
+            ->get()
+            ->each(function ($quiz) {
+                $quiz->avg_score = $quiz->attempts->count() > 0
+                    ? round($quiz->attempts->avg(fn($a) => $a->total_marks > 0 ? ($a->score / $a->total_marks) * 100 : 0))
+                    : null;
+            });
 
         return view('teacher.quizzes', compact('quizzes'));
     }
-
+    
     public function results()
     {
         $quizzes = Quiz::where('teacher_id', Auth::id())

@@ -364,7 +364,7 @@ $skippedCount = $answers->whereNull('option_id')->count();
         <div class="score-circle">
             <svg width="160" height="160" viewBox="0 0 160 160">
                 <circle class="score-circle-bg" cx="80" cy="80" r="70"></circle>
-                <circle class="score-circle-fill" cx="80" cy="80" r="70" id="scoreRing">
+                <circle class="score-circle-fill" cx="80" cy="80" r="70" id="scoreRing" />
             </svg>
             <div class="score-circle-text">
                 <div class="score-circle-pct">{{ $pct }}%</div>
@@ -511,11 +511,7 @@ $skippedCount = $answers->whereNull('option_id')->count();
     document.addEventListener('DOMContentLoaded', function() {
 
         // Score Ring Animation
-        const QUIZ_PCT = {
-            {
-                $pct
-            }
-        };
+        const QUIZ_PCT = {{ $pct }};
 
         try {
             const ring = document.getElementById('scoreRing');

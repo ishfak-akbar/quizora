@@ -430,7 +430,6 @@
                 </span>
             </div>
             <div class="quiz-meta">
-                <div class="quiz-meta-item"><i class="ti ti-help-circle"></i> {{ $quiz->questions_count }} questions</div>
                 @if($quiz->time_limit)
                 <div class="quiz-meta-item"><i class="ti ti-clock"></i> {{ $quiz->time_limit }} min</div>
                 @endif

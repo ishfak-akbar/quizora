@@ -102,6 +102,21 @@ class DashboardController extends Controller
             ->orderBy('ends_at')
             ->first();
 
+        $nearestEndingLabel = null;
+        if ($nearestEndingQuiz) {
+            $diff = now()->diff($nearestEndingQuiz->ends_at);
+
+            if ($diff->days >= 1) {
+                $nearestEndingLabel = $diff->days . 'd ' . $diff->h . 'h left';
+            } elseif ($diff->h >= 1) {
+                $nearestEndingLabel = $diff->h . 'h ' . $diff->i . 'm left';
+            } elseif ($diff->i >= 1) {
+                $nearestEndingLabel = $diff->i . 'm left';
+            } else {
+                $nearestEndingLabel = 'under a minute left';
+            }
+        }
+
         return view('teacher.dashboard', compact(
             'totalQuizzes',
             'activeQuizzes',
@@ -117,7 +132,8 @@ class DashboardController extends Controller
             'submissionsThisWeek',
             'dailyAttempts',
             'dailySubmissions',
-            'nearestEndingQuiz'
+            'nearestEndingQuiz',
+            'nearestEndingLabel'
         ));
     }
     public function leaderboard($quizId)

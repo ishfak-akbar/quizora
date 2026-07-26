@@ -66,7 +66,7 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 3px;
+    height: 2px;
   }
 
   .stat-card.purple::before {
@@ -797,7 +797,7 @@
     <div class="stat-legend">
       @if($nearestEndingQuiz)
       <span class="stat-legend-item">
-        <i class="ti ti-clock"></i> {{ Str::limit($nearestEndingQuiz->title, 18) }} · {{ now()->diffInDays($nearestEndingQuiz->ends_at) }}d left
+        <i class="ti ti-clock"></i> {{ Str::limit($nearestEndingQuiz->title, 18) }} · {{ $nearestEndingLabel }}
       </span>
       @else
       <span class="stat-legend-item" style="color:var(--color-text-muted); font-weight:500;">

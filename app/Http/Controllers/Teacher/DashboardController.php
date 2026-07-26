@@ -49,13 +49,75 @@ class DashboardController extends Controller
             ->where('status', 'active')
             ->get();
 
+        $draftQuizzes = Quiz::where('teacher_id', $teacher->id)
+            ->where('status', 'draft')
+            ->count();
+
+        $endingSoon = Quiz::where('teacher_id', $teacher->id)
+            ->where('status', 'active')
+            ->whereNotNull('ends_at')
+            ->whereBetween('ends_at', [now(), now()->addDays(3)])
+            ->count();
+
+        $newStudentsThisWeek = Attempt::whereHas('quiz', function ($q) use ($teacher) {
+            $q->where('teacher_id', $teacher->id);
+        })
+            ->where('created_at', '>=', now()->subDays(7))
+            ->distinct('student_id')
+            ->count('student_id');
+
+        $newStudentsThisMonth = Attempt::whereHas('quiz', function ($q) use ($teacher) {
+            $q->where('teacher_id', $teacher->id);
+        })
+            ->where('created_at', '>=', now()->subDays(30))
+            ->distinct('student_id')
+            ->count('student_id');
+
+        $avgSubmissionsPerQuiz = $totalQuizzes > 0 ? round($totalSubmissions / $totalQuizzes, 1) : 0;
+
+        $submissionsThisWeek = Attempt::whereHas('quiz', function ($q) use ($teacher) {
+            $q->where('teacher_id', $teacher->id);
+        })
+            ->where('status', 'submitted')
+            ->where('created_at', '>=', now()->subDays(7))
+            ->count();
+
+        $dailyAttempts = collect(range(6, 0))->map(function ($daysAgo) use ($teacher) {
+            return Attempt::whereHas('quiz', fn($q) => $q->where('teacher_id', $teacher->id))
+                ->whereDate('created_at', now()->subDays($daysAgo))
+                ->count();
+        })->values();
+
+        $dailySubmissions = collect(range(6, 0))->map(function ($daysAgo) use ($teacher) {
+            return Attempt::whereHas('quiz', fn($q) => $q->where('teacher_id', $teacher->id))
+                ->where('status', 'submitted')
+                ->whereDate('created_at', now()->subDays($daysAgo))
+                ->count();
+        })->values();
+
+        $nearestEndingQuiz = Quiz::where('teacher_id', $teacher->id)
+            ->where('status', 'active')
+            ->whereNotNull('ends_at')
+            ->where('ends_at', '>=', now())
+            ->orderBy('ends_at')
+            ->first();
+
         return view('teacher.dashboard', compact(
             'totalQuizzes',
             'activeQuizzes',
             'totalSubmissions',
             'totalStudents',
             'recentQuizzes',
-            'quizzes'
+            'quizzes',
+            'draftQuizzes',
+            'endingSoon',
+            'newStudentsThisWeek',
+            'newStudentsThisMonth',
+            'avgSubmissionsPerQuiz',
+            'submissionsThisWeek',
+            'dailyAttempts',
+            'dailySubmissions',
+            'nearestEndingQuiz'
         ));
     }
     public function leaderboard($quizId)

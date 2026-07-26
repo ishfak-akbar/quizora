@@ -11,18 +11,53 @@
   }
 
   .stat-card {
-    background: var(--color-bg-card);
     border: 1px solid var(--color-border-light);
     border-radius: 14px;
-    padding: 20px;
+    padding: 18px 20px 16px;
     position: relative;
     overflow: hidden;
-    transition: border-color 0.2s, transform 0.2s;
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+
+  .stat-card.purple {
+    background: linear-gradient(180deg, rgba(79, 70, 229, 0.32) 0%, rgba(79, 70, 229, 0.06) 45%, var(--color-bg-card) 100%);
+  }
+
+  .stat-card.cyan {
+    background: linear-gradient(180deg, rgba(8, 145, 178, 0.30) 0%, rgba(8, 145, 178, 0.05) 45%, var(--color-bg-card) 100%);
+  }
+
+  .stat-card.green {
+    background: linear-gradient(180deg, rgba(5, 150, 105, 0.30) 0%, rgba(5, 150, 105, 0.05) 45%, var(--color-bg-card) 100%);
+  }
+
+  .stat-card.pink {
+    background: linear-gradient(180deg, rgba(219, 39, 119, 0.30) 0%, rgba(219, 39, 119, 0.05) 45%, var(--color-bg-card) 100%);
   }
 
   .stat-card:hover {
-    border-color: rgba(79, 70, 229, 0.4);
-    transform: translateY(-2px);
+    border-color: rgba(129, 140, 248, 0.45);
+    transform: translateY(-3px);
+    box-shadow:
+      0 0 0 1px rgba(129, 140, 248, 0.10),
+      0 10px 26px rgba(79, 70, 229, 0.20);
+  }
+
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 0%), rgba(129, 140, 248, 0.14), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.25s;
+    pointer-events: none;
+  }
+
+  .stat-card:hover::after {
+    opacity: 1;
   }
 
   .stat-card::before {
@@ -31,7 +66,7 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 2px;
+    height: 3px;
   }
 
   .stat-card.purple::before {
@@ -50,15 +85,24 @@
     background: linear-gradient(90deg, #DB2777, #F472B6);
   }
 
+  .stat-card-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+  }
+
   .stat-icon {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
-    margin-bottom: 14px;
+    font-size: 26px;
+    flex-shrink: 0;
   }
 
   .stat-card.purple .stat-icon {
@@ -81,38 +125,256 @@
     color: #F472B6;
   }
 
+  .stat-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+
+  .stat-footer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    position: relative;
+    z-index: 1;
+    font-size: 11px;
+    color: var(--color-text-muted);
+  }
+
+  .stat-footer-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .stat-footer-item i {
+    font-size: 13px;
+  }
+
+  .stat-footer-pipe {
+    color: var(--color-border-light);
+  }
+
   .stat-value {
     font-size: 28px;
     font-weight: 700;
     color: #fff;
     line-height: 1;
-    margin-bottom: 4px;
+    position: relative;
+    z-index: 1;
   }
 
-  .stat-label {
+  .stat-visual {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    position: relative;
+    z-index: 1;
+    min-height: 0;
+  }
+
+  .stat-visual>* {
+    width: 100%;
+  }
+
+  /* Stacked bar: published vs draft */
+  .stat-stack-bar {
+    display: flex;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .stat-stack-seg.published {
+    background: linear-gradient(90deg, #059669, var(--color-status-success));
+  }
+
+  .stat-stack-seg.draft {
+    background: linear-gradient(90deg, #B45309, #F59E0B);
+  }
+
+  /* Countdown chip */
+  .stat-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(34, 211, 238, 0.12);
+    border: 1px solid rgba(34, 211, 238, 0.3);
+    border-radius: 20px;
+    padding: 6px 12px;
     font-size: 12px;
+    font-weight: 600;
+    color: var(--color-stat-cyan);
+    max-width: 100%;
+  }
+
+  .stat-chip .chip-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 140px;
+  }
+
+  .stat-chip-idle {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12.5px;
     color: var(--color-text-muted);
     font-weight: 500;
   }
 
-  .stat-change {
-    position: absolute;
-    top: 20px;
-    right: 16px;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 3px 8px;
-    border-radius: 20px;
+  .stat-pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-text-muted);
+    position: relative;
+    flex-shrink: 0;
   }
 
-  .stat-change.up {
-    background: rgba(52, 211, 153, 0.15);
+  .stat-pulse-dot::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px solid var(--color-text-muted);
+    opacity: 0;
+    animation: statDotPulse 2.2s ease-out infinite;
+  }
+
+  @keyframes statDotPulse {
+    0% {
+      transform: scale(0.6);
+      opacity: 0.5;
+    }
+
+    100% {
+      transform: scale(1.8);
+      opacity: 0;
+    }
+  }
+
+  /* Sparkline / bar chart shared */
+  .stat-mini-chart {
+    display: block;
+  }
+
+  .stat-mini-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 34px;
+  }
+
+  .stat-mini-bars span {
+    flex: 1;
+    border-radius: 2px 2px 0 0;
+    min-height: 3px;
+    background: linear-gradient(180deg, #F472B6, #DB2777);
+  }
+
+  .stat-divider {
+    height: 1px;
+    background: var(--color-border-light);
+    margin: 14px 0 12px;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+  }
+
+  .stat-legend {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+    font-size: 11.5px;
+    color: #fff;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .stat-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .stat-legend-pipe {
+    color: var(--color-text-muted);
+    font-weight: 400;
+  }
+
+  .stat-caption {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+  }
+
+  .stat-caption i {
+    font-size: 14px;
+  }
+
+  .stat-card.purple .stat-caption {
+    color: var(--color-primary-glow);
+  }
+
+  .stat-card.cyan .stat-caption {
+    color: var(--color-stat-cyan);
+  }
+
+  .stat-card.green .stat-caption {
     color: var(--color-status-success);
   }
 
-  .stat-change.down {
-    background: rgba(248, 113, 113, 0.15);
-    color: var(--color-status-error);
+  .stat-card.pink .stat-caption {
+    color: #F472B6;
+  }
+
+  .stat-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .stat-watermark {
+    position: absolute;
+    right: 1px;
+    bottom: 70px;
+    font-size: 60px;
+    opacity: 0.09;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .stat-card.purple .stat-watermark {
+    color: var(--color-primary-glow);
+  }
+
+  .stat-card.cyan .stat-watermark {
+    color: var(--color-stat-cyan);
+  }
+
+  .stat-card.green .stat-watermark {
+    color: var(--color-status-success);
+  }
+
+  .stat-card.pink .stat-watermark {
+    color: #F472B6;
   }
 
   /* GRID LAYOUT */
@@ -121,6 +383,31 @@
     grid-template-columns: 1fr 340px;
     gap: 20px;
     margin-bottom: 24px;
+    align-items: start;
+  }
+
+  .leaderboard-card {
+    display: flex;
+    flex-direction: column;
+    max-height: 460px;
+  }
+
+  .leaderboard-list {
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  .leaderboard-list::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .leaderboard-list::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .leaderboard-list::-webkit-scrollbar-thumb {
+    background: rgba(129, 140, 248, 0.25);
+    border-radius: 2px;
   }
 
   /* CREATE QUIZ SECTION */
@@ -470,28 +757,110 @@
 <div class="stats-grid">
   <!-- Total Quizzes -->
   <div class="stat-card purple">
-    <div class="stat-icon"><i class="ti ti-file-description" aria-hidden="true"></i></div>
-    <div class="stat-value">{{ $totalQuizzes }}</div>
-    <div class="stat-label">Total Quizzes</div>
+    <i class="ti ti-file-description stat-watermark"></i>
+    <div class="stat-card-head">
+      <div class="stat-icon"><i class="ti ti-file-description"></i></div>
+      <div>
+        <div class="stat-title">Total Quizzes</div>
+        <div class="stat-value">{{ $totalQuizzes }}</div>
+      </div>
+    </div>
+    @php $publishedCount = $totalQuizzes - $draftQuizzes; @endphp
+    <div class="stat-visual">
+      <div class="stat-stack-bar">
+        @if($totalQuizzes > 0)
+        <div class="stat-stack-seg published" style="width:{{ round(($publishedCount / $totalQuizzes) * 100) }}%"></div>
+        <div class="stat-stack-seg draft" style="width:{{ round(($draftQuizzes / $totalQuizzes) * 100) }}%"></div>
+        @endif
+      </div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-legend">
+      <span class="stat-legend-item"><span class="stat-dot" style="background:var(--color-status-success)"></span> {{ $totalQuizzes - $draftQuizzes }} Published</span>
+      <span class="stat-legend-pipe">|</span>
+      <span class="stat-legend-item"><span class="stat-dot" style="background:#F59E0B"></span> {{ $draftQuizzes }} Draft</span>
+    </div>
   </div>
-  <!-- Active Quizzes -->
+
+  <!-- Live Quizzes -->
   <div class="stat-card cyan">
-    <div class="stat-icon"><i class="ti ti-player-play" aria-hidden="true"></i></div>
-    <div class="stat-value">{{ $activeQuizzes }}</div>
-    <div class="stat-label">Active Quizzes</div>
+    <i class="ti ti-broadcast stat-watermark"></i>
+    <div class="stat-card-head">
+      <div class="stat-icon"><i class="ti ti-player-play"></i></div>
+      <div>
+        <div class="stat-title">Live Quizzes</div>
+        <div class="stat-value">{{ $activeQuizzes }}</div>
+      </div>
+    </div>
+    <div class="stat-visual"></div>
+    <div class="stat-divider"></div>
+    <div class="stat-legend">
+      @if($nearestEndingQuiz)
+      <span class="stat-legend-item">
+        <i class="ti ti-clock"></i> {{ Str::limit($nearestEndingQuiz->title, 18) }} · {{ now()->diffInDays($nearestEndingQuiz->ends_at) }}d left
+      </span>
+      @else
+      <span class="stat-legend-item" style="color:var(--color-text-muted); font-weight:500;">
+        <span class="stat-pulse-dot"></span> No quizzes currently live
+      </span>
+      @endif
+    </div>
   </div>
+
   <!-- Total Students -->
   <div class="stat-card green">
-    <div class="stat-icon"><i class="ti ti-users" aria-hidden="true"></i></div>
-    <div class="stat-value">{{ $totalStudents }}</div>
-    <div class="stat-label">Total Students</div>
+    <i class="ti ti-users stat-watermark"></i>
+    <div class="stat-card-head">
+      <div class="stat-icon"><i class="ti ti-users"></i></div>
+      <div>
+        <div class="stat-title">Total Students</div>
+        <div class="stat-value">{{ $totalStudents }}</div>
+      </div>
+    </div>
+    <div class="stat-visual">
+      @php
+      $max = max($dailyAttempts->max(), 1);
+      $w = 220; $h = 34; $step = $w / 6;
+      $points = $dailyAttempts->map(fn($v, $i) => ($i * $step) . ',' . ($h - ($v / $max) * ($h - 4) - 2))->implode(' L ');
+      @endphp
+      <svg class="stat-mini-chart" width="100%" height="{{ $h }}" viewBox="0 0 {{ $w }} {{ $h }}" preserveAspectRatio="none">
+        <path d="M {{ $points }}" fill="none" stroke="var(--color-status-success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-legend">
+      <span class="stat-legend-item"><i class="ti ti-trending-up" style="color:var(--color-status-success)"></i> +{{ $newStudentsThisWeek }} this week</span>
+      <span class="stat-legend-pipe">|</span>
+      <span class="stat-legend-item">{{ $newStudentsThisMonth }} this month</span>
+    </div>
   </div>
-  <!-- Total Submissions -->
+
+  <!-- Submissions -->
   <div class="stat-card pink">
-    <div class="stat-icon"><i class="ti ti-clipboard-check" aria-hidden="true"></i></div>
-    <div class="stat-value">{{ $totalSubmissions }}</div>
-    <div class="stat-label">Submissions</div>
+    <i class="ti ti-chart-bar stat-watermark"></i>
+    <div class="stat-card-head">
+      <div class="stat-icon"><i class="ti ti-clipboard-check"></i></div>
+      <div>
+        <div class="stat-title">Submissions</div>
+        <div class="stat-value">{{ $totalSubmissions }}</div>
+      </div>
+    </div>
+    @php $maxSub = max($dailySubmissions->max(), 1); @endphp
+    <div class="stat-visual">
+      <div class="stat-mini-bars">
+        @foreach($dailySubmissions as $count)
+        <span style="height:{{ max(round(($count / $maxSub) * 100), 8) }}%"></span>
+        @endforeach
+      </div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-legend">
+      <span class="stat-legend-item"><i class="ti ti-chart-dots"></i> {{ $avgSubmissionsPerQuiz }} avg/quiz</span>
+      <span class="stat-legend-pipe">|</span>
+      <span class="stat-legend-item">{{ $submissionsThisWeek }} this week</span>
+    </div>
   </div>
+
 </div>
 <!-- CREATE QUIZ CTA -->
 <!-- QUICK ACTION CARDS -->
@@ -651,7 +1020,7 @@
     </table>
   </div>
   <!-- LEADERBOARD -->
-  <div class="card">
+  <div class="card leaderboard-card">
     <div class="card-header">
       <h2>Leaderboard</h2>
       <i class="ti ti-trophy" style="color:#F59E0B;font-size:18px"></i>
@@ -671,6 +1040,13 @@
 @endsection
 @push('scripts')
 <script>
+  document.querySelectorAll('.stat-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+      card.style.setProperty('--my', `${e.clientY - rect.top}px`);
+    });
+  });
   const quizSelect = document.getElementById('quizSelect');
   const lbList = document.getElementById('lbList');
   const colors = ['#4F46E5', '#7C3AED', '#0891B2', '#059669', '#D97706'];

@@ -118,6 +118,7 @@
     }
 
     .select-toggle-btn {
+        margin-left: auto;
         height: 38px;
         padding: 0 16px;
         border-radius: 10px;
@@ -213,6 +214,8 @@
 
     .bank-row.selectable {
         cursor: pointer;
+        border-style: dashed;
+        border-color: rgba(79, 70, 229, 0.35);
     }
 
     .bank-row.selectable:hover {
@@ -425,22 +428,6 @@
         <i class="ti ti-plus"></i> Add Question
     </button>
 </div>
-
-<div class="stats-row">
-    <div class="stat-card purple">
-        <div class="stat-value">{{ $totalQuestions }}</div>
-        <div class="stat-label">Total Questions</div>
-    </div>
-    <div class="stat-card cyan">
-        <div class="stat-value">{{ $totalCategories }}</div>
-        <div class="stat-label">Categories</div>
-    </div>
-    <div class="stat-card amber">
-        <div class="stat-value">{{ $addedThisWeek }}</div>
-        <div class="stat-label">Added This Week</div>
-    </div>
-</div>
-
 <div class="filters">
     <form method="GET" class="search-wrap">
         <i class="ti ti-search"></i>
@@ -448,7 +435,7 @@
     </form>
     <div id="categoryFilterWrap" style="min-width:180px;"></div>
     <button type="button" class="select-toggle-btn" id="selectModeBtn" onclick="toggleSelectMode()">
-        <i class="ti ti-checkbox"></i> Select Multiple
+        <i class="ti ti-checkbox" id="selectModeIcon"></i> <span id="selectModeLabel">Select Multiple</span>
     </button>
 </div>
 
@@ -555,6 +542,10 @@
     let selectMode = false;
     let selectedIds = new Set();
     let deleteTarget = null; // single id or '__bulk__'
+    
+    if (new URLSearchParams(window.location.search).get('pick_for_quiz')) {
+        toggleSelectMode();
+    }
 
     createCustomSelect(
         document.getElementById('categoryFilterWrap'),
@@ -579,6 +570,8 @@
     function toggleSelectMode() {
         selectMode = !selectMode;
         document.getElementById('selectModeBtn').classList.toggle('active', selectMode);
+        document.getElementById('selectModeLabel').textContent = selectMode ? 'Cancel Selecting' : 'Select Multiple';
+        document.getElementById('selectModeIcon').className = selectMode ? 'ti ti-x' : 'ti ti-checkbox';
         document.querySelectorAll('.bank-row').forEach(row => row.classList.toggle('selectable', selectMode));
         if (!selectMode) cancelSelection();
     }

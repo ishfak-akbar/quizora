@@ -254,7 +254,7 @@ class QuizController extends Controller
 
         return view('teacher.quizzes', compact('quizzes'));
     }
-    
+
     public function results()
     {
         $quizzes = Quiz::where('teacher_id', Auth::id())
@@ -389,5 +389,111 @@ class QuizController extends Controller
         $submittedCount = Attempt::where('quiz_id', $quiz->id)->where('status', 'submitted')->count();
 
         return view('teacher.quiz.view', compact('quiz', 'totalMarks', 'submittedCount'));
+    }
+    public function importCsv(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:csv,txt|max:2048',
+        ]);
+
+        $path = $request->file('file')->getRealPath();
+        $handle = fopen($path, 'r');
+
+        if (!$handle) {
+            return response()->json(['error' => 'Could not read this file.'], 422);
+        }
+
+        $header = fgetcsv($handle);
+        if (!$header) {
+            fclose($handle);
+            return response()->json(['error' => 'The CSV file appears to be empty.'], 422);
+        }
+
+        $header = array_map(fn($h) => strtolower(trim($h)), $header);
+        $required = ['question', 'option_a', 'option_b', 'option_c', 'option_d', 'correct'];
+
+        foreach ($required as $col) {
+            if (!in_array($col, $header)) {
+                fclose($handle);
+                return response()->json(['error' => "Missing required column: {$col}"], 422);
+            }
+        }
+
+        $questions = [];
+        $errors = [];
+        $rowNum = 1;
+
+        while (($row = fgetcsv($handle)) !== false) {
+            $rowNum++;
+
+            if (count(array_filter($row)) === 0) continue; // skip fully blank rows
+
+            $data = array_combine($header, array_pad($row, count($header), null));
+
+            $questionText = trim($data['question'] ?? '');
+            $options = [
+                trim($data['option_a'] ?? ''),
+                trim($data['option_b'] ?? ''),
+                trim($data['option_c'] ?? ''),
+                trim($data['option_d'] ?? ''),
+            ];
+            $correctRaw = strtoupper(trim($data['correct'] ?? ''));
+            $marks = is_numeric($data['marks'] ?? null) ? (int) $data['marks'] : 1;
+
+            if (empty($questionText)) {
+                $errors[] = "Row {$rowNum}: question text is empty — skipped.";
+                continue;
+            }
+
+            if (in_array('', $options, true)) {
+                $errors[] = "Row {$rowNum}: one or more options are empty — skipped.";
+                continue;
+            }
+
+            $correctIndex = match ($correctRaw) {
+                'A', '1' => 0,
+                'B', '2' => 1,
+                'C', '3' => 2,
+                'D', '4' => 3,
+                default => null,
+            };
+
+            if ($correctIndex === null) {
+                $errors[] = "Row {$rowNum}: invalid 'correct' value (\"{$correctRaw}\") — skipped.";
+                continue;
+            }
+
+            $questions[] = [
+                'text'   => $questionText,
+                'marks'  => $marks > 0 ? $marks : 1,
+                'options' => array_map(fn($o) => ['text' => $o, 'is_correct' => false], $options),
+                'correct' => $correctIndex,
+            ];
+        }
+
+        fclose($handle);
+
+        if (empty($questions)) {
+            return response()->json(['error' => 'No valid questions found in this file.', 'row_errors' => $errors], 422);
+        }
+
+        return response()->json([
+            'success'    => true,
+            'questions'  => $questions,
+            'imported'   => count($questions),
+            'row_errors' => $errors,
+        ]);
+    }
+
+    public function csvTemplate()
+    {
+        $csv = "question,option_a,option_b,option_c,option_d,correct,marks\n";
+        $csv .= "What is 2+2?,3,4,5,6,B,1\n";
+        $csv .= "Capital of France?,London,Berlin,Paris,Madrid,C,1\n";
+
+        return response($csv, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="quizora-quiz-template.csv"',
+        ]);
     }
 }

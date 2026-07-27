@@ -58,6 +58,9 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->group(function (
     Route::post('/ai-assistant/chat', [TeacherDashboard::class, 'aiChat'])->name('teacher.ai-assistant.chat');
     Route::post('/ai-assistant/upload', [TeacherDashboard::class, 'aiUpload'])->name('teacher.ai-assistant.upload');
     Route::delete('/ai-assistant/upload', [TeacherDashboard::class, 'aiRemoveUpload'])->name('teacher.ai-assistant.upload.remove');
+
+    Route::post('/quiz/import-csv', [QuizController::class, 'importCsv'])->name('teacher.quiz.import-csv');
+    Route::get('/quiz/csv-template', [QuizController::class, 'csvTemplate'])->name('teacher.quiz.csv-template');
 });
 
 Route::middleware(['auth', 'role:student'])->prefix('student')->group(function () {

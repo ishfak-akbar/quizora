@@ -804,6 +804,15 @@
                         <button type="button" class="btn btn-secondary" onclick="goToBankForImport()" style="flex:1;justify-content:center;">
                             <i class="ti ti-database"></i> Import from Bank
                         </button>
+                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('csvFileInput').click()" style="flex:1;justify-content:center;">
+                            <i class="ti ti-file-upload"></i> Import from CSV
+                        </button>
+                        <input type="file" id="csvFileInput" accept=".csv" style="display:none;" onchange="handleCsvImport(event)">
+                    </div>
+                    <div style="margin-top:10px; text-align:right;">
+                        <a href="{{ route('teacher.quiz.csv-template') }}" style="font-size:12px; color:var(--color-text-muted); text-decoration:underline;">
+                            Download CSV template
+                        </a>
                     </div>
                 </div>
             </div>
@@ -1216,6 +1225,52 @@
                     }
                 });
             });
+        }
+
+        function handleCsvImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch("{{ route('teacher.quiz.import-csv') }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
+                    },
+                    body: formData
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error + (data.row_errors?.length ? '\n\n' + data.row_errors.join('\n') : ''));
+                        return;
+                    }
+
+                    data.questions.forEach(q => {
+                        addQuestion();
+                        const index = questionCount - 1;
+                        const card = document.getElementById('question-' + index);
+                        card.querySelector('.q-text').value = q.text;
+                        card.querySelector('input[name*="marks"]').value = q.marks;
+                        q.options.forEach((opt, i) => {
+                            card.querySelector(`[name="questions[${index}][options][${i}]"]`).value = opt.text;
+                        });
+                        document.getElementById(`opt-radio-${index}-${q.correct}`).checked = true;
+                        markCorrect(index, q.correct);
+                    });
+
+                    let msg = `Imported ${data.imported} question(s) from CSV.`;
+                    if (data.row_errors.length > 0) {
+                        msg += `\n\n${data.row_errors.length} row(s) skipped:\n` + data.row_errors.join('\n');
+                    }
+                    alert(msg);
+                })
+                .catch(() => alert('Failed to import CSV file.'));
+
+            event.target.value = '';
         }
 
         const savedDraft = JSON.parse(sessionStorage.getItem('quiz_draft_state') || 'null');

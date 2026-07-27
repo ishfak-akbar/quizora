@@ -1,0 +1,685 @@
+@extends('layouts.teacher')
+@section('title', 'Quizora — AI Assistant')
+
+@push('styles')
+<style>
+    .ai-layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 10px;
+        height: calc(100vh - 56px - 56px);
+    }
+
+    .ai-sidebar {
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border-light);
+        border-radius: 16px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        overflow-y: auto;
+    }
+
+    .ai-sidebar-title {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 4px;
+    }
+
+    .suggestion-chip {
+        background: rgba(79, 70, 229, 0.08);
+        border: 1px solid rgba(79, 70, 229, 0.2);
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 12.5px;
+        color: var(--color-text-secondary);
+        cursor: pointer;
+        transition: all 0.2s;
+        line-height: 1.4;
+    }
+
+    .suggestion-chip:hover {
+        background: rgba(79, 70, 229, 0.18);
+        border-color: rgba(129, 140, 248, 0.5);
+        color: #fff;
+    }
+
+    .ai-sidebar::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    .ai-sidebar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .ai-sidebar::-webkit-scrollbar-thumb {
+        background: transparent;
+        border-radius: 2px;
+    }
+
+    .ai-divider {
+        height: 1px;
+        background: var(--color-border-light);
+        margin: 4px 0;
+    }
+
+    .ai-info-box {
+        background: linear-gradient(135deg, #2E2570 0%, #4F46E5 50%, #818CF8 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 12px 14px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.75);
+        line-height: 1.6;
+    }
+
+    .ai-info-box strong {
+        color: #fff;
+        display: block;
+        margin-bottom: 4px;
+        font-size: 12px;
+    }
+
+    .ai-chat-wrap {
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border-light);
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .chat-header {
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--color-border-light);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-shrink: 0;
+    }
+
+    .chat-header-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #4F46E5, #818CF8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        color: #fff;
+        flex-shrink: 0;
+    }
+
+    .chat-header-info h3 {
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+    }
+
+    .chat-header-info p {
+        font-size: 12px;
+        color: var(--color-text-muted);
+        margin-top: 1px;
+    }
+
+    .chat-status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #34D399;
+        margin-left: auto;
+        box-shadow: 0 0 6px rgba(52, 211, 153, 0.6);
+    }
+
+    .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        scroll-behavior: smooth;
+    }
+
+    .chat-messages::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .chat-messages::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .chat-messages::-webkit-scrollbar-thumb {
+        background: rgba(129, 140, 248, 0.2);
+        border-radius: 2px;
+    }
+
+    .msg {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        max-width: 82%;
+    }
+
+    .msg.user {
+        flex-direction: row-reverse;
+        margin-left: auto;
+    }
+
+    .msg-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        flex-shrink: 0;
+        font-weight: 700;
+    }
+
+    .msg.ai .msg-avatar {
+        background: linear-gradient(135deg, #4F46E5, #818CF8);
+        color: #fff;
+    }
+
+    .msg.user .msg-avatar {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--color-text-secondary);
+        font-size: 13px;
+    }
+
+    .msg-bubble {
+        padding: 12px 16px;
+        border-radius: 14px;
+        font-size: 13.5px;
+        line-height: 1.65;
+    }
+
+    .msg.ai .msg-bubble {
+        background: rgba(79, 70, 229, 0.1);
+        border: 1px solid rgba(79, 70, 229, 0.2);
+        color: var(--color-text-primary);
+        border-top-left-radius: 4px;
+    }
+
+    .msg.user .msg-bubble {
+        background: var(--color-primary-solid);
+        color: #fff;
+        border-top-right-radius: 4px;
+    }
+
+    .msg.ai .msg-bubble strong {
+        color: #fff;
+    }
+
+    .msg.ai .msg-bubble code {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-family: monospace;
+    }
+
+    .typing-indicator {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .typing-dots {
+        display: flex;
+        gap: 4px;
+        padding: 12px 16px;
+        background: rgba(79, 70, 229, 0.1);
+        border: 1px solid rgba(79, 70, 229, 0.2);
+        border-radius: 14px;
+        border-top-left-radius: 4px;
+    }
+
+    .typing-dots span {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--color-primary-glow);
+        animation: typingBounce 1.2s infinite;
+    }
+
+    .typing-dots span:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .typing-dots span:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+    @keyframes typingBounce {
+
+        0%,
+        60%,
+        100% {
+            transform: translateY(0);
+            opacity: 0.4;
+        }
+
+        30% {
+            transform: translateY(-6px);
+            opacity: 1;
+        }
+    }
+
+    .chat-input-bar {
+        padding: 14px 20px 16px;
+        border-top: 1px solid var(--color-border-light);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+    .attached-file-chip {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        background: rgba(79, 70, 229, 0.12);
+        border: 1px solid rgba(79, 70, 229, 0.3);
+        border-radius: 10px;
+        padding: 8px 12px;
+        font-size: 12px;
+        color: var(--color-primary-glow);
+        font-weight: 600;
+        width: fit-content;
+        max-width: 100%;
+    }
+
+    .attached-file-chip.visible {
+        display: flex;
+    }
+
+    .attached-file-chip span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 220px;
+    }
+
+    .attached-file-chip button {
+        background: none;
+        border: none;
+        color: var(--color-text-muted);
+        cursor: pointer;
+        font-size: 14px;
+        padding: 0;
+        line-height: 1;
+    }
+
+    .attached-file-chip button:hover {
+        color: #F87171;
+    }
+
+    .chat-input-row {
+        display: flex;
+        gap: 10px;
+        align-items: flex-end;
+    }
+
+    .attach-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--color-border-light);
+        color: var(--color-text-secondary);
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        flex-shrink: 0;
+    }
+
+    .attach-btn:hover {
+        background: var(--color-bg-row-hover);
+        color: #fff;
+    }
+
+    .chat-input-wrap {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1.5px solid var(--color-border-light);
+        border-radius: 12px;
+        display: flex;
+        align-items: flex-end;
+        padding: 10px 14px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .chat-input-wrap:focus-within {
+        border-color: rgba(79, 70, 229, 0.6);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .chat-input {
+        flex: 1;
+        background: none;
+        border: none;
+        outline: none;
+        color: #fff;
+        font-size: 14px;
+        font-family: var(--font);
+        resize: none;
+        max-height: 120px;
+        line-height: 1.5;
+    }
+
+    .chat-input::placeholder {
+        color: var(--color-text-muted);
+    }
+
+    .send-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: var(--color-primary-solid);
+        border: none;
+        color: #fff;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.15s;
+        flex-shrink: 0;
+    }
+
+    .send-btn:hover {
+        background: #4338CA;
+        transform: scale(1.05);
+    }
+
+    .send-btn:disabled {
+        background: rgba(79, 70, 229, 0.3);
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .welcome-msg {
+        margin: auto;
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--color-text-muted);
+    }
+
+    .welcome-icon {
+        font-size: 52px;
+        margin-bottom: 16px;
+        display: block;
+        color: var(--color-primary-glow);
+    }
+
+    .welcome-msg h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 8px;
+    }
+
+    .welcome-msg p {
+        font-size: 13px;
+        max-width: 320px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+</style>
+@endpush
+
+@section('content')
+<div class="ai-layout">
+
+    <div class="ai-sidebar">
+        <div class="ai-sidebar-title">Suggested Questions</div>
+        <div class="suggestion-chip" onclick="sendSuggestion(this)">Which quiz has the lowest average score?</div>
+        <div class="suggestion-chip" onclick="sendSuggestion(this)">What topics are my students struggling with?</div>
+        <div class="suggestion-chip" onclick="sendSuggestion(this)">Summarize performance across all quizzes</div>
+        <div class="suggestion-chip" onclick="sendSuggestion(this)">Which questions have the lowest pass rate?</div>
+        <div class="suggestion-chip" onclick="sendSuggestion(this)">Suggest improvements for my hardest quiz</div>
+        <div class="suggestion-chip" onclick="sendSuggestion(this)">Generate quiz questions from my attached document</div>
+
+        <div class="ai-divider" style="margin-top: auto;"></div>
+
+        <div class="ai-info-box">
+            <strong><i class="ti ti-shield-lock"></i> Your data stays private</strong>
+            The AI only sees your own quizzes, student results, and any file you attach. Nothing is shared with other teachers.
+        </div>
+    </div>
+
+    <div class="ai-chat-wrap">
+        <div class="chat-header">
+            <div class="chat-header-avatar"><i class="ti ti-brain"></i></div>
+            <div class="chat-header-info">
+                <h3>Quizora AI Assistant</h3>
+                <p>Powered by Llama 3.3 · Knows your quizzes and student performance</p>
+            </div>
+            <div class="chat-status-dot"></div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <div class="welcome-msg" id="welcomeMsg">
+                <i class="ti ti-brain welcome-icon"></i>
+                <h3>Hi, {{ auth()->user()->name }}! 👋</h3>
+                <p>I know all your quizzes, questions, and how your students performed. Attach a PDF or text file for extra context, or just ask me anything.</p>
+            </div>
+        </div>
+
+        <div class="chat-input-bar">
+            <div class="attached-file-chip" id="attachedFileChip">
+                <i class="ti ti-file-text"></i>
+                <span id="attachedFileName"></span>
+                <button type="button" onclick="removeAttachedFile()" title="Remove"><i class="ti ti-x"></i></button>
+            </div>
+
+            <div class="chat-input-row">
+                <input type="file" id="fileInput" accept=".pdf,.txt" style="display:none;" onchange="handleFileSelect(event)">
+                <button class="attach-btn" onclick="document.getElementById('fileInput').click()" title="Attach a PDF or text file">
+                    <i class="ti ti-paperclip"></i>
+                </button>
+                <div class="chat-input-wrap">
+                    <textarea
+                        class="chat-input"
+                        id="chatInput"
+                        rows="1"
+                        placeholder="Ask about your quizzes, student performance, or an attached document..."></textarea>
+                </div>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                    <i class="ti ti-send"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+@endsection
+
+@push('scripts')
+<script>
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const userInitial = "{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}";
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    const attachedFileChip = document.getElementById('attachedFileChip');
+    const attachedFileName = document.getElementById('attachedFileName');
+
+    let history = [];
+    let isLoading = false;
+
+    @if($uploadedFileName ?? false)
+    attachedFileChip.classList.add('visible');
+    attachedFileName.textContent = @json($uploadedFileName);
+    @endif
+
+    chatInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    });
+
+    chatInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    function sendSuggestion(el) {
+        chatInput.value = el.textContent.trim();
+        sendMessage();
+    }
+
+    function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        attachedFileChip.classList.add('visible');
+        attachedFileName.textContent = 'Uploading...';
+
+        fetch("{{ route('teacher.ai-assistant.upload') }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.error) {
+                    attachedFileChip.classList.remove('visible');
+                    alert(data.error);
+                    return;
+                }
+                attachedFileName.textContent = data.filename;
+            })
+            .catch(() => {
+                attachedFileChip.classList.remove('visible');
+                alert('Failed to upload file.');
+            });
+
+        event.target.value = '';
+    }
+
+    function removeAttachedFile() {
+        fetch("{{ route('teacher.ai-assistant.upload.remove') }}", {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(() => attachedFileChip.classList.remove('visible'));
+    }
+
+    function sendMessage() {
+        const text = chatInput.value.trim();
+        if (!text || isLoading) return;
+
+        const welcome = document.getElementById('welcomeMsg');
+        if (welcome) welcome.remove();
+
+        appendMessage('user', text);
+        history.push({
+            role: 'user',
+            content: text
+        });
+
+        chatInput.value = '';
+        chatInput.style.height = 'auto';
+
+        const typingEl = appendTyping();
+        setLoading(true);
+
+        fetch("{{ route('teacher.ai-assistant.chat') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: text,
+                    history: history.slice(0, -1)
+                })
+            })
+            .then(r => r.json())
+            .then(data => {
+                typingEl.remove();
+                setLoading(false);
+
+                if (data.error) {
+                    appendMessage('ai', '⚠️ Sorry, something went wrong. Please try again.');
+                    return;
+                }
+
+                appendMessage('ai', data.reply);
+                history.push({
+                    role: 'assistant',
+                    content: data.reply
+                });
+            })
+            .catch(() => {
+                typingEl.remove();
+                setLoading(false);
+                appendMessage('ai', '⚠️ Could not reach the AI. Please check your connection.');
+            });
+    }
+
+    function appendMessage(role, text) {
+        const isUser = role === 'user';
+        const div = document.createElement('div');
+        div.className = `msg ${role}`;
+        div.innerHTML = `
+            <div class="msg-avatar">${isUser ? userInitial : '<i class="ti ti-brain"></i>'}</div>
+            <div class="msg-bubble">${formatText(text)}</div>`;
+        chatMessages.appendChild(div);
+        scrollToBottom();
+        return div;
+    }
+
+    function appendTyping() {
+        const div = document.createElement('div');
+        div.className = 'msg ai typing-indicator';
+        div.innerHTML = `
+            <div class="msg-avatar"><i class="ti ti-brain"></i></div>
+            <div class="typing-dots"><span></span><span></span><span></span></div>`;
+        chatMessages.appendChild(div);
+        scrollToBottom();
+        return div;
+    }
+
+    function setLoading(state) {
+        isLoading = state;
+        sendBtn.disabled = state;
+        chatInput.disabled = state;
+    }
+
+    function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function formatText(text) {
+        return text
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+            .replace(/`(.+?)`/g, '<code>$1</code>')
+            .replace(/\n/g, '<br>');
+    }
+</script>
+@endpush

@@ -555,6 +555,11 @@
                 <i class="ti ti-database nav-icon" aria-hidden="true"></i>
                 <span class="nav-text">Question Bank</span>
             </a>
+            <a href="{{ route('teacher.ai-assistant') }}"
+                class="nav-item {{ request()->routeIs('teacher.ai-assistant') ? 'active' : '' }}">
+                <i class="ti ti-brain nav-icon" aria-hidden="true"></i>
+                <span class="nav-text">AI Assistant</span>
+            </a>
         </nav>
         <div class="sidebar-bottom">
             <a href="{{ route('profile.edit') }}"

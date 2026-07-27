@@ -54,6 +54,10 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->group(function (
     Route::post('/question-bank/fetch-by-ids', [\App\Http\Controllers\Teacher\QuestionBankController::class, 'fetchByIds'])->name('teacher.question-bank.fetch-by-ids');
 
     Route::get('/quiz/{quiz}/view', [QuizController::class, 'view'])->name('teacher.quiz.view');
+    Route::get('/ai-assistant', [TeacherDashboard::class, 'aiAssistant'])->name('teacher.ai-assistant');
+    Route::post('/ai-assistant/chat', [TeacherDashboard::class, 'aiChat'])->name('teacher.ai-assistant.chat');
+    Route::post('/ai-assistant/upload', [TeacherDashboard::class, 'aiUpload'])->name('teacher.ai-assistant.upload');
+    Route::delete('/ai-assistant/upload', [TeacherDashboard::class, 'aiRemoveUpload'])->name('teacher.ai-assistant.upload.remove');
 });
 
 Route::middleware(['auth', 'role:student'])->prefix('student')->group(function () {

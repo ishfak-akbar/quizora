@@ -7,6 +7,9 @@ use App\Models\Quiz;
 use App\Models\Attempt;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Smalot\PdfParser\Parser as PdfParser;
 
 class DashboardController extends Controller
 {
@@ -273,5 +276,159 @@ class DashboardController extends Controller
     public function questionBank()
     {
         return view('teacher.question-bank');
+    }
+    public function aiAssistant()
+    {
+        $uploadedFileName = session('ai_uploaded_filename');
+        return view('teacher.ai-assistant', compact('uploadedFileName'));
+    }
+
+    public function aiUpload(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:pdf,txt|max:5120', // 5MB max
+        ]);
+
+        $file = $request->file('file');
+        $extension = $file->getClientOriginalExtension();
+        $text = '';
+
+        try {
+            if ($extension === 'pdf') {
+                $parser = new PdfParser();
+                $pdf = $parser->parseFile($file->getPathname());
+                $text = $pdf->getText();
+            } else {
+                $text = file_get_contents($file->getPathname());
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Could not read this file. Try a different PDF or a plain text file.'], 422);
+        }
+
+        $text = trim($text);
+
+        if (empty($text)) {
+            return response()->json(['error' => 'No readable text found in this file.'], 422);
+        }
+
+        // Cap context size to keep prompts reasonable
+        $text = mb_substr($text, 0, 12000);
+
+        session([
+            'ai_uploaded_text' => $text,
+            'ai_uploaded_filename' => $file->getClientOriginalName(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'filename' => $file->getClientOriginalName(),
+        ]);
+    }
+
+    public function aiRemoveUpload()
+    {
+        session()->forget(['ai_uploaded_text', 'ai_uploaded_filename']);
+        return response()->json(['success' => true]);
+    }
+
+    public function aiChat(Request $request)
+    {
+        $teacher = Auth::user();
+
+        $quizzes = Quiz::where('teacher_id', $teacher->id)
+            ->withCount(['questions', 'attempts as submitted_attempts' => function ($q) {
+                $q->where('status', 'submitted');
+            }])
+            ->get();
+
+        $contextLines = [];
+        $contextLines[] = "You are an AI teaching assistant for a teacher named {$teacher->name} on the Quizora quiz platform.";
+        $contextLines[] = "You have full knowledge of all quizzes this teacher has created and how their students performed.";
+        $contextLines[] = "Help them understand class performance, identify which quizzes or topics students struggle with, suggest improvements to quiz content, and answer questions about their data.";
+        $contextLines[] = "Be concise, professional, and actionable. Use the teacher's actual data when answering.";
+        $contextLines[] = "";
+        $contextLines[] = "=== TEACHER'S QUIZZES ===";
+
+        if ($quizzes->isEmpty()) {
+            $contextLines[] = "This teacher has not created any quizzes yet.";
+        }
+
+        foreach ($quizzes as $quiz) {
+            $attempts = Attempt::where('quiz_id', $quiz->id)
+                ->where('status', 'submitted')
+                ->get();
+
+            $avgScore = $attempts->count() > 0
+                ? round($attempts->avg(fn($a) => $a->total_marks > 0 ? ($a->score / $a->total_marks) * 100 : 0))
+                : null;
+
+            $contextLines[] = "";
+            $contextLines[] = "--- Quiz: \"{$quiz->title}\" ---";
+            $contextLines[] = "Category: " . ($quiz->category ?? 'N/A');
+            $contextLines[] = "Difficulty: " . ($quiz->difficulty ?? 'N/A');
+            $contextLines[] = "Status: " . ucfirst($quiz->display_status);
+            $contextLines[] = "Questions: {$quiz->questions_count}";
+            $contextLines[] = "Submissions: {$quiz->submitted_attempts}";
+            $contextLines[] = "Average Score: " . ($avgScore !== null ? "{$avgScore}%" : 'No submissions yet');
+
+            $questions = $quiz->questions()->with('options', 'answers')->get();
+            foreach ($questions as $question) {
+                $answered = $question->answers->where('is_correct', '!=', null);
+                $correctCount = $answered->where('is_correct', true)->count();
+                $totalAnswered = $answered->count();
+                $pctCorrect = $totalAnswered > 0 ? round(($correctCount / $totalAnswered) * 100) : null;
+
+                $contextLines[] = "  Q: {$question->question_text} — " .
+                    ($pctCorrect !== null ? "{$pctCorrect}% of students got this right" : "not yet answered by anyone");
+            }
+        }
+
+        // Include uploaded file content if present
+        $uploadedText = session('ai_uploaded_text');
+        $uploadedFilename = session('ai_uploaded_filename');
+
+        if ($uploadedText) {
+            $contextLines[] = "";
+            $contextLines[] = "=== ATTACHED DOCUMENT: \"{$uploadedFilename}\" ===";
+            $contextLines[] = "The teacher has attached this document for you to reference in your answers.";
+            $contextLines[] = $uploadedText;
+        }
+
+        $systemPrompt = implode("\n", $contextLines);
+
+        $history = $request->input('history', []);
+        $userMessage = $request->input('message', '');
+
+        if (!$userMessage) {
+            return response()->json(['error' => 'No message provided'], 422);
+        }
+
+        $messages = [['role' => 'system', 'content' => $systemPrompt]];
+
+        foreach ($history as $msg) {
+            if (in_array($msg['role'] ?? '', ['user', 'assistant']) && !empty($msg['content'])) {
+                $messages[] = ['role' => $msg['role'], 'content' => $msg['content']];
+            }
+        }
+
+        $messages[] = ['role' => 'user', 'content' => $userMessage];
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . config('services.groq.key'),
+            'Content-Type'  => 'application/json',
+        ])->post('https://api.groq.com/openai/v1/chat/completions', [
+            'model'      => 'llama-3.3-70b-versatile',
+            'messages'   => $messages,
+            'max_tokens' => 1024,
+        ]);
+
+        if ($response->failed()) {
+            return response()->json(['error' => 'AI service error'], 500);
+        }
+
+        $data = $response->json();
+        $reply = $data['choices'][0]['message']['content'] ?? 'Sorry, I could not generate a response.';
+
+        return response()->json(['reply' => $reply]);
     }
 }

@@ -244,8 +244,12 @@
     background: linear-gradient(180deg, rgba(5, 150, 105, 0.30) 0%, rgba(5, 150, 105, 0.05) 45%, var(--color-bg-card) 100%);
   }
 
-  .stat-card.amber {
-    background: linear-gradient(180deg, rgba(180, 83, 9, 0.30) 0%, rgba(180, 83, 9, 0.05) 45%, var(--color-bg-card) 100%);
+  .stat-card.pink {
+    background: linear-gradient(180deg, rgba(219, 39, 119, 0.30) 0%, rgba(219, 39, 119, 0.05) 45%, var(--color-bg-card) 100%);
+  }
+
+  .stat-card.pink::before {
+    background: linear-gradient(90deg, #DB2777, #F472B6);
   }
 
   .stat-card:hover {
@@ -305,9 +309,9 @@
     color: var(--color-status-success);
   }
 
-  .stat-card.amber .stat-icon {
-    background: rgba(245, 158, 11, 0.15);
-    color: #F59E0B;
+  .stat-card.pink .stat-icon {
+    background: rgba(219, 39, 119, 0.15);
+    color: #DB2777;
   }
 
   .stat-title {
@@ -403,8 +407,8 @@
     color: var(--color-status-success);
   }
 
-  .stat-card.amber .stat-caption {
-    color: #F59E0B;
+  .stat-card.ink .stat-caption {
+    color: #F472B6;
   }
 
   .ai-tutor-section {
@@ -572,7 +576,7 @@
   </div>
 
   <!-- Bookmarks -->
-  <div class="stat-card amber">
+  <div class="stat-card pink">
     <div class="stat-card-head">
       <div class="stat-icon"><i class="ti ti-bookmark"></i></div>
       <div>

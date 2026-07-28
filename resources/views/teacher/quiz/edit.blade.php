@@ -543,6 +543,16 @@
 </head>
 
 <body>
+    @if(session('row_errors') && count(session('row_errors')) > 0)
+    <div style="background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.4); color:#F59E0B; padding:14px 18px; border-radius:10px; margin-bottom:16px; font-size:13px;">
+        <strong>{{ count(session('row_errors')) }} row(s) were skipped during import:</strong>
+        <ul style="margin-top:6px; padding-left:18px;">
+            @foreach(session('row_errors') as $err)
+            <li>{{ $err }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
     <form id="quizForm" method="POST" action="{{ route('teacher.quiz.update', $quiz->id) }}">
         @csrf
         @method('PUT')

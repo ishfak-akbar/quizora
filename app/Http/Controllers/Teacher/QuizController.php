@@ -393,20 +393,21 @@ class QuizController extends Controller
     public function importCsv(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:csv,txt|max:2048',
+            'title'    => 'required|string|max:255',
+            'csv_file' => 'required|file|mimes:csv,txt|max:2048',
         ]);
 
-        $path = $request->file('file')->getRealPath();
+        $path = $request->file('csv_file')->getRealPath();
         $handle = fopen($path, 'r');
 
         if (!$handle) {
-            return response()->json(['error' => 'Could not read this file.'], 422);
+            return back()->with('error', 'Could not read this file.');
         }
 
         $header = fgetcsv($handle);
         if (!$header) {
             fclose($handle);
-            return response()->json(['error' => 'The CSV file appears to be empty.'], 422);
+            return back()->with('error', 'The CSV file appears to be empty.');
         }
 
         $header = array_map(fn($h) => strtolower(trim($h)), $header);
@@ -415,18 +416,18 @@ class QuizController extends Controller
         foreach ($required as $col) {
             if (!in_array($col, $header)) {
                 fclose($handle);
-                return response()->json(['error' => "Missing required column: {$col}"], 422);
+                return back()->with('error', "Missing required column: {$col}");
             }
         }
 
         $questions = [];
-        $errors = [];
+        $rowErrors = [];
         $rowNum = 1;
 
         while (($row = fgetcsv($handle)) !== false) {
             $rowNum++;
 
-            if (count(array_filter($row)) === 0) continue; // skip fully blank rows
+            if (count(array_filter($row)) === 0) continue;
 
             $data = array_combine($header, array_pad($row, count($header), null));
 
@@ -441,12 +442,12 @@ class QuizController extends Controller
             $marks = is_numeric($data['marks'] ?? null) ? (int) $data['marks'] : 1;
 
             if (empty($questionText)) {
-                $errors[] = "Row {$rowNum}: question text is empty — skipped.";
+                $rowErrors[] = "Row {$rowNum}: question text is empty — skipped.";
                 continue;
             }
 
             if (in_array('', $options, true)) {
-                $errors[] = "Row {$rowNum}: one or more options are empty — skipped.";
+                $rowErrors[] = "Row {$rowNum}: one or more options are empty — skipped.";
                 continue;
             }
 
@@ -459,14 +460,14 @@ class QuizController extends Controller
             };
 
             if ($correctIndex === null) {
-                $errors[] = "Row {$rowNum}: invalid 'correct' value (\"{$correctRaw}\") — skipped.";
+                $rowErrors[] = "Row {$rowNum}: invalid 'correct' value (\"{$correctRaw}\") — skipped.";
                 continue;
             }
 
             $questions[] = [
-                'text'   => $questionText,
-                'marks'  => $marks > 0 ? $marks : 1,
-                'options' => array_map(fn($o) => ['text' => $o, 'is_correct' => false], $options),
+                'text'    => $questionText,
+                'marks'   => $marks > 0 ? $marks : 1,
+                'options' => $options,
                 'correct' => $correctIndex,
             ];
         }
@@ -474,15 +475,51 @@ class QuizController extends Controller
         fclose($handle);
 
         if (empty($questions)) {
-            return response()->json(['error' => 'No valid questions found in this file.', 'row_errors' => $errors], 422);
+            return back()->with('error', 'No valid questions found in this file.')
+                ->with('row_errors', $rowErrors);
         }
 
-        return response()->json([
-            'success'    => true,
-            'questions'  => $questions,
-            'imported'   => count($questions),
-            'row_errors' => $errors,
-        ]);
+        $quiz = \DB::transaction(function () use ($request, $questions) {
+            $quiz = Quiz::create([
+                'teacher_id'        => Auth::id(),
+                'title'             => $request->title,
+                'type'              => 'mcq',
+                'status'            => 'draft',
+                'visibility'        => 'public',
+                'category'          => 'General',
+                'difficulty'        => 'medium',
+                'max_attempts'      => 1,
+                'show_results'      => true,
+                'shuffle_questions' => false,
+            ]);
+
+            foreach ($questions as $index => $q) {
+                $question = Question::create([
+                    'quiz_id'       => $quiz->id,
+                    'question_text' => $q['text'],
+                    'type'          => 'mcq',
+                    'marks'         => $q['marks'],
+                    'order'         => $index,
+                ]);
+
+                foreach ($q['options'] as $optIndex => $optText) {
+                    Option::create([
+                        'question_id' => $question->id,
+                        'option_text' => $optText,
+                        'is_correct'  => $optIndex == $q['correct'],
+                        'order'       => $optIndex,
+                    ]);
+                }
+            }
+
+            return $quiz;
+        });
+
+        $successMsg = count($questions) . ' question(s) imported successfully. Review and publish your quiz.';
+
+        return redirect()->route('teacher.quiz.edit', $quiz->id)
+            ->with('success', $successMsg)
+            ->with('row_errors', $rowErrors);
     }
 
     public function csvTemplate()
@@ -495,5 +532,9 @@ class QuizController extends Controller
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename="quizora-quiz-template.csv"',
         ]);
+    }
+    public function importPage()
+    {
+        return view('teacher.quiz-import');
     }
 }

@@ -533,6 +533,10 @@
                 <i class="ti ti-circle-plus nav-icon" aria-hidden="true"></i>
                 <span class="nav-text">Create Quiz</span>
             </a>
+            <a href="{{ route('teacher.quiz.import') }}" class="nav-item {{ request()->routeIs('teacher.quiz.import') ? 'active' : '' }}">
+                <i class="ti ti-file-upload nav-icon"></i>
+                <span class="nav-text">Import Quiz</span>
+            </a>
             <div class="nav-label">Analytics</div>
             <a href="{{ route('teacher.results') }}"
                 class="nav-item {{ request()->routeIs('teacher.results') ? 'active' : '' }}">

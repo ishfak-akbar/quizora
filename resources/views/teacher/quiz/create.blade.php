@@ -804,15 +804,6 @@
                         <button type="button" class="btn btn-secondary" onclick="goToBankForImport()" style="flex:1;justify-content:center;">
                             <i class="ti ti-database"></i> Import from Bank
                         </button>
-                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('csvFileInput').click()" style="flex:1;justify-content:center;">
-                            <i class="ti ti-file-upload"></i> Import from CSV
-                        </button>
-                        <input type="file" id="csvFileInput" accept=".csv" style="display:none;" onchange="handleCsvImport(event)">
-                    </div>
-                    <div style="margin-top:10px; text-align:right;">
-                        <a href="{{ route('teacher.quiz.csv-template') }}" style="font-size:12px; color:var(--color-text-muted); text-decoration:underline;">
-                            Download CSV template
-                        </a>
                     </div>
                 </div>
             </div>

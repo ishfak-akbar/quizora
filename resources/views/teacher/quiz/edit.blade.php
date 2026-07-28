@@ -539,6 +539,100 @@
             border-color: var(--color-status-success);
             color: var(--color-status-success);
         }
+
+        .visibility-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .visibility-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1.5px solid var(--color-border-light);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .visibility-card:hover {
+            border-color: rgba(79, 70, 229, 0.4);
+        }
+
+        .visibility-card.selected {
+            border-color: var(--color-primary-solid);
+            background: rgba(79, 70, 229, 0.1);
+        }
+
+        .visibility-card-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: rgba(79, 70, 229, 0.15);
+            color: var(--color-primary-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            margin-bottom: 12px;
+        }
+
+        .visibility-card.selected .visibility-card-icon {
+            background: var(--color-primary-solid);
+            color: #fff;
+        }
+
+        .visibility-card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .visibility-card-desc {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            line-height: 1.5;
+        }
+
+        .access-code-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(79, 70, 229, 0.08);
+            border: 1.5px solid rgba(79, 70, 229, 0.3);
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+
+        #accessCodeText {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 6px;
+            color: var(--color-primary-glow);
+            font-family: monospace;
+        }
+
+        .code-shuffle-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: 1px solid var(--color-border-light);
+            background: transparent;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .code-shuffle-btn:hover {
+            background: var(--color-bg-row-hover);
+            color: #fff;
+        }
     </style>
 </head>
 
@@ -586,7 +680,12 @@
                 <div class="step-line" id="line-2"></div>
                 <div class="step" id="step-indicator-3">
                     <div class="step-circle" id="circle-3">3</div>
-                    <div class="step-label">Review & Publish</div>
+                    <div class="step-label">Visibility&nbsp;& Access</div>
+                </div>
+                <div class="step-line" id="line-3"></div>
+                <div class="step" id="step-indicator-4">
+                    <div class="step-circle" id="circle-4">4</div>
+                    <div class="step-label">Review&nbsp;& Publish</div>
                 </div>
             </div>
 
@@ -654,18 +753,11 @@
                             placeholder="e.g. algebra, geometry, mcq" />
                     </div>
 
-                    <div class="row-2">
-                        <div class="field">
-                            <label>Visibility</label>
-                            <div id="visibilitySelectContainer"></div>
-                            <input type="hidden" name="visibility" id="visibilityInput" value="private">
-                        </div>
-                        <div class="field">
-                            <label>Passing Score (%)</label>
-                            <input type="number" class="input" name="passing_score"
-                                value="{{ old('passing_score', $quiz->passing_score) }}"
-                                placeholder="e.g. 50" min="0" max="100" />
-                        </div>
+                    <div class="field">
+                        <label>Passing Score (%)</label>
+                        <input type="number" class="input" name="passing_score"
+                            value="{{ old('passing_score', $quiz->passing_score) }}"
+                            placeholder="e.g. 50" min="0" max="100" />
                     </div>
                 </div>
 
@@ -711,8 +803,48 @@
                 </div>
             </div>
 
-            <!-- STEP 3: REVIEW -->
+            <!-- STEP 3: VISIBILITY & ACCESS -->
             <div id="step3" style="display:none;">
+                <div class="form-card">
+                    <h2>Visibility & Access</h2>
+                    <p>Choose who can see and attempt this quiz.</p>
+
+                    <div class="visibility-cards">
+                        <div class="visibility-card {{ $quiz->visibility === 'public' ? 'selected' : '' }}" id="card-public" onclick="selectVisibility('public')">
+                            <div class="visibility-card-icon"><i class="ti ti-world"></i></div>
+                            <div class="visibility-card-title">Public</div>
+                            <div class="visibility-card-desc">Anyone can find and attempt this quiz from Browse.</div>
+                        </div>
+                        <div class="visibility-card {{ $quiz->visibility === 'private' ? 'selected' : '' }}" id="card-private" onclick="selectVisibility('private')">
+                            <div class="visibility-card-icon"><i class="ti ti-lock"></i></div>
+                            <div class="visibility-card-title">Private</div>
+                            <div class="visibility-card-desc">Only students with the access code can attempt it.</div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="visibility" id="visibilityInput" value="{{ $quiz->visibility }}">
+
+                    <div id="accessCodeBox" style="{{ $quiz->visibility === 'private' ? '' : 'display:none;' }}">
+                        <label style="display:block;font-size:11px;font-weight:600;color:var(--color-text-muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:8px;">
+                            Access Code
+                        </label>
+                        <div class="access-code-display">
+                            <span id="accessCodeText">{{ $quiz->access_code ?? '------' }}</span>
+                            <button type="button" class="code-shuffle-btn" onclick="generateAccessCode()" title="Generate a new code">
+                                <i class="ti ti-refresh"></i>
+                            </button>
+                        </div>
+                        <p style="font-size:12px;color:var(--color-text-muted);margin-top:8px;">
+                            Share this code with students so they can unlock the quiz. Click refresh to generate a new one.
+                        </p>
+                    </div>
+
+                    <input type="hidden" name="proposed_code" id="proposedCodeInput" value="{{ $quiz->access_code }}">
+                </div>
+            </div>
+
+            <!-- STEP 4: REVIEW -->
+            <div id="step4" style="display:none;">
                 <div class="form-card">
                     <h2>Review Quiz</h2>
                     <p>Check everything before publishing.</p>
@@ -753,18 +885,18 @@
     </form>
     <script>
         @php
-        $existingQuestions = $quiz->questions()->with('options')->get()->map(function($q) {
+        $existingQuestions = $quiz -> questions() -> with('options') -> get() -> map(function($q) {
             return [
-                'text' => $q->question_text ?? '',
-                'marks' => $q->marks ?? 1,
-                'options' => $q->options->map(function($opt) {
+                'text' => $q -> question_text ?? '',
+                'marks' => $q -> marks ?? 1,
+                'options' => $q -> options -> map(function($opt) {
                     return [
-                        'text' => $opt->option_text ?? '',
-                        'is_correct' => (bool) $opt->is_correct
+                        'text' => $opt -> option_text ?? '',
+                        'is_correct' => (bool) $opt -> is_correct
                     ];
-                })->toArray()
+                }) -> toArray()
             ];
-        })->toArray();
+        }) -> toArray();
         @endphp
 
         let existingQuestions = @json($existingQuestions);
@@ -790,20 +922,31 @@
             (value) => document.getElementById('difficultyInput').value = value
         );
 
-        createCustomSelect(
-            document.getElementById('visibilitySelectContainer'),
-            [{
-                    value: 'private',
-                    label: 'Private (invite only)'
-                },
-                {
-                    value: 'public',
-                    label: 'Public (anyone can attempt)'
+        const CODE_CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+
+        function generateAccessCode() {
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)];
+            }
+            document.getElementById('accessCodeText').textContent = code;
+            document.getElementById('proposedCodeInput').value = code;
+        }
+
+        function selectVisibility(value) {
+            document.getElementById('visibilityInput').value = value;
+            document.getElementById('card-public').classList.toggle('selected', value === 'public');
+            document.getElementById('card-private').classList.toggle('selected', value === 'private');
+            const box = document.getElementById('accessCodeBox');
+            if (value === 'private') {
+                box.style.display = 'block';
+                if (!document.getElementById('proposedCodeInput').value) {
+                    generateAccessCode();
                 }
-            ],
-            '{{ $quiz->visibility === "public" ? "Public (anyone can attempt)" : "Private (invite only)" }}',
-            (value) => document.getElementById('visibilityInput').value = value
-        );
+            } else {
+                box.style.display = 'none';
+            }
+        }
         let currentStep = 1;
         let questionCount = 0;
 
@@ -847,6 +990,8 @@
                         return;
                     }
                 }
+            }
+            if (currentStep === 3) {
                 buildReview();
             }
             goToStep(currentStep + 1);
@@ -878,11 +1023,13 @@
             else document.getElementById('line-1').classList.remove('done');
             if (currentStep > 2) document.getElementById('line-2').classList.add('done');
             else document.getElementById('line-2').classList.remove('done');
+            if (currentStep > 3) document.getElementById('line-3').classList.add('done');
+            else document.getElementById('line-3').classList.remove('done');
 
             document.getElementById('prevBtn').style.visibility = currentStep === 1 ? 'hidden' : 'visible';
-            document.getElementById('nextBtn').style.display = currentStep === 3 ? 'none' : 'inline-flex';
-            document.getElementById('publishBtn').style.display = currentStep === 3 ? 'inline-flex' : 'none';
-            document.getElementById('saveDraftBtn').style.display = currentStep === 3 ? 'inline-flex' : 'none';
+            document.getElementById('nextBtn').style.display = currentStep === 4 ? 'none' : 'inline-flex';
+            document.getElementById('publishBtn').style.display = currentStep === 4 ? 'inline-flex' : 'none';
+            document.getElementById('saveDraftBtn').style.display = currentStep === 4 ? 'inline-flex' : 'none';
         }
 
         function loadExistingQuestions() {
@@ -893,34 +1040,31 @@
 
             existingQuestions.forEach((q) => {
                 addQuestion();
+                const index = questionCount - 1;
+                const card = document.getElementById('question-' + index);
+                if (!card) return;
 
-                setTimeout(() => {
-                    const index = questionCount - 1;
-                    const card = document.getElementById('question-' + index);
-                    if (!card) return;
+                //Fill Question Text
+                const textInput = card.querySelector('.q-text');
+                if (textInput) textInput.value = q.text;
 
-                    // Fill Question Text
-                    const textInput = card.querySelector('.q-text');
-                    if (textInput) textInput.value = q.text;
+                //Fill Marks
+                const marksInput = card.querySelector('input[name*="marks"]');
+                if (marksInput) marksInput.value = q.marks;
 
-                    // Fill Marks
-                    const marksInput = card.querySelector('input[name*="marks"]');
-                    if (marksInput) marksInput.value = q.marks;
+                //Fill Options & Correct Answer
+                q.options.forEach((opt, i) => {
+                    const optInput = card.querySelector(`[name="questions[${index}][options][${i}]"]`);
+                    if (optInput) optInput.value = opt.text;
 
-                    // Fill Options & Correct Answer
-                    q.options.forEach((opt, i) => {
-                        const optInput = card.querySelector(`[name="questions[${index}][options][${i}]"]`);
-                        if (optInput) optInput.value = opt.text;
-
-                        if (opt.is_correct) {
-                            const radio = document.getElementById(`opt-radio-${index}-${i}`);
-                            if (radio) {
-                                radio.checked = true;
-                                markCorrect(index, i);
-                            }
+                    if (opt.is_correct) {
+                        const radio = document.getElementById(`opt-radio-${index}-${i}`);
+                        if (radio) {
+                            radio.checked = true;
+                            markCorrect(index, i);
                         }
-                    });
-                }, 30);
+                    }
+                });
             });
         }
 
@@ -1014,16 +1158,20 @@
             const shuffle = document.getElementById('shuffle_questions').value === '1' ? 'Yes' : 'No';
             const showResults = document.getElementById('show_results').value === '1' ? 'Yes' : 'No';
 
+            const visibility = document.getElementById('visibilityInput').value;
+            const code = document.getElementById('proposedCodeInput').value;
+
             document.getElementById('reviewDetails').innerHTML = `
-        <div class="review-row"><span>Title</span><span>${title}</span></div>
-        <div class="review-row"><span>Time Limit</span><span>${timeLimit ? timeLimit + ' minutes' : 'No limit'}</span></div>
-        <div class="review-row"><span>Max Attempts</span><span>${maxAttempts}</span></div>
-        <div class="review-row"><span>Starts At</span><span>${startsAt || 'Immediately'}</span></div>
-        <div class="review-row"><span>Ends At</span><span>${endsAt || 'No deadline'}</span></div>
-        <div class="review-row"><span>Shuffle Questions</span><span>${shuffle}</span></div>
-        <div class="review-row"><span>Show Results</span><span>${showResults}</span></div>
-        <div class="review-row"><span>Total Questions</span><span>${document.querySelectorAll('.question-card').length}</span></div>
-    `;
+                <div class="review-row"><span>Title</span><span>${title}</span></div>
+                <div class="review-row"><span>Time Limit</span><span>${timeLimit ? timeLimit + ' minutes' : 'No limit'}</span></div>
+                <div class="review-row"><span>Max Attempts</span><span>${maxAttempts}</span></div>
+                <div class="review-row"><span>Starts At</span><span>${startsAt || 'Immediately'}</span></div>
+                <div class="review-row"><span>Ends At</span><span>${endsAt || 'No deadline'}</span></div>
+                <div class="review-row"><span>Shuffle Questions</span><span>${shuffle}</span></div>
+                <div class="review-row"><span>Show Results</span><span>${showResults}</span></div>
+                <div class="review-row"><span>Visibility</span><span>${visibility === 'private' ? 'Private (code: ' + code + ')' : 'Public'}</span></div>
+                <div class="review-row"><span>Total Questions</span><span>${document.querySelectorAll('.question-card').length}</span></div>
+            `;
 
             const cards = document.querySelectorAll('.question-card');
             document.getElementById('reviewQCount').textContent = '(' + cards.length + ' questions)';

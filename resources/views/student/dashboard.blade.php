@@ -2,17 +2,24 @@
 @section('title', 'Quizora — Dashboard')
 @push('styles')
 <style>
+  .cta-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
   .browse-section {
     background: linear-gradient(135deg, #2E2570 0%, #4F46E5 50%, #818CF8 100%);
     border-radius: 16px;
     padding: 28px;
+    min-height: 190px;
     position: relative;
     overflow: hidden;
-    margin-bottom: 24px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: space-between;
-    gap: 20px;
+    gap: 16px;
   }
 
   .browse-section::before {
@@ -29,6 +36,9 @@
   .browse-info {
     position: relative;
     z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
   }
 
   .browse-info h2 {
@@ -46,6 +56,7 @@
   .browse-btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(8px);
@@ -60,6 +71,7 @@
     white-space: nowrap;
     position: relative;
     z-index: 1;
+    align-self: flex-start;
   }
 
   .browse-btn:hover {
@@ -394,6 +406,113 @@
   .stat-card.amber .stat-caption {
     color: #F59E0B;
   }
+
+  .ai-tutor-section {
+    background: linear-gradient(135deg, #1E3A5F 0%, #0891B2 50%, #22D3EE 100%);
+    border-radius: 16px;
+    padding: 28px;
+    min-height: 190px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .ai-tutor-section::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .ai-tutor-section::after {
+    content: '';
+    position: absolute;
+    bottom: -50px;
+    left: 30%;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .ai-tutor-info {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .ai-tutor-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .ai-tutor-info h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ai-tutor-info h2 .badge-new {
+    font-size: 10px;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  .ai-tutor-info p {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.75);
+    max-width: 420px;
+  }
+
+  .ai-tutor-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #fff;
+    color: #0891B2;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 11px 22px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+    position: relative;
+    z-index: 1;
+    align-self: flex-start;
+  }
+
+  .ai-tutor-btn:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-1px);
+  }
 </style>
 @endpush
 @section('content')
@@ -470,15 +589,32 @@
 
 </div>
 
-{{-- BROWSE CTA --}}
-<div class="browse-section">
-  <div class="browse-info">
-    <h2>Discover new quizzes</h2>
-    <p>Explore quizzes across every topic — from school to BCS prep</p>
+<div class="cta-row">
+
+  {{-- BROWSE CTA --}}
+  <div class="browse-section">
+    <div class="browse-info">
+      <h2>Discover new quizzes</h2>
+      <p>Explore quizzes across every topic — from school to BCS prep</p>
+    </div>
+    <a href="{{ route('student.browse') }}" class="browse-btn">
+      <i class="ti ti-compass"></i> Browse Quizzes
+    </a>
   </div>
-  <a href="{{ route('student.browse') }}" class="browse-btn">
-    <i class="ti ti-compass"></i> Browse Quizzes
-  </a>
+
+  {{-- AI TUTOR CTA --}}
+  <div class="ai-tutor-section">
+    <div class="ai-tutor-info">
+      <div>
+        <h2>Meet your AI Tutor <span class="badge-new">AI</span></h2>
+        <p>Ask about your results, get topics explained, and find out exactly what to study next.</p>
+      </div>
+    </div>
+    <a href="{{ route('student.ai-tutor') }}" class="ai-tutor-btn">
+      <i class="ti ti-message-chatbot"></i> Chat with AI Tutor
+    </a>
+  </div>
+
 </div>
 
 {{-- MAIN GRID --}}

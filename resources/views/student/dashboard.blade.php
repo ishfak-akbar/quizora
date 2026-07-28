@@ -197,36 +197,277 @@
     margin-top: 2px;
   }
 
-  .card-header h2{
+  .card-header h2 {
     font-size: 15px;
   }
 
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    border: 1px solid var(--color-border-light);
+    border-radius: 14px;
+    padding: 18px 20px 16px;
+    position: relative;
+    overflow: hidden;
+    height: 168px;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+
+  .stat-card.purple {
+    background: linear-gradient(180deg, rgba(79, 70, 229, 0.32) 0%, rgba(79, 70, 229, 0.06) 45%, var(--color-bg-card) 100%);
+  }
+
+  .stat-card.cyan {
+    background: linear-gradient(180deg, rgba(8, 145, 178, 0.30) 0%, rgba(8, 145, 178, 0.05) 45%, var(--color-bg-card) 100%);
+  }
+
+  .stat-card.green {
+    background: linear-gradient(180deg, rgba(5, 150, 105, 0.30) 0%, rgba(5, 150, 105, 0.05) 45%, var(--color-bg-card) 100%);
+  }
+
+  .stat-card.amber {
+    background: linear-gradient(180deg, rgba(180, 83, 9, 0.30) 0%, rgba(180, 83, 9, 0.05) 45%, var(--color-bg-card) 100%);
+  }
+
+  .stat-card:hover {
+    border-color: rgba(129, 140, 248, 0.45);
+    transform: translateY(-3px);
+    box-shadow:
+      0 0 0 1px rgba(129, 140, 248, 0.10),
+      0 10px 26px rgba(79, 70, 229, 0.20);
+  }
+
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 0%), rgba(129, 140, 248, 0.14), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.25s;
+    pointer-events: none;
+  }
+
+  .stat-card:hover::after {
+    opacity: 1;
+  }
+
+  .stat-card-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+  }
+
+  .stat-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+
+  .stat-card.purple .stat-icon {
+    background: rgba(79, 70, 229, 0.2);
+    color: var(--color-primary-glow);
+  }
+
+  .stat-card.cyan .stat-icon {
+    background: rgba(34, 211, 238, 0.15);
+    color: var(--color-stat-cyan);
+  }
+
+  .stat-card.green .stat-icon {
+    background: rgba(52, 211, 153, 0.15);
+    color: var(--color-status-success);
+  }
+
+  .stat-card.amber .stat-icon {
+    background: rgba(245, 158, 11, 0.15);
+    color: #F59E0B;
+  }
+
+  .stat-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+
+  .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+    position: relative;
+    z-index: 1;
+  }
+
+  .stat-visual {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    position: relative;
+    z-index: 1;
+    min-height: 0;
+  }
+
+  .stat-divider {
+    height: 1px;
+    background: var(--color-border-light);
+    margin: 14px 0 12px;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+  }
+
+  .stat-legend {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+    font-size: 11.5px;
+    color: #fff;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .stat-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .stat-legend-pipe {
+    color: var(--color-text-muted);
+    font-weight: 400;
+  }
+
+  .stat-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .stat-caption {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+  }
+
+  .stat-caption i {
+    font-size: 14px;
+  }
+
+  .stat-card.purple .stat-caption {
+    color: var(--color-primary-glow);
+  }
+
+  .stat-card.cyan .stat-caption {
+    color: var(--color-stat-cyan);
+  }
+
+  .stat-card.green .stat-caption {
+    color: var(--color-status-success);
+  }
+
+  .stat-card.amber .stat-caption {
+    color: #F59E0B;
+  }
 </style>
 @endpush
 @section('content')
 
 {{-- STATS --}}
 <div class="stats-grid">
+
+  <!-- Quizzes Taken -->
   <div class="stat-card purple">
-    <div class="stat-icon"><i class="ti ti-clipboard-list"></i></div>
-    <div class="stat-value">{{ $totalAttempts }}</div>
-    <div class="stat-label">Quizzes Taken</div>
+    <div class="stat-card-head">
+      <div class="stat-icon"><i class="ti ti-clipboard-list"></i></div>
+      <div>
+        <div class="stat-title">Quizzes Taken</div>
+        <div class="stat-value">{{ $totalAttempts }}</div>
+      </div>
+    </div>
+    <div class="stat-visual"></div>
+    <div class="stat-divider"></div>
+    <div class="stat-legend">
+      <span class="stat-legend-item"><span class="stat-dot" style="background:var(--color-status-success)"></span> {{ $quizzesPassed }} Passed</span>
+      <span class="stat-legend-pipe">|</span>
+      <span class="stat-legend-item"><span class="stat-dot" style="background:#F87171"></span> {{ max($totalAttempts - $quizzesPassed, 0) }} Failed</span>
+    </div>
   </div>
+
+  <!-- Average Score -->
   <div class="stat-card cyan">
-    <div class="stat-icon"><i class="ti ti-chart-line"></i></div>
-    <div class="stat-value">{{ $avgScore }}%</div>
-    <div class="stat-label">Average Score</div>
+    <div class="stat-card-head">
+      <div class="stat-icon"><i class="ti ti-chart-line"></i></div>
+      <div>
+        <div class="stat-title">Average Score</div>
+        <div class="stat-value">{{ $avgScore }}%</div>
+      </div>
+    </div>
+    <div class="stat-visual"></div>
+    <div class="stat-divider"></div>
+    <div class="stat-caption">
+      <i class="ti ti-{{ $avgScore >= 50 ? 'trending-up' : 'trending-down' }}"></i>
+      {{ $avgScore >= 50 ? 'On track' : 'Needs improvement' }}
+    </div>
   </div>
+
+  <!-- Best Score -->
   <div class="stat-card green">
-    <div class="stat-icon"><i class="ti ti-star"></i></div>
-    <div class="stat-value">{{ $bestScore }}%</div>
-    <div class="stat-label">Best Score</div>
+    <div class="stat-card-head">
+      <div class="stat-icon"><i class="ti ti-star"></i></div>
+      <div>
+        <div class="stat-title">Best Score</div>
+        <div class="stat-value">{{ $bestScore }}%</div>
+      </div>
+    </div>
+    <div class="stat-visual"></div>
+    <div class="stat-divider"></div>
+    <div class="stat-caption">
+      <i class="ti ti-trophy"></i> Your top performance
+    </div>
   </div>
+
+  <!-- Bookmarks -->
   <div class="stat-card amber">
-    <div class="stat-icon"><i class="ti ti-bookmark"></i></div>
-    <div class="stat-value">{{ $bookmarkCount }}</div>
-    <div class="stat-label">Bookmarks</div>
+    <div class="stat-card-head">
+      <div class="stat-icon"><i class="ti ti-bookmark"></i></div>
+      <div>
+        <div class="stat-title">Bookmarks</div>
+        <div class="stat-value">{{ $bookmarkCount }}</div>
+      </div>
+    </div>
+    <div class="stat-visual"></div>
+    <div class="stat-divider"></div>
+    <div class="stat-caption">
+      <i class="ti ti-clock"></i> Saved for later
+    </div>
   </div>
+
 </div>
 
 {{-- BROWSE CTA --}}
@@ -317,3 +558,14 @@
 </div>
 
 @endsection
+@push('scripts')
+<script>
+  document.querySelectorAll('.stat-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+      card.style.setProperty('--my', `${e.clientY - rect.top}px`);
+    });
+  });
+</script>
+@endpush

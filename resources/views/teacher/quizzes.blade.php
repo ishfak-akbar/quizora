@@ -352,11 +352,10 @@
     .empty-state {
         text-align: center;
         padding: 60px 20px;
-        color: var(--color-text-muted);
     }
 
-    .empty-state i {
-        font-size: 48px;
+    .empty-state .empty-icon {
+        font-size: 52px;
         display: block;
         margin-bottom: 16px;
         color: rgba(79, 70, 229, 0.3);
@@ -371,7 +370,27 @@
 
     .empty-state p {
         font-size: 13px;
+        color: #6b7280;
         margin-bottom: 20px;
+    }
+
+    .empty-browse-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--color-primary-solid);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 11px 22px;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: background 0.2s, transform 0.15s;
+    }
+
+    .empty-browse-btn:hover {
+        background: #4338CA;
+        transform: translateY(-1px);
     }
 </style>
 @endpush
@@ -470,10 +489,10 @@
     </div>
     @empty
     <div class="empty-state" style="grid-column:1/-1;">
-        <i class="ti ti-file-off"></i>
+        <i class="ti ti-file-off empty-icon"></i>
         <h3>No quizzes yet</h3>
         <p>Create your first quiz to get started</p>
-        <a href="{{ route('teacher.quiz.create') }}" class="create-btn"><i class="ti ti-plus"></i> Create Quiz</a>
+        <a href="{{ route('teacher.quiz.create') }}" class="empty-browse-btn"><i class="ti ti-plus"></i> Create Quiz</a>
     </div>
     @endforelse
 </div>

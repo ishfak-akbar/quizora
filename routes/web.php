@@ -62,6 +62,10 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->group(function (
     Route::get('/quiz/import', [QuizController::class, 'importPage'])->name('teacher.quiz.import');
     Route::post('/quiz/import-csv', [QuizController::class, 'importCsv'])->name('teacher.quiz.import-csv');
     Route::get('/quiz/csv-template', [QuizController::class, 'csvTemplate'])->name('teacher.quiz.csv-template');
+
+    Route::patch('/settings', [QuizController::class, 'updateSettings'])->name('teacher.settings.update');
+    Route::put('/settings/password', [QuizController::class, 'updatePassword'])->name('teacher.settings.password');
+    Route::delete('/settings/account', [QuizController::class, 'deleteAccount'])->name('teacher.settings.delete');
 });
 
 Route::middleware(['auth', 'role:student'])->prefix('student')->group(function () {

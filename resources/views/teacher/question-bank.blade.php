@@ -22,57 +22,6 @@
         margin-top: 4px;
     }
 
-    .stats-row {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 14px;
-        margin-bottom: 24px;
-    }
-
-    .stat-card {
-        background: var(--color-bg-card);
-        border: 1px solid var(--color-border-light);
-        border-radius: 14px;
-        padding: 18px 20px;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .stat-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-    }
-
-    .stat-card.purple::before {
-        background: linear-gradient(90deg, #4F46E5, #A78BFA);
-    }
-
-    .stat-card.cyan::before {
-        background: linear-gradient(90deg, #0891B2, #22D3EE);
-    }
-
-    .stat-card.amber::before {
-        background: linear-gradient(90deg, #D97706, #F59E0B);
-    }
-
-    .stat-value {
-        font-size: 26px;
-        font-weight: 700;
-        color: #fff;
-        line-height: 1;
-        margin-bottom: 4px;
-    }
-
-    .stat-label {
-        font-size: 12px;
-        color: var(--color-text-muted);
-        font-weight: 500;
-    }
-
     .filters {
         display: flex;
         align-items: center;

@@ -29,6 +29,7 @@ class User extends Authenticatable
         'location',
         'bio',
         'institution',
+        'designation',
         'class_level',
         'education_level',
         'study_goal',

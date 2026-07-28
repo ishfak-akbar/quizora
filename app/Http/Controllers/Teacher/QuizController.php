@@ -9,6 +9,9 @@ use App\Models\Option;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Attempt;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class QuizController extends Controller
 {
@@ -314,7 +317,71 @@ class QuizController extends Controller
 
     public function settings()
     {
-        return view('teacher.settings');
+        $user = User::findOrFail(Auth::id());
+        return view('teacher.settings', ['user' => $user]);
+    }
+
+    public function updateSettings(Request $request)
+    {
+        $user = User::findOrFail(Auth::id());
+        $section = $request->input('section', 'profile');
+
+        if ($section === 'profile') {
+            $validated = $request->validate([
+                'name'          => 'required|string|max:255',
+                'email'         => 'required|email|unique:users,email,' . $user->id,
+                'phone'         => 'nullable|string|max:20',
+                'date_of_birth' => 'nullable|date|before:today',
+                'gender'        => 'nullable|in:male,female,other,prefer_not_to_say',
+                'location'      => 'nullable|string|max:100',
+                'bio'           => 'nullable|string|max:300',
+                'avatar_color'  => 'nullable|string|max:7',
+            ]);
+        } elseif ($section === 'professional') {
+            $validated = $request->validate([
+                'institution' => 'nullable|string|max:200',
+                'designation' => 'nullable|string|max:150',
+            ]);
+        } else {
+            return back()->withErrors(['section' => 'Invalid settings section.']);
+        }
+
+        $user->fill($validated);
+        $user->save();
+
+        return redirect()->route('teacher.settings', ['tab' => $section])
+            ->with('success', ucfirst($section) . ' updated successfully.');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $user = User::findOrFail(Auth::id());
+
+        $request->validate([
+            'current_password' => 'required|current_password',
+            'password'          => ['required', 'confirmed', Password::min(8)],
+        ]);
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return redirect()->route('teacher.settings')->with('success', 'Password updated successfully.');
+    }
+
+    public function deleteAccount(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|current_password',
+        ]);
+
+        $user = User::findOrFail(Auth::id());
+        Auth::logout();
+        $user->delete();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('success', 'Account deleted.');
     }
     public function generateAccessCode(Quiz $quiz)
     {

@@ -7,7 +7,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 24px;
+        margin-bottom: 22px;
     }
 
     .page-header h1 {
@@ -27,10 +27,10 @@
         flex-direction: column;
         align-items: center;
         text-align: center;
-        padding: 28px 24px;
+        padding: 22px 24px;
         background: linear-gradient(135deg, #2E2570 0%, #4F46E5 50%, #818CF8 100%);
         border-radius: 18px;
-        margin-bottom: 28px;
+        margin-bottom: 16px;
         position: relative;
         overflow: hidden;
     }
@@ -84,7 +84,7 @@
     .import-form {
         display: flex;
         flex-direction: column;
-        gap: 14px;
+        gap: 8px;
         position: relative;
         z-index: 1;
         width: 100%;
@@ -96,7 +96,7 @@
         backdrop-filter: blur(8px);
         border: 1.5px dashed rgba(255, 255, 255, 0.35);
         border-radius: 12px;
-        padding: 22px 16px;
+        padding: 16px 16px;
         color: #fff;
         cursor: pointer;
         transition: all 0.2s;
@@ -120,6 +120,37 @@
         font-weight: 600;
         margin-top: 8px;
         color: #fff;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .filename-remove-btn {
+        background: rgba(255, 255, 255, 0.15);
+        border: none;
+        color: #fff;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.2s;
+        flex-shrink: 0;
+        padding: 0;
+        line-height: 1;
+    }
+
+    .filename-remove-btn i {
+        font-size: 18px;
+        position: relative;
+        top: 4px;
+    }
+
+    .filename-remove-btn:hover {
+        background: rgba(248, 113, 113, 0.6);
     }
 
     .import-dropzone .hint {
@@ -234,10 +265,9 @@
     }
 
     .guide-card .col-name {
-        font-size: 12.5px;
-        font-weight: 700;
+        font-size: 14px;
+        font-weight: 600;
         color: #fff;
-        margin-bottom: 4px;
         position: relative;
         z-index: 1;
     }
@@ -272,13 +302,20 @@
         <input type="text" name="title" class="input" placeholder="Quiz title *" required
             style="background:rgba(255,255,255,0.12); border:1.5px solid rgba(255,255,255,0.3); border-radius:12px; padding:13px 16px; color:#fff; font-size:13px; font-family:var(--font); outline:none;">
 
-        <label class="import-dropzone" id="dropzone" for="csvFile">
-            <i class="ti ti-cloud-upload"></i>
-            <span>Click to browse or drag & drop your CSV here</span>
-            <div class="filename" id="fileName"></div>
+        <div class="import-dropzone" id="dropzone">
+            <label for="csvFile" style="cursor:pointer; display:block;" id="dropzoneLabel">
+                <i class="ti ti-cloud-upload"></i>
+                <span id="dropzoneText">Click to browse or drag & drop your CSV here</span>
+            </label>
+            <div class="filename" id="fileName">
+                <span id="fileNameText"></span>
+                <button type="button" class="filename-remove-btn" id="removeFileBtn" title="Remove file">
+                    <i class="ti ti-x"></i>
+                </button>
+            </div>
             <div class="hint">.csv files only</div>
             <input type="file" name="csv_file" id="csvFile" accept=".csv" required style="display:none;">
-        </label>
+        </div>
 
         <div class="import-actions">
             <button type="submit" class="import-submit">
@@ -339,11 +376,32 @@
     const dropzone = document.getElementById('dropzone');
     const fileInput = document.getElementById('csvFile');
     const fileNameEl = document.getElementById('fileName');
+    const fileNameText = document.getElementById('fileNameText');
+    const dropzoneText = document.getElementById('dropzoneText');
+    const removeFileBtn = document.getElementById('removeFileBtn');
+
+    function showSelectedFile(name) {
+        fileNameText.textContent = name;
+        fileNameEl.style.display = 'flex';
+        dropzoneText.style.display = 'none';
+    }
+
+    function clearSelectedFile() {
+        fileInput.value = '';
+        fileNameEl.style.display = 'none';
+        dropzoneText.style.display = 'inline';
+    }
 
     fileInput.addEventListener('change', () => {
         if (fileInput.files.length) {
-            fileNameEl.textContent = fileInput.files[0].name;
+            showSelectedFile(fileInput.files[0].name);
         }
+    });
+
+    removeFileBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        clearSelectedFile();
     });
 
     ['dragover', 'dragenter'].forEach(evt => {
@@ -364,7 +422,7 @@
         const file = e.dataTransfer.files[0];
         if (file) {
             fileInput.files = e.dataTransfer.files;
-            fileNameEl.textContent = file.name;
+            showSelectedFile(file.name);
         }
     });
 </script>

@@ -340,6 +340,10 @@
     min-height: 0;
   }
 
+  .stat-visual>* {
+    width: 100%;
+  }
+
   .stat-divider {
     height: 1px;
     background: var(--color-border-light);
@@ -409,6 +413,66 @@
 
   .stat-card.ink .stat-caption {
     color: #F472B6;
+  }
+
+  .stat-stack-bar {
+    display: flex;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .stat-stack-seg.passed {
+    background: linear-gradient(90deg, #059669, var(--color-status-success));
+  }
+
+  .stat-stack-seg.failed {
+    background: linear-gradient(90deg, #B91C1C, #F87171);
+  }
+
+  .stat-mini-chart {
+    display: block;
+  }
+
+  .stat-scale {
+    position: relative;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #F87171, #F59E0B, var(--color-status-success));
+    opacity: 0.35;
+  }
+
+  .stat-scale-marker {
+    position: absolute;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--color-status-success);
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.25);
+  }
+
+  .stat-dot-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .stat-dot-row .fill-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #F59E0B;
+  }
+
+  .stat-dot-row .empty-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
   }
 
   .ai-tutor-section {
@@ -533,12 +597,20 @@
         <div class="stat-value">{{ $totalAttempts }}</div>
       </div>
     </div>
-    <div class="stat-visual"></div>
+    @php $failedCount = max($totalAttempts - $quizzesPassed, 0); @endphp
+    <div class="stat-visual">
+      <div class="stat-stack-bar">
+        @if($totalAttempts > 0)
+        <div class="stat-stack-seg passed" style="width:{{ round(($quizzesPassed / $totalAttempts) * 100) }}%"></div>
+        <div class="stat-stack-seg failed" style="width:{{ round(($failedCount / $totalAttempts) * 100) }}%"></div>
+        @endif
+      </div>
+    </div>
     <div class="stat-divider"></div>
     <div class="stat-legend">
       <span class="stat-legend-item"><span class="stat-dot" style="background:var(--color-status-success)"></span> {{ $quizzesPassed }} Passed</span>
       <span class="stat-legend-pipe">|</span>
-      <span class="stat-legend-item"><span class="stat-dot" style="background:#F87171"></span> {{ max($totalAttempts - $quizzesPassed, 0) }} Failed</span>
+      <span class="stat-legend-item"><span class="stat-dot" style="background:#F87171"></span> {{ $failedCount }} Failed</span>
     </div>
   </div>
 
@@ -551,7 +623,18 @@
         <div class="stat-value">{{ $avgScore }}%</div>
       </div>
     </div>
-    <div class="stat-visual"></div>
+    <div class="stat-visual">
+      @if($recentScores->count() >= 2)
+      @php
+      $max = max($recentScores->max(), 1);
+      $w = 220; $h = 34; $step = $w / max($recentScores->count() - 1, 1);
+      $points = $recentScores->map(fn($v, $i) => ($i * $step) . ',' . ($h - ($v / $max) * ($h - 4) - 2))->implode(' L ');
+      @endphp
+      <svg class="stat-mini-chart" width="100%" height="{{ $h }}" viewBox="0 0 {{ $w }} {{ $h }}" preserveAspectRatio="none">
+        <path d="M {{ $points }}" fill="none" stroke="var(--color-stat-cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      @endif
+    </div>
     <div class="stat-divider"></div>
     <div class="stat-caption">
       <i class="ti ti-{{ $avgScore >= 50 ? 'trending-up' : 'trending-down' }}"></i>
@@ -568,7 +651,11 @@
         <div class="stat-value">{{ $bestScore }}%</div>
       </div>
     </div>
-    <div class="stat-visual"></div>
+    <div class="stat-visual">
+      <div class="stat-scale">
+        <div class="stat-scale-marker" style="left:{{ $bestScore }}%"></div>
+      </div>
+    </div>
     <div class="stat-divider"></div>
     <div class="stat-caption">
       <i class="ti ti-trophy"></i> Your top performance
@@ -584,7 +671,16 @@
         <div class="stat-value">{{ $bookmarkCount }}</div>
       </div>
     </div>
-    <div class="stat-visual"></div>
+    <div class="stat-visual">
+      <div class="stat-dot-row">
+        @for($i = 0; $i < 5; $i++)
+          <span class="{{ $i < min($bookmarkCount, 5) ? 'fill-dot' : 'empty-dot' }}"></span>
+          @endfor
+          @if($bookmarkCount > 5)
+          <span style="font-size:11px; color:var(--color-text-muted); margin-left:4px;">+{{ $bookmarkCount - 5 }}</span>
+          @endif
+      </div>
+    </div>
     <div class="stat-divider"></div>
     <div class="stat-caption">
       <i class="ti ti-clock"></i> Saved for later

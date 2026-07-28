@@ -28,6 +28,15 @@ class DashboardController extends Controller
             ->where('status', 'submitted')
             ->get();
 
+        $recentScores = Attempt::where('student_id', $student->id)
+            ->where('status', 'submitted')
+            ->latest('submitted_at')
+            ->take(7)
+            ->get()
+            ->reverse()
+            ->values()
+            ->map(fn($a) => $a->total_marks > 0 ? round(($a->score / $a->total_marks) * 100) : 0);
+
         $avgScore = $totalAttempts > 0
             ? round($attempts->avg(fn($a) => $a->total_marks > 0 ? ($a->score / $a->total_marks) * 100 : 0))
             : 0;
@@ -59,7 +68,8 @@ class DashboardController extends Controller
             'recentAttempts',
             'bookmarkCount',
             'recommendedQuizzes',
-            'isAiRecommended'
+            'isAiRecommended',
+            'recentScores'
         ));
     }
 

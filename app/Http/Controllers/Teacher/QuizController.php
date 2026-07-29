@@ -110,9 +110,47 @@ class QuizController extends Controller
                 }
             }
         }
+        if ($quiz->status === 'active' && $quiz->visibility === 'public') {
+            $this->notifyStudentsOfNewQuiz($quiz);
+        }
 
         return redirect()->route('teacher.dashboard')
             ->with('success', 'Quiz created successfully!');
+    }
+    private function notifyStudentsOfNewQuiz(Quiz $quiz)
+    {
+        $followerIds = Attempt::whereHas('quiz', function ($q) use ($quiz) {
+            $q->where('teacher_id', $quiz->teacher_id);
+        })
+            ->distinct()
+            ->pluck('student_id');
+
+        $categoryInterestedIds = Attempt::whereHas('quiz', function ($q) use ($quiz) {
+            $q->where('category', $quiz->category);
+        })
+            ->distinct()
+            ->pluck('student_id')
+            ->diff($followerIds);
+
+        foreach ($followerIds as $studentId) {
+            \App\Models\AppNotification::notify(
+                $studentId,
+                'new_quiz_followed_teacher',
+                "New quiz from a teacher you've learned from: \"{$quiz->title}\"",
+                $quiz->category,
+                route('student.quiz.detail', $quiz->id)
+            );
+        }
+
+        foreach ($categoryInterestedIds as $studentId) {
+            \App\Models\AppNotification::notify(
+                $studentId,
+                'new_quiz',
+                "New quiz in {$quiz->category}: \"{$quiz->title}\"",
+                null,
+                route('student.quiz.detail', $quiz->id)
+            );
+        }
     }
 
     public function destroy(Quiz $quiz)
@@ -142,6 +180,7 @@ class QuizController extends Controller
         if ($quiz->teacher_id !== Auth::id()) {
             abort(403);
         }
+        $wasNewlyPublished = $quiz->status !== 'active' && $request->status === 'active';
 
         $request->validate([
             'title'             => 'required|string|max:255',
@@ -229,6 +268,9 @@ class QuizController extends Controller
                     ]);
                 }
             }
+        }
+        if ($wasNewlyPublished && $quiz->visibility === 'public') {
+            $this->notifyStudentsOfNewQuiz($quiz);
         }
 
         return redirect()->route('teacher.dashboard')

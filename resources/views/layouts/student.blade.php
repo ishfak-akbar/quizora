@@ -775,6 +775,192 @@
         .streak-badge i {
             font-size: 16px;
         }
+
+        .notif-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 2px);
+            right: 0;
+            width: 340px;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border-light);
+            border-radius: 16px;
+            z-index: 200;
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.45);
+            overflow: hidden;
+        }
+
+        .notif-dropdown-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 18px;
+            background: linear-gradient(135deg, #2E2570 0%, #4F46E5 60%, #6366F1 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notif-dropdown-header::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            right: -20px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .notif-dropdown-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .notif-unread-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            margin-left: 8px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.22);
+            color: #fff;
+            font-size: 10.5px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .notif-mark-all-btn {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: var(--font);
+            transition: background 0.2s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .notif-mark-all-btn:hover {
+            background: rgba(255, 255, 255, 0.28);
+        }
+
+        .notif-list-wrap {
+            max-height: 380px;
+            overflow-y: auto;
+        }
+
+        .notif-list-wrap::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .notif-list-wrap::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .notif-list-wrap::-webkit-scrollbar-thumb {
+            background: rgba(129, 140, 248, 0.25);
+            border-radius: 2px;
+        }
+
+        .notif-item {
+            display: flex;
+            gap: 12px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--color-border-light);
+            text-decoration: none;
+            transition: background 0.15s;
+            position: relative;
+        }
+
+        .notif-item:last-child {
+            border-bottom: none;
+        }
+
+        .notif-item:hover {
+            background: var(--color-bg-row-hover);
+        }
+
+        .notif-item.unread {
+            background: rgba(79, 70, 229, 0.07);
+        }
+
+        .notif-item.unread::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--color-primary-solid);
+        }
+
+        .notif-item-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .notif-item-body-wrap {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notif-item-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 3px;
+            line-height: 1.4;
+        }
+
+        .notif-item-body {
+            font-size: 11.5px;
+            color: var(--color-text-muted);
+            line-height: 1.4;
+        }
+
+        .notif-item-time {
+            font-size: 10.5px;
+            color: var(--color-text-muted);
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .notif-empty {
+            padding: 48px 20px;
+            text-align: center;
+        }
+
+        .notif-empty i {
+            font-size: 36px;
+            color: rgba(79, 70, 229, 0.3);
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .notif-empty p {
+            font-size: 12.5px;
+            color: var(--color-text-muted);
+        }
     </style>
     @stack('styles')
 </head>
@@ -851,10 +1037,24 @@
                 <div class="topbar-sub">{{ now()->format('l, F j, Y') }}</div>
                 </div>
                 <div class="topbar-right">
-                    <button class="notif-btn" aria-label="Notifications">
-                        <i class="ti ti-bell" aria-hidden="true"></i>
-                        <span class="notif-dot"></span>
-                    </button>
+                    <div style="position:relative;">
+                        <button class="notif-btn" id="notifBtn" aria-label="Notifications">
+                            <i class="ti ti-bell" aria-hidden="true"></i>
+                            <span class="notif-dot" id="notifDot" style="display:none;"></span>
+                        </button>
+                        <div id="notifDropdown" class="notif-dropdown">
+                            <div class="notif-dropdown-header">
+                                <div>
+                                    <span class="notif-dropdown-title">Notifications</span>
+                                    <span class="notif-unread-badge" id="notifUnreadBadge" style="display:none;"></span>
+                                </div>
+                                <button onclick="markAllNotifsRead()" class="notif-mark-all-btn">
+                                    Mark all read
+                                </button>
+                            </div>
+                            <div id="notifList" class="notif-list-wrap"></div>
+                        </div>
+                    </div>
                     <div class="streak-badge" title="{{ \App\Http\Controllers\Student\DashboardController::getCachedStreak(auth()->id()) }} day streak">
                         <i class="ti ti-flame" aria-hidden="true"></i>
                         <span>{{ \App\Http\Controllers\Student\DashboardController::getCachedStreak(auth()->id()) }}</span>
@@ -905,6 +1105,138 @@
             userDropdown.classList.toggle('open');
         });
         document.addEventListener('click', () => userDropdown.classList.remove('open'));
+
+        // NOTIFICATIONS
+        const notifBtn = document.getElementById('notifBtn');
+        const notifDropdown = document.getElementById('notifDropdown');
+        const notifDot = document.getElementById('notifDot');
+        const notifList = document.getElementById('notifList');
+
+        function timeAgo(dateStr) {
+            const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
+            if (diff < 60) return 'just now';
+            if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+            if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+            return Math.floor(diff / 86400) + 'd ago';
+        }
+
+        const notifStyles = {
+            new_submission: {
+                icon: 'ti-clipboard-check',
+                bg: 'rgba(79,70,229,0.18)',
+                color: '#818CF8'
+            },
+            milestone: {
+                icon: 'ti-trophy',
+                bg: 'rgba(245,158,11,0.18)',
+                color: '#F59E0B'
+            },
+            low_score: {
+                icon: 'ti-alert-triangle',
+                bg: 'rgba(248,113,113,0.18)',
+                color: '#F87171'
+            },
+            perfect_score: {
+                icon: 'ti-star',
+                bg: 'rgba(52,211,153,0.18)',
+                color: '#34D399'
+            },
+            new_quiz: {
+                icon: 'ti-sparkles',
+                bg: 'rgba(34,211,238,0.18)',
+                color: '#22D3EE'
+            },
+            new_quiz_followed_teacher: {
+                icon: 'ti-user-star',
+                bg: 'rgba(129,140,248,0.18)',
+                color: '#A78BFA'
+            },
+            quiz_unlocked: {
+                icon: 'ti-lock-open',
+                bg: 'rgba(52,211,153,0.18)',
+                color: '#34D399'
+            },
+        };
+
+        function notifIconFor(type) {
+            return notifStyles[type] || {
+                icon: 'ti-bell',
+                bg: 'rgba(129,140,248,0.15)',
+                color: '#818CF8'
+            };
+        }
+
+        function loadNotifications() {
+            fetch("{{ route('notifications.index') }}")
+                .then(r => r.json())
+                .then(data => {
+                    notifDot.style.display = data.unread_count > 0 ? 'block' : 'none';
+
+                    const badge = document.getElementById('notifUnreadBadge');
+                    if (data.unread_count > 0) {
+                        badge.style.display = 'inline-flex';
+                        badge.textContent = data.unread_count > 9 ? '9+' : data.unread_count;
+                    } else {
+                        badge.style.display = 'none';
+                    }
+
+                    if (data.notifications.length === 0) {
+                        notifList.innerHTML = `
+                    <div class="notif-empty">
+                        <i class="ti ti-bell-off"></i>
+                        <p>No notifications yet.</p>
+                    </div>`;
+                        return;
+                    }
+
+                    notifList.innerHTML = data.notifications.map(n => {
+                        const style = notifIconFor(n.type);
+                        return `
+                    <a href="${n.link || '#'}" class="notif-item ${!n.read_at ? 'unread' : ''}" onclick="markNotifRead(${n.id})">
+                        <div class="notif-item-icon" style="background:${style.bg}; color:${style.color};">
+                            <i class="ti ${style.icon}"></i>
+                        </div>
+                        <div class="notif-item-body-wrap">
+                            <div class="notif-item-title">${n.title}</div>
+                            ${n.body ? `<div class="notif-item-body">${n.body}</div>` : ''}
+                            <div class="notif-item-time"><i class="ti ti-clock" style="font-size:10px;"></i> ${timeAgo(n.created_at)}</div>
+                        </div>
+                    </a>`;
+                    }).join('');
+                });
+        }
+
+        function markNotifRead(id) {
+            fetch(`/notifications/${id}/read`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json',
+                }
+            });
+        }
+
+        function markAllNotifsRead() {
+            fetch("{{ route('notifications.read-all') }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json',
+                }
+            }).then(() => loadNotifications());
+        }
+
+        notifBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = notifDropdown.style.display === 'block';
+            notifDropdown.style.display = isOpen ? 'none' : 'block';
+            if (!isOpen) loadNotifications();
+        });
+
+        document.addEventListener('click', () => notifDropdown.style.display = 'none');
+
+        loadNotifications();
+        setInterval(loadNotifications, 30000);
     </script>
 
     {{-- TOAST --}}

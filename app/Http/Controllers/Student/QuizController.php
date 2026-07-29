@@ -246,6 +246,49 @@ class QuizController extends Controller
         foreach ($answerRows as $row) {
             $attempt->answers()->create($row);
         }
+
+        \App\Models\AppNotification::notify(
+            $quiz->teacher_id,
+            'new_submission',
+            "{$student->name} submitted \"{$quiz->title}\"",
+            "Scored {$score}/{$totalMarks}",
+            route('teacher.quiz.results', $quiz->id)
+        );
+
+        $submittedCount = Attempt::where('quiz_id', $quiz->id)
+            ->where('status', 'submitted')
+            ->count();
+
+        if (in_array($submittedCount, [10, 25, 50, 100])) {
+            \App\Models\AppNotification::notify(
+                $quiz->teacher_id,
+                'milestone',
+                "\"{$quiz->title}\" just hit {$submittedCount} submissions",
+                null,
+                route('teacher.quiz.results', $quiz->id)
+            );
+        }
+
+        $scorePct = $totalMarks > 0 ? round(($score / $totalMarks) * 100) : 0;
+
+        if ($scorePct <= 30) {
+            \App\Models\AppNotification::notify(
+                $quiz->teacher_id,
+                'low_score',
+                "{$student->name} scored low on \"{$quiz->title}\"",
+                "{$scorePct}% — may need support with this topic",
+                route('teacher.quiz.results', $quiz->id)
+            );
+        } elseif ($scorePct === 100) {
+            \App\Models\AppNotification::notify(
+                $quiz->teacher_id,
+                'perfect_score',
+                "{$student->name} got a perfect score on \"{$quiz->title}\"",
+                "100% — nice work!",
+                route('teacher.quiz.results', $quiz->id)
+            );
+        }
+
         $this->updateStreakCache($student->id);
         return redirect()->route('student.quiz.result', $quiz->id);
     }
@@ -328,6 +371,14 @@ class QuizController extends Controller
             'student_id' => $student->id,
             'quiz_id'    => $quiz->id,
         ]);
+
+        \App\Models\AppNotification::notify(
+            $student->id,
+            'quiz_unlocked',
+            "Unlocked: \"{$quiz->title}\"",
+            'This private quiz is now available to you.',
+            route('student.quiz.detail', $quiz->id)
+        );
 
         return redirect()->route('student.quiz.detail', $quiz->id)
             ->with('success', 'Quiz unlocked! You now have permanent access.');

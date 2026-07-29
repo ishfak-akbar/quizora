@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
     <link rel="stylesheet" href="{{ asset('quizora.css') }}">
     <link rel="stylesheet" href="{{ asset('layout.css') }}">
+    <link rel="stylesheet" href="{{ asset('teacher.css') }}">
     <title>@yield('title', 'Quizora')</title>
     @stack('styles')
 </head>

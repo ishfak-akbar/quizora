@@ -184,3 +184,100 @@
     color: #fff; line-height: 1; margin-bottom: 4px;
 }
 .stat-label { font-size: 12px; color: var(--color-text-muted); font-weight: 500; }
+.card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-light);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--color-border-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-header h2 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.status-badge.active {
+    background: rgba(52, 211, 153, 0.15);
+    color: var(--color-status-success);
+}
+
+.status-badge.draft {
+    background: rgba(107, 114, 128, 0.2);
+    color: var(--color-text-secondary);
+}
+
+.status-badge.closed {
+    background: rgba(248, 113, 113, 0.15);
+    color: var(--color-status-error);
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    display: inline-block;
+}
+
+.action-btns {
+    display: flex;
+    gap: 6px;
+}
+
+.action-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: 1px solid var(--color-border-light);
+    background: transparent;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.action-btn:hover {
+    background: var(--color-bg-row-hover);
+    color: #fff;
+    border-color: rgba(79, 70, 229, 0.4);
+}
+
+.view-all-link {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-primary-glow);
+    background: transparent;
+    border: 1px solid var(--color-border-light);
+    border-radius: 8px;
+    padding: 5px 14px;
+    cursor: pointer;
+    font-family: var(--font);
+    transition: background 0.15s;
+    text-decoration: none;
+}
+
+.view-all-link:hover {
+    background: var(--color-bg-row-hover);
+}

@@ -10,9 +10,11 @@ use App\Http\Controllers\Student\QuizController as StudentQuizController;
 
 Route::get('/', function () {
     if (Auth::check()) {
-        return redirect()->route(
-            Auth::user()->role === 'teacher' ? 'teacher.dashboard' : 'student.dashboard'
-        );
+        return match (Auth::user()->role) {
+            'admin'   => redirect()->route('admin.dashboard'),
+            'teacher' => redirect()->route('teacher.dashboard'),
+            default   => redirect()->route('student.dashboard'),
+        };
     }
     return view('welcome');
 })->name('welcome');

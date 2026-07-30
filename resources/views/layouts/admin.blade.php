@@ -9,28 +9,78 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
     <link rel="stylesheet" href="{{ asset('quizora.css') }}">
     <link rel="stylesheet" href="{{ asset('layout.css') }}">
-    <link rel="stylesheet" href="{{ asset('teacher.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin.css') }}">
     <title>@yield('title', 'Quizora Admin')</title>
     @stack('styles')
 </head>
 
 <body>
 
-    {{-- SIDEBAR --}}
+    {{-- SIDEBAR (same structure as teacher) --}}
     <aside class="sidebar" id="sidebar">
-        <a href="{{ route('welcome') }}" class="sidebar-logo" style="text-decoration:none;">
+        <a href="{{ route('admin.dashboard') }}" class="sidebar-logo" style="text-decoration:none;">
             <div class="logo-icon">Q</div>
             <div class="logo-text">Quiz<span>ora</span></div>
         </a>
         <nav class="sidebar-nav">
-            <div class="nav-label">Admin</div>
+            <div class="nav-label">Main</div>
             <a href="{{ route('admin.dashboard') }}"
                 class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <i class="ti ti-layout-dashboard nav-icon"></i>
                 <span class="nav-text">Dashboard</span>
             </a>
 
-            {{-- More menu items will be added later --}}
+            <div class="nav-label">Management</div>
+            <a href="#" class="nav-item">
+                <i class="ti ti-users nav-icon"></i>
+                <span class="nav-text">Users</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="ti ti-school nav-icon"></i>
+                <span class="nav-text">Teachers</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="ti ti-user nav-icon"></i>
+                <span class="nav-text">Students</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="ti ti-file-description nav-icon"></i>
+                <span class="nav-text">Quizzes</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="ti ti-clipboard-list nav-icon"></i>
+                <span class="nav-text">Submissions</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="ti ti-category nav-icon"></i>
+                <span class="nav-text">Categories</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="ti ti-chart-bar nav-icon"></i>
+                <span class="nav-text">Reports</span>
+            </a>
+
+            <div class="nav-label">System</div>
+            <a href="#" class="nav-item">
+                <i class="ti ti-speakerphone nav-icon"></i>
+                <span class="nav-text">Announcements</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="ti ti-heart-rate-monitor nav-icon"></i>
+                <span class="nav-text">System Health</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="ti ti-settings nav-icon"></i>
+                <span class="nav-text">Settings</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="ti ti-file-text nav-icon"></i>
+                <span class="nav-text">Logs</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="ti ti-robot nav-icon"></i>
+                <span class="nav-text">AI Services</span>
+            </a>
         </nav>
         <div class="sidebar-bottom">
             <a href="#" class="nav-item">
@@ -48,15 +98,15 @@
     <main class="main" id="main">
         <header class="topbar">
             <div>
-                <div class="topbar-title">Admin Panel</div>
-                <div class="topbar-sub">{{ now()->format('l, F j, Y') }}</div>
+                <div class="topbar-title">@yield('page-title', 'Dashboard')</div>
+                <div class="topbar-sub">@yield('page-subtitle', 'Welcome back, ' . auth()->user()->name)</div>
             </div>
             <div class="topbar-right">
                 <div class="user-btn" id="userBtn">
                     <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
                     <div>
                         <div class="user-name">{{ auth()->user()->name }}</div>
-                        <div class="user-role">Admin</div>
+                        <div class="user-role">Super Admin</div>
                     </div>
                     <i class="ti ti-chevron-down user-chevron"></i>
                     <div class="user-dropdown" id="userDropdown">

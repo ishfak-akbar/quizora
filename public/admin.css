@@ -1,0 +1,98 @@
+/* ======================================================
+   ADMIN – Emerald theme (force override)
+   ====================================================== */
+
+:root {
+    --color-primary-glow: #34d399;
+    --color-primary-solid: #10b981;
+    --color-primary-dark: #059669;
+    --color-bg-main: #0b0f19;
+    --color-bg-card: #111827;
+    --color-bg-row-hover: #1f2937;
+    --color-border-light: rgba(255, 255, 255, 0.07);
+    --color-border-solid: #064e3b;
+    --color-text-primary: #f9fafb;
+    --color-text-secondary: #94a3b8;
+    --color-text-muted: #64748b;
+    --color-stat-purple: #34d399;
+    --color-stat-cyan: #2dd4bf;
+    --color-status-success: #34d399;
+    --color-status-error: #f87171;
+}
+
+/* Force body background */
+body {
+    background: #0b0f19 !important;
+}
+
+/* ========== SIDEBAR ========== */
+/* Sidebar & Topbar – same solid color */
+.sidebar {
+    background: #0b0f19 !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.07) !important;
+}
+
+.sidebar-logo {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+}
+
+.logo-icon {
+    background: #10b981 !important;
+}
+
+.logo-text span {
+    color: #34d399 !important;
+}
+
+.nav-item.active {
+    background: rgba(16, 185, 129, 0.18) !important;
+}
+
+.nav-item.active .nav-icon {
+    color: #34d399 !important;
+}
+
+.nav-item.active .nav-text {
+    color: #fff !important;
+}
+
+.nav-item:hover {
+    background: #1f2937 !important;
+}
+
+/* ========== TOPBAR ========== */
+.topbar {
+    background: #0b0f19 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+}
+/* ========== TOGGLE BUTTON ========== */
+.toggle-btn {
+    background: #111827 !important;
+    border-color: rgba(255, 255, 255, 0.07) !important;
+}
+
+.toggle-btn:hover {
+    background: #1f2937 !important;
+}
+
+/* ========== USER BUTTON ========== */
+.user-btn {
+    border-color: rgba(255, 255, 255, 0.07) !important;
+}
+
+.user-btn:hover {
+    background: #1f2937 !important;
+}
+
+.user-avatar {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+}
+
+.user-dropdown {
+    background: #111827 !important;
+    border-color: rgba(255, 255, 255, 0.07) !important;
+}
+
+.dropdown-item:hover {
+    background: #1f2937 !important;
+}

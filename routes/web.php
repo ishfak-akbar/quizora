@@ -73,6 +73,11 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->group(function (
     Route::delete('/settings/account', [QuizController::class, 'deleteAccount'])->name('teacher.settings.delete');
 });
 
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])
+        ->name('admin.dashboard');
+});
+
 Route::middleware(['auth', 'role:student'])->prefix('student')->group(function () {
 
     Route::get('/dashboard', [StudentDashboard::class, 'index'])->name('student.dashboard');

@@ -28,8 +28,11 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        $role = Auth::user()->role;
-        return redirect($role === 'teacher' ? '/teacher/dashboard' : '/student/dashboard');
+        return redirect(match (Auth::user()->role) {
+            'admin'   => '/admin/dashboard',
+            'teacher' => '/teacher/dashboard',
+            default   => '/student/dashboard',
+        });
     }
 
     /**

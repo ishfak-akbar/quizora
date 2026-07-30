@@ -3,6 +3,403 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('teacher.css') }}">
+<style>
+  .dq-card {
+    background:
+      radial-gradient(ellipse 100% 400px at 50% 0%,
+        rgba(99, 102, 241, 0.18) 0%,
+        transparent 65%),
+      linear-gradient(180deg, #1c1842 0%, #161233 50%, #0f0c1e 100%);
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .dq-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+  }
+
+  .dq-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .dq-card-head-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .dq-card-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .dq-card-icon.indigo {
+    background: rgba(79, 70, 229, 0.18);
+    color: #818CF8;
+  }
+
+  .dq-card-icon.violet {
+    background: rgba(79, 70, 229, 0.18);
+    color: #818CF8;
+  }
+
+  .dq-card-icon.amber {
+    background: rgba(79, 70, 229, 0.15);
+    color: #A5B4FC;
+  }
+
+  .dq-card-title {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+  }
+
+  .dq-card-sub {
+    font-size: 11.5px;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+  }
+
+  .dq-view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-primary-glow);
+    background: rgba(79, 70, 229, 0.1);
+    border: 1px solid rgba(79, 70, 229, 0.25);
+    border-radius: 8px;
+    padding: 6px 12px;
+    text-decoration: none;
+    transition: background 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+
+  .dq-view-all:hover {
+    background: rgba(79, 70, 229, 0.2);
+    border-color: rgba(129, 140, 248, 0.5);
+  }
+
+  .dq-view-all i {
+    font-size: 13px;
+  }
+
+  /* Results card */
+  .dq-results-card {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: visible !important;
+  }
+
+  .dq-results-card .dq-card-head {
+    padding: 0 0 16px;
+    border-bottom: none;
+  }
+
+  .dq-select-wrap {
+    margin-bottom: 16px;
+  }
+
+  .dq-stat-trio {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .dq-stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--color-border-light);
+    border-radius: 12px;
+    padding: 12px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .dq-stat-pill:hover {
+    border-color: rgba(79, 70, 229, 0.35);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .dq-stat-pill-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .dq-stat-pill-icon.indigo {
+    background: rgba(79, 70, 229, 0.18);
+    color: #818CF8;
+  }
+
+  .dq-stat-pill-icon.green {
+    background: rgba(52, 211, 153, 0.15);
+    color: #34D399;
+  }
+
+  .dq-stat-pill-icon.amber {
+    background: rgba(79, 70, 229, 0.15);
+    color: #A5B4FC;
+  }
+
+  .dq-stat-pill-value {
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+  }
+
+  .dq-stat-pill-label {
+    font-size: 10.5px;
+    color: var(--color-text-muted);
+    margin-top: 1px;
+  }
+
+  /* Recent Quizzes table */
+  .dq-table-wrap {
+    overflow-x: auto;
+  }
+
+  .dq-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .dq-table th {
+    padding: 11px 20px;
+    text-align: left;
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--color-border-light);
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .dq-table td {
+    padding: 14px 20px;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    border-bottom: 1px solid var(--color-border-light);
+    vertical-align: middle;
+  }
+
+  .dq-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .dq-table tr:hover td {
+    background: var(--color-bg-row-hover);
+  }
+
+  .dq-quiz-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .dq-quiz-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(79, 70, 229, 0.15);
+    color: var(--color-primary-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .dq-quiz-name {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .dq-quiz-type {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+  }
+
+  .dq-empty-row {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--color-text-muted);
+  }
+
+  .dq-empty-row i {
+    font-size: 30px;
+    display: block;
+    margin-bottom: 10px;
+    opacity: 0.4;
+  }
+
+  /* Leaderboard card */
+  .dq-leader-card {
+    display: flex;
+    flex-direction: column;
+    max-height: 460px;
+  }
+
+  .dq-leader-filter {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .dq-leader-list {
+    overflow-y: auto;
+    flex: 1;
+    padding: 6px 8px;
+  }
+
+  .dq-leader-list::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .dq-leader-list::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .dq-leader-list::-webkit-scrollbar-thumb {
+    background: rgba(129, 140, 248, 0.25);
+    border-radius: 2px;
+  }
+
+  .dq-lb-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    transition: background 0.15s;
+  }
+
+  .dq-lb-item:hover {
+    background: var(--color-bg-row-hover);
+  }
+
+  .dq-lb-rank {
+    width: 26px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+  }
+
+  .dq-lb-rank.medal {
+    font-size: 16px;
+  }
+
+  .dq-lb-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .dq-lb-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .dq-lb-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dq-lb-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+    margin-top: 5px;
+    overflow: hidden;
+  }
+
+  .dq-lb-fill {
+    height: 100%;
+    border-radius: 2px;
+  }
+
+  .dq-lb-score {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-primary-glow);
+    flex-shrink: 0;
+  }
+
+  .dq-view-all-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 13px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-primary-glow);
+    border-top: 1px solid var(--color-border-light);
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+
+  .dq-view-all-footer:hover {
+    background: var(--color-bg-row-hover);
+  }
+
+  .dq-empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--color-text-muted);
+    font-size: 13px;
+  }
+
+  .dq-empty-state i {
+    font-size: 30px;
+    display: block;
+    margin-bottom: 10px;
+    opacity: 0.35;
+  }
+</style>
 @endpush
 
 @section('content')
@@ -169,123 +566,159 @@
     </div>
   </div>
 
-  <!-- OVERALL RESULTS CARD -->
-  <div style="
-            background: var(--color-bg-card);
-            border: 1px solid var(--color-border-light);
-            border-radius: 16px;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            min-height: 160px;
-        ">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-      <div>
-        <div style="font-size:15px;font-weight:700;color:#fff;">Quiz Results</div>
-        <div style="font-size:12px;color:var(--color-text-muted);margin-top:2px;">Overall performance</div>
+  <!-- QUIZ RESULTS CARD -->
+  <div class="dq-card dq-results-card">
+    <div class="dq-card-head">
+      <div class="dq-card-head-left">
+        <div class="dq-card-icon indigo"><i class="ti ti-chart-bar"></i></div>
+        <div>
+          <div class="dq-card-title">Quiz Results</div>
+          <div class="dq-card-sub">Overall performance snapshot</div>
+        </div>
       </div>
-      <i class="ti ti-chart-bar" style="font-size:22px;color:var(--color-primary-glow);"></i>
     </div>
 
-    <div id="resultSelectContainer" style="margin-bottom:16px;"></div>
+    <div id="resultSelectContainer" class="dq-select-wrap"></div>
 
-    <div id="resultStats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
-      <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:12px;text-align:center;">
-        <div style="font-size:20px;font-weight:700;color:#fff;" id="res-submissions">—</div>
-        <div style="font-size:11px;color:var(--color-text-muted);margin-top:3px;">Submissions</div>
+    <div id="resultStats" class="dq-stat-trio">
+      <div class="dq-stat-pill">
+        <div class="dq-stat-pill-icon indigo"><i class="ti ti-users"></i></div>
+        <div>
+          <div class="dq-stat-pill-value" id="res-submissions">—</div>
+          <div class="dq-stat-pill-label">Submissions</div>
+        </div>
       </div>
-      <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:12px;text-align:center;">
-        <div style="font-size:20px;font-weight:700;color:var(--color-status-success);" id="res-avg">—</div>
-        <div style="font-size:11px;color:var(--color-text-muted);margin-top:3px;">Avg Score</div>
+      <div class="dq-stat-pill">
+        <div class="dq-stat-pill-icon green"><i class="ti ti-trending-up"></i></div>
+        <div>
+          <div class="dq-stat-pill-value" id="res-avg" style="color:var(--color-status-success)">—</div>
+          <div class="dq-stat-pill-label">Avg Score</div>
+        </div>
       </div>
-      <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:12px;text-align:center;">
-        <div style="font-size:20px;font-weight:700;color:var(--color-primary-glow);" id="res-highest">—</div>
-        <div style="font-size:11px;color:var(--color-text-muted);margin-top:3px;">Highest</div>
+      <div class="dq-stat-pill">
+        <div class="dq-stat-pill-icon amber"><i class="ti ti-award"></i></div>
+        <div>
+          <div class="dq-stat-pill-value" id="res-highest" style="color:var(--color-primary-glow)">—</div>
+          <div class="dq-stat-pill-label">Highest</div>
+        </div>
       </div>
     </div>
   </div>
 
 </div>
 <!-- MAIN GRID -->
+<!-- MAIN GRID -->
 <div class="dashboard-grid">
-  <!-- QUIZ TABLE -->
-  <div class="card">
-    <div class="card-header">
-      <h2>Recent Quizzes</h2>
-      <a href="{{ route('teacher.quizzes') }}" class="view-all-link">View all</a>
+
+  <!-- RECENT QUIZZES -->
+  <div class="dq-card dq-table-card">
+    <div class="dq-card-head">
+      <div class="dq-card-head-left">
+        <div class="dq-card-icon violet"><i class="ti ti-file-description"></i></div>
+        <div>
+          <div class="dq-card-title">Recent Quizzes</div>
+          <div class="dq-card-sub">Latest activity across your quizzes</div>
+        </div>
+      </div>
+      <a href="{{ route('teacher.quizzes') }}" class="dq-view-all">View all <i class="ti ti-arrow-right"></i></a>
     </div>
-    <table class="quiz-table">
-      <thead>
-        <tr>
-          <th>Quiz</th>
-          <th>Students</th>
-          <th>Due Date</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        @forelse($recentQuizzes as $quiz)
-        <tr>
-          <td>
-            <div class="quiz-name">{{ $quiz->title }}</div>
-            <div class="quiz-type">
-              {{ strtoupper($quiz->type) }} ·
-              {{ $quiz->questions()->count() }} questions
-              @if($quiz->time_limit) · {{ $quiz->time_limit }} min @endif
-            </div>
-          </td>
-          <td>{{ $quiz->submitted_attempts }} / {{ $quiz->total_attempts }}</td>
-          <td>{{ $quiz->ends_at ? $quiz->ends_at->format('M d, Y') : 'No deadline' }}</td>
-          <td>
-            <span class="status-badge {{ $quiz->status }}">
-              <span class="status-dot"></span> {{ ucfirst($quiz->display_status) }}
-            </span>
-          </td>
-          <td>
-            <div class="action-btns">
-              <a href="{{ route('teacher.quiz.edit', $quiz->id) }}" class="action-btn" title="Edit">
-                <i class="ti ti-edit"></i>
-              </a>
-              <a href="#" class="action-btn" title="Results">
-                <i class="ti ti-chart-bar" aria-hidden="true"></i>
-              </a>
-              <form method="POST" action="{{ route('teacher.quiz.destroy', $quiz->id) }}">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="action-btn" title="Delete"
-                  onclick="return confirm('Are you sure you want to delete this quiz?')">
-                  <i class="ti ti-trash"></i>
-                </button>
-              </form>
-            </div>
-          </td>
-        </tr>
-        @empty
-        <tr>
-          <td colspan="5" style="text-align:center;padding:32px;color:var(--color-text-muted);">
-            No quizzes yet. Create your first quiz!
-          </td>
-        </tr>
-        @endforelse
-      </tbody>
-    </table>
+
+    <div class="dq-table-wrap">
+      <table class="dq-table">
+        <thead>
+          <tr>
+            <th>Quiz</th>
+            <th>Students</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @forelse($recentQuizzes as $quiz)
+          <tr>
+            <td>
+              <div class="dq-quiz-cell">
+                <div class="dq-quiz-icon">
+                  <i class="{{ \App\Helpers\QuizHelper::categoryIcon($quiz->category) }}"></i>
+                </div>
+                <div>
+                  <div class="dq-quiz-name">{{ $quiz->title }}</div>
+                  <div class="dq-quiz-type">
+                    {{ strtoupper($quiz->type) }} ·
+                    {{ $quiz->questions()->count() }} questions
+                    @if($quiz->time_limit) · {{ $quiz->time_limit }} min @endif
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td>{{ $quiz->submitted_attempts }} / {{ $quiz->total_attempts }}</td>
+            <td>{{ $quiz->ends_at ? $quiz->ends_at->format('M d, Y') : 'No deadline' }}</td>
+            <td>
+              <span class="status-badge {{ $quiz->status }}">
+                <span class="status-dot"></span> {{ ucfirst($quiz->display_status) }}
+              </span>
+            </td>
+            <td>
+              <div class="action-btns">
+                <a href="{{ route('teacher.quiz.edit', $quiz->id) }}" class="action-btn" title="Edit">
+                  <i class="ti ti-edit"></i>
+                </a>
+                <a href="#" class="action-btn" title="Results">
+                  <i class="ti ti-chart-bar" aria-hidden="true"></i>
+                </a>
+                <form method="POST" action="{{ route('teacher.quiz.destroy', $quiz->id) }}">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" class="action-btn" title="Delete"
+                    onclick="return confirm('Are you sure you want to delete this quiz?')">
+                    <i class="ti ti-trash"></i>
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          @empty
+          <tr>
+            <td colspan="5">
+              <div class="dq-empty-row">
+                <i class="ti ti-file-off"></i>
+                No quizzes yet. Create your first quiz!
+              </div>
+            </td>
+          </tr>
+          @endforelse
+        </tbody>
+      </table>
+    </div>
   </div>
+
   <!-- LEADERBOARD -->
-  <div class="card leaderboard-card">
-    <div class="card-header">
-      <h2>Leaderboard</h2>
-      <i class="ti ti-trophy" style="color:#F59E0B;font-size:18px"></i>
-    </div>
-    <div style="padding:12px 16px;border-bottom:1px solid var(--color-border-light);">
-      <div id="lbSelectContainer"></div>
-    </div>
-    <div class="leaderboard-list" id="lbList">
-      <div style="text-align:center;padding:32px;color:var(--color-text-muted);font-size:13px;">
-        Select a quiz to view leaderboard
+  <div class="dq-card dq-leader-card">
+    <div class="dq-card-head">
+      <div class="dq-card-head-left">
+        <div class="dq-card-icon amber"><i class="ti ti-trophy"></i></div>
+        <div>
+          <div class="dq-card-title">Leaderboard</div>
+          <div class="dq-card-sub">Top performers by quiz</div>
+        </div>
       </div>
     </div>
-    <a href="{{ route('teacher.leaderboard.page') }}" class="view-all-btn">View full leaderboard</a>
+
+    <div class="dq-leader-filter">
+      <div id="lbSelectContainer"></div>
+    </div>
+
+    <div class="dq-leader-list" id="lbList">
+      <div class="dq-empty-state">
+        <i class="ti ti-trophy"></i>
+        <p>Select a quiz to view leaderboard</p>
+      </div>
+    </div>
+
+    <a href="{{ route('teacher.leaderboard.page') }}" class="dq-view-all-footer">
+      View full leaderboard <i class="ti ti-arrow-right"></i>
+    </a>
   </div>
 </div>
 
@@ -306,20 +739,20 @@
 
   function renderLeaderboard(data) {
     if (data.length === 0) {
-      lbList.innerHTML = '<div style="text-align:center;padding:32px;color:var(--color-text-muted);font-size:13px;">No submissions yet for this quiz.</div>';
+      lbList.innerHTML = '<div class="dq-empty-state"><i class="ti ti-inbox"></i><p>No submissions yet for this quiz.</p></div>';
       return;
     }
     lbList.innerHTML = data.map((s, i) => `
-            <div class="lb-item">
-                <div class="lb-rank">${i < 3 ? medals[i] : i + 1}</div>
-                <div class="lb-avatar" style="background:${colors[i] || '#6B7280'}">${s.initials}</div>
-                <div class="lb-info">
-                    <div class="lb-name">${s.name}</div>
-                    <div class="lb-score-bar">
-                        <div class="lb-score-fill" style="width:${s.score}%;background:${colors[i] || '#6B7280'}"></div>
+            <div class="dq-lb-item">
+                <div class="dq-lb-rank ${i < 3 ? 'medal' : ''}">${i < 3 ? medals[i] : i + 1}</div>
+                <div class="dq-lb-avatar" style="background:${colors[i] || '#6B7280'}">${s.initials}</div>
+                <div class="dq-lb-info">
+                    <div class="dq-lb-name">${s.name}</div>
+                    <div class="dq-lb-bar">
+                        <div class="dq-lb-fill" style="width:${s.score}%;background:${colors[i] || '#6B7280'}"></div>
                     </div>
                 </div>
-                <div class="lb-score">${s.score}%</div>
+                <div class="dq-lb-score">${s.score}%</div>
             </div>
         `).join('');
   }

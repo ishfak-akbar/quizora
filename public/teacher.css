@@ -1518,20 +1518,17 @@ textarea.input,
 }
 
 .quiz-card {
-    background: var(--color-bg-card);
+    background:
+        radial-gradient(
+            ellipse 100% 400px at 50% 0%,
+            rgba(99, 102, 241, 0.18) 0%,
+            transparent 65%
+        ),
+        linear-gradient(180deg, #1c1842 0%, #161233 80%, #0f0c1e 100%);
     border: 1px solid var(--color-border-light);
     border-radius: 14px;
     display: flex;
     flex-direction: column;
-}
-
-.quiz-card-accent {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 4px;
-    z-index: 2;
 }
 
 .qc-banner {
@@ -2364,7 +2361,14 @@ textarea.input,
 }
 
 .form-card {
-    background: var(--color-bg-card);
+    background:
+        radial-gradient(
+            ellipse 800px 500px at 50% 10%,
+            rgba(99, 102, 241, 0.18) 0%,
+            rgba(99, 102, 241, 0.04) 45%,
+            transparent 75%
+        ),
+        linear-gradient(180deg, #1c1842 0%, #191539 60%, #0f0c1e 100%);
     border: 1px solid var(--color-border-light);
     border-radius: 16px;
     padding: 28px;

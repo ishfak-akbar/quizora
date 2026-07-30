@@ -76,6 +76,9 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->group(function (
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])
         ->name('admin.dashboard');
+    Route::get('/users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.users.index');
+    Route::patch('/users/{user}/suspend', [\App\Http\Controllers\Admin\UserController::class, 'suspend'])->name('admin.users.suspend');
+    Route::delete('/users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('admin.users.destroy');
 });
 
 Route::middleware(['auth', 'role:student'])->prefix('student')->group(function () {

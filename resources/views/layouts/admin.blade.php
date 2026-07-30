@@ -31,7 +31,8 @@
             </a>
 
             <div class="nav-label">Management</div>
-            <a href="#" class="nav-item">
+            <a href="{{ route('admin.users.index') }}"
+                class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                 <i class="ti ti-users nav-icon"></i>
                 <span class="nav-text">Users</span>
             </a>

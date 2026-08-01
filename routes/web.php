@@ -111,6 +111,8 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->group(function (
 
     Route::get('/ai-tutor', [StudentDashboard::class, 'aiTutor'])->name('student.ai-tutor');
     Route::post('/ai-tutor/chat', [StudentDashboard::class, 'aiChat'])->name('student.ai-tutor.chat');
+    Route::post('/ai-tutor/upload', [StudentDashboard::class, 'aiUpload'])->name('student.ai-tutor.upload');
+    Route::delete('/ai-tutor/upload', [StudentDashboard::class, 'aiRemoveUpload'])->name('student.ai-tutor.upload.remove');
 
     Route::get('/settings', [StudentDashboard::class, 'settings'])->name('student.settings');
     Route::patch('/settings', [StudentDashboard::class, 'updateSettings'])->name('student.settings.update');

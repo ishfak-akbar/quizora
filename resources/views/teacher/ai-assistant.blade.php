@@ -2,7 +2,7 @@
 @section('title', 'Quizora — AI Assistant')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('teacher.css') }}">
+<link rel="stylesheet" href="{{ asset('teacher.css') }}">
 @endpush
 
 @section('content')
@@ -10,12 +10,11 @@
 
     <div class="ai-sidebar">
         <div class="ai-sidebar-title">Suggested Questions</div>
-        <div class="suggestion-chip" onclick="sendSuggestion(this)">Which quiz has the lowest average score?</div>
-        <div class="suggestion-chip" onclick="sendSuggestion(this)">What topics are my students struggling with?</div>
-        <div class="suggestion-chip" onclick="sendSuggestion(this)">Summarize performance across all quizzes</div>
-        <div class="suggestion-chip" onclick="sendSuggestion(this)">Which questions have the lowest pass rate?</div>
-        <div class="suggestion-chip" onclick="sendSuggestion(this)">Suggest improvements for my hardest quiz</div>
-        <div class="suggestion-chip" onclick="sendSuggestion(this)">Generate quiz questions from my attached document</div>
+        <div class="suggestion-chip" onclick="sendSuggestion(this)">Student weak topics</div>
+        <div class="suggestion-chip" onclick="sendSuggestion(this)">Quiz performance summary</div>
+        <div class="suggestion-chip" onclick="sendSuggestion(this)">Lowest pass rate questions</div>
+        <div class="suggestion-chip" onclick="sendSuggestion(this)">Improve my hardest quiz</div>
+        <div class="suggestion-chip" onclick="sendSuggestion(this)">Generate quiz from document</div>
 
         <div class="ai-divider" style="margin-top: auto;"></div>
 

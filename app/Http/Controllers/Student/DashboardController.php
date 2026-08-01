@@ -13,6 +13,7 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use App\Models\User;
+use Smalot\PdfParser\Parser as PdfParser;
 
 class DashboardController extends Controller
 {
@@ -298,7 +299,55 @@ class DashboardController extends Controller
     }
     public function aiTutor()
     {
-        return view('student.ai-tutor');
+        $uploadedFileName = session('ai_uploaded_filename_student');
+        return view('student.ai-tutor', compact('uploadedFileName'));
+    }
+
+    public function aiUpload(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:pdf,txt|max:5120',
+        ]);
+
+        $file = $request->file('file');
+        $extension = $file->getClientOriginalExtension();
+        $text = '';
+
+        try {
+            if ($extension === 'pdf') {
+                $parser = new PdfParser();
+                $pdf = $parser->parseFile($file->getPathname());
+                $text = $pdf->getText();
+            } else {
+                $text = file_get_contents($file->getPathname());
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Could not read this file. Try a different PDF or a plain text file.'], 422);
+        }
+
+        $text = trim($text);
+
+        if (empty($text)) {
+            return response()->json(['error' => 'No readable text found in this file.'], 422);
+        }
+
+        $text = mb_substr($text, 0, 12000);
+
+        session([
+            'ai_uploaded_text_student' => $text,
+            'ai_uploaded_filename_student' => $file->getClientOriginalName(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'filename' => $file->getClientOriginalName(),
+        ]);
+    }
+
+    public function aiRemoveUpload()
+    {
+        session()->forget(['ai_uploaded_text_student', 'ai_uploaded_filename_student']);
+        return response()->json(['success' => true]);
     }
 
     public function aiChat(Request $request)
@@ -351,6 +400,16 @@ class DashboardController extends Controller
                 $contextLines[] = "  Correct answer: " . ($correctOption?->option_text ?? 'N/A');
                 $contextLines[] = "  Result: " . ($answer->is_correct ? 'Correct' : 'Wrong') . " ({$answer->marks_obtained}/{$question->marks} marks)";
             }
+        }
+
+        $uploadedText = session('ai_uploaded_text_student');
+        $uploadedFilename = session('ai_uploaded_filename_student');
+
+        if ($uploadedText) {
+            $contextLines[] = "";
+            $contextLines[] = "=== ATTACHED DOCUMENT: \"{$uploadedFilename}\" ===";
+            $contextLines[] = "The student has attached this document for you to reference in your answers.";
+            $contextLines[] = $uploadedText;
         }
 
         $systemPrompt = implode("\n", $contextLines);

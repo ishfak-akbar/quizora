@@ -11,7 +11,10 @@
     }
 
     .ai-sidebar {
-        background: var(--color-bg-card);
+        background: radial-gradient(ellipse 100% 400px at 50% 0%,
+                rgba(99, 102, 241, 0.18) 0%,
+                transparent 65%),
+            linear-gradient(180deg, #1c1842 0%, #161233 50%, #0f0c1e 100%);
         border: 1px solid var(--color-border-light);
         border-radius: 16px;
         padding: 20px;
@@ -85,12 +88,77 @@
     }
 
     .ai-chat-wrap {
-        background: var(--color-bg-card);
+        background: radial-gradient(ellipse 100% 400px at 50% 0%,
+                rgba(99, 102, 241, 0.18) 0%,
+                transparent 65%),
+            linear-gradient(180deg, #1c1842 0%, #161233 50%, #0f0c1e 100%);
         border: 1px solid var(--color-border-light);
         border-radius: 16px;
         display: flex;
         flex-direction: column;
         overflow: hidden;
+    }
+
+    .attached-file-chip {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        background: rgba(79, 70, 229, 0.12);
+        border: 1px solid rgba(79, 70, 229, 0.3);
+        border-radius: 10px;
+        padding: 8px 12px;
+        font-size: 12px;
+        color: var(--color-primary-glow);
+        font-weight: 600;
+        width: fit-content;
+        max-width: 100%;
+        margin: 0 20px 8px;
+    }
+
+    .attached-file-chip.visible {
+        display: flex;
+    }
+
+    .attached-file-chip span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 220px;
+    }
+
+    .attached-file-chip button {
+        background: none;
+        border: none;
+        color: var(--color-text-muted);
+        cursor: pointer;
+        font-size: 14px;
+        padding: 0;
+        line-height: 1;
+    }
+
+    .attached-file-chip button:hover {
+        color: #F87171;
+    }
+
+    .attach-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--color-border-light);
+        color: var(--color-text-secondary);
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        flex-shrink: 0;
+    }
+
+    .attach-btn:hover {
+        background: var(--color-bg-row-hover);
+        color: #fff;
     }
 
     .chat-header {
@@ -376,22 +444,22 @@
 <div class="ai-layout">
 
     <div class="ai-sidebar">
-    <div class="ai-sidebar-title">Suggested Questions</div>
-    <div class="suggestion-chip" onclick="sendSuggestion(this)">What are my weakest topics?</div>
-    <div class="suggestion-chip" onclick="sendSuggestion(this)">Which quiz did I score best?</div>
-    <div class="suggestion-chip" onclick="sendSuggestion(this)">Explain my wrong answers</div>
-    <div class="suggestion-chip" onclick="sendSuggestion(this)">Overall performance summary</div>
-    <div class="suggestion-chip" onclick="sendSuggestion(this)">What should I revise next?</div>
-    <div class="suggestion-chip" onclick="sendSuggestion(this)">Tips to improve my score</div>
-    <div class="suggestion-chip" onclick="sendSuggestion(this)">My progress over time</div>
+        <div class="ai-sidebar-title">Suggested Questions</div>
+        <div class="suggestion-chip" onclick="sendSuggestion(this)">What are my weakest topics?</div>
+        <div class="suggestion-chip" onclick="sendSuggestion(this)">Which quiz did I score best?</div>
+        <div class="suggestion-chip" onclick="sendSuggestion(this)">Explain my wrong answers</div>
+        <div class="suggestion-chip" onclick="sendSuggestion(this)">Overall performance summary</div>
+        <div class="suggestion-chip" onclick="sendSuggestion(this)">What should I revise next?</div>
+        <div class="suggestion-chip" onclick="sendSuggestion(this)">Tips to improve my score</div>
+        <div class="suggestion-chip" onclick="sendSuggestion(this)">My progress over time</div>
 
-    <div class="ai-divider" style="margin-top: auto;"></div>
+        <div class="ai-divider" style="margin-top: auto;"></div>
 
-    <div class="ai-info-box">
-        <strong><i class="ti ti-shield-lock"></i> Your data is private</strong>
-        The AI only sees your own quiz history. Nothing is shared with other students.
+        <div class="ai-info-box">
+            <strong><i class="ti ti-shield-lock"></i> Your data is private</strong>
+            The AI only sees your own quiz history. Nothing is shared with other students.
+        </div>
     </div>
-</div>
 
     <div class="ai-chat-wrap">
         <div class="chat-header">
@@ -413,13 +481,23 @@
             </div>
         </div>
 
+        <div class="attached-file-chip" id="attachedFileChip">
+            <i class="ti ti-file-text"></i>
+            <span id="attachedFileName"></span>
+            <button type="button" onclick="removeAttachedFile()" title="Remove"><i class="ti ti-x"></i></button>
+        </div>
+
         <div class="chat-input-bar">
+            <input type="file" id="fileInput" accept=".pdf,.txt" style="display:none;" onchange="handleFileSelect(event)">
+            <button class="attach-btn" onclick="document.getElementById('fileInput').click()" title="Attach a PDF or text file">
+                <i class="ti ti-paperclip"></i>
+            </button>
             <div class="chat-input-wrap">
                 <textarea
                     class="chat-input"
                     id="chatInput"
                     rows="1"
-                    placeholder="Ask about your results, weak topics, or any question explanation..."></textarea>
+                    placeholder="Ask about your results, an attached document, or any question explanation..."></textarea>
             </div>
             <button class="send-btn" id="sendBtn" onclick="sendMessage()">
                 <i class="ti ti-send"></i>
@@ -438,9 +516,62 @@
     const sendBtn = document.getElementById('sendBtn');
     const userInitial = "{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}";
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    const attachedFileChip = document.getElementById('attachedFileChip');
+    const attachedFileName = document.getElementById('attachedFileName');
 
     let history = [];
     let isLoading = false;
+
+    @if($uploadedFileName ?? false)
+    attachedFileChip.classList.add('visible');
+    attachedFileName.textContent = @json($uploadedFileName);
+    @endif
+
+    function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        attachedFileChip.classList.add('visible');
+        attachedFileName.textContent = 'Uploading...';
+
+        fetch("{{ route('student.ai-tutor.upload') }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.error) {
+                    attachedFileChip.classList.remove('visible');
+                    alert(data.error);
+                    return;
+                }
+                attachedFileName.textContent = data.filename;
+            })
+            .catch(() => {
+                attachedFileChip.classList.remove('visible');
+                alert('Failed to upload file.');
+            });
+
+        event.target.value = '';
+    }
+
+    function removeAttachedFile() {
+        fetch("{{ route('student.ai-tutor.upload.remove') }}", {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(() => attachedFileChip.classList.remove('visible'));
+    }
 
     chatInput.addEventListener('input', function() {
         this.style.height = 'auto';

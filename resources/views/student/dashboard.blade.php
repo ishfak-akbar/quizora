@@ -213,6 +213,14 @@
     font-size: 15px;
   }
 
+  .card {
+    background: radial-gradient(ellipse 100% 400px at 50% 0%,
+        rgba(99, 102, 241, 0.18) 0%,
+        transparent 65%),
+      linear-gradient(180deg, #1c1842 0%, #161233 50%, #0f0c1e 100%);
+    ;
+  }
+
   .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

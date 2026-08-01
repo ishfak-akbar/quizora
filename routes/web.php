@@ -83,6 +83,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::patch('/quizzes/{quiz}/close', [\App\Http\Controllers\Admin\QuizController::class, 'forceClose'])->name('admin.quizzes.close');
     Route::delete('/quizzes/{quiz}', [\App\Http\Controllers\Admin\QuizController::class, 'destroy'])->name('admin.quizzes.destroy');
     Route::get('/quizzes/{quiz}', [\App\Http\Controllers\Admin\QuizController::class, 'show'])->name('admin.quizzes.show');
+    Route::get('/teachers', [\App\Http\Controllers\Admin\TeacherController::class, 'index'])->name('admin.teachers.index');
 });
 
 Route::middleware(['auth', 'role:student'])->prefix('student')->group(function () {

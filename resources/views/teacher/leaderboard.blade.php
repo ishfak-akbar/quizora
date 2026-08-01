@@ -8,45 +8,43 @@
 @section('content')
 
 <div class="page-header">
-    <div>
-        <h1>Leaderboard</h1>
-        <p>Top performing students per quiz</p>
-    </div>
+  <div>
+    <h1>Leaderboard</h1>
+    <p>Top performing students per quiz</p>
+  </div>
 </div>
 
 <div class="lb-layout">
 
-    <!-- QUIZ LIST -->
-    <div>
-        <div style="font-size:12px;font-weight:600;color:var(--color-text-muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px;">
-            Select Quiz
+  <!-- QUIZ LIST -->
+  <div>
+    <div class="panel-sidebar-label">Select Quiz</div>
+    <div class="quiz-list">
+      @forelse($quizzes as $quiz)
+      <div class="quiz-list-item" onclick="loadLeaderboard({{ $quiz->id }}, this)">
+        <div class="quiz-list-icon">
+          <i class="{{ \App\Helpers\QuizHelper::categoryIcon($quiz->category) }}"></i>
         </div>
-        <div class="quiz-list">
-            @forelse($quizzes as $quiz)
-            <div class="quiz-list-item" onclick="loadLeaderboard({{ $quiz->id }}, this)">
-                <div class="quiz-list-icon">
-                    <i class="ti ti-file-description"></i>
-                </div>
-                <div style="flex:1;overflow:hidden;">
-                    <div class="quiz-list-name">{{ $quiz->title }}</div>
-                    <div class="quiz-list-meta">{{ ucfirst($quiz->display_status) }}</div>
-                </div>
-            </div>
-            @empty
-            <div style="text-align:center;padding:32px;color:var(--color-text-muted);font-size:13px;">
-                No quizzes yet.
-            </div>
-            @endforelse
+        <div style="flex:1;overflow:hidden;">
+          <div class="quiz-list-name">{{ $quiz->title }}</div>
+          <div class="quiz-list-meta">{{ ucfirst($quiz->display_status) }}</div>
         </div>
+      </div>
+      @empty
+      <div style="text-align:center;padding:32px;color:var(--color-text-muted);font-size:13px;">
+        No quizzes yet.
+      </div>
+      @endforelse
     </div>
+  </div>
 
-    <!-- LEADERBOARD PANEL -->
-    <div id="lbPanel">
-        <div class="empty-lb">
-            <i class="ti ti-trophy"></i>
-            <p>Select a quiz to view leaderboard</p>
-        </div>
+  <!-- LEADERBOARD PANEL -->
+  <div id="lbPanel">
+    <div class="empty-lb">
+      <i class="ti ti-trophy"></i>
+      <p>Select a quiz to view leaderboard</p>
     </div>
+  </div>
 
 </div>
 
@@ -54,44 +52,56 @@
 
 @push('scripts')
 <script>
-    const colors = ['#4F46E5', '#7C3AED', '#0891B2', '#059669', '#D97706', '#DB2777', '#0891B2'];
-    const medals = ['🥇', '🥈', '🥉'];
-    const medalColors = ['#F59E0B', '#9CA3AF', '#D97706'];
+  const colors = ['#4F46E5', '#7C3AED', '#0891B2', '#059669', '#D97706', '#DB2777', '#0891B2'];
+  const medals = ['🥇', '🥈', '🥉'];
+  const medalColors = ['#F59E0B', '#9CA3AF', '#D97706'];
 
-    function getInitials(name) {
-        const parts = name.split(' ');
-        return parts.length > 1 ?
-            (parts[0][0] + parts[1][0]).toUpperCase() :
-            name.substring(0, 2).toUpperCase();
-    }
+  function getInitials(name) {
+    const parts = name.split(' ');
+    return parts.length > 1 ?
+      (parts[0][0] + parts[1][0]).toUpperCase() :
+      name.substring(0, 2).toUpperCase();
+  }
 
-    function loadLeaderboard(quizId, el) {
-        document.querySelectorAll('.quiz-list-item').forEach(i => i.classList.remove('active'));
-        el.classList.add('active');
+  function loadLeaderboard(quizId, el) {
+    document.querySelectorAll('.quiz-list-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
 
-        const panel = document.getElementById('lbPanel');
-        panel.innerHTML = '<div style="text-align:center;padding:48px;color:var(--color-text-muted);font-size:13px;">Loading...</div>';
+    const panel = document.getElementById('lbPanel');
+    panel.innerHTML = '<div style="text-align:center;padding:48px;color:var(--color-text-muted);font-size:13px;">Loading...</div>';
 
-        fetch(`/teacher/leaderboard/${quizId}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.length === 0) {
-                    panel.innerHTML = `
+    fetch(`/teacher/leaderboard/${quizId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.length === 0) {
+          panel.innerHTML = `
         <div class="empty-lb">
           <i class="ti ti-inbox"></i>
           <p>No submissions yet for this quiz.</p>
         </div>`;
-                    return;
-                }
+          return;
+        }
 
-                // TOP 3 PODIUM
-                const top3 = data.slice(0, 3);
-                const podiumOrder = top3.length >= 2 ? [top3[1], top3[0], top3[2]].filter(Boolean) :
-                    top3;
-                const podiumHeights = top3.length >= 2 ? ['80px', '110px', '60px'] : ['110px'];
-                const podiumRanks = top3.length >= 2 ? [2, 1, 3] : [1];
+        // TOP SCORER BANNER
+        const topScorer = data[0];
+        const topScorerHTML = `
+      <div class="top-scorer-banner">
+        <div class="top-scorer-icon"><i class="ti ti-crown"></i></div>
+        <div class="top-scorer-text">
+          <div class="top-scorer-label">Top Scorer</div>
+          <div class="top-scorer-name">${topScorer.name}</div>
+        </div>
+        <div class="top-scorer-score">${topScorer.score}%</div>
+      </div>`;
 
-                let podiumHTML = podiumOrder.map((s, i) => `
+        // TOP 3 PODIUM
+        const top3 = data.slice(0, 3);
+        const podiumOrder = top3.length >= 2 ? [top3[1], top3[0], top3[2]].filter(Boolean) :
+          top3;
+        const podiumHeights = top3.length >= 2 ? ['80px', '110px', '60px'] : ['110px'];
+        const podiumRanks = top3.length >= 2 ? [2, 1, 3] : [1];
+
+        let podiumHTML = podiumOrder.map((s, i) => `
       <div class="podium-item">
         <div class="podium-avatar" style="background:${colors[podiumRanks[i]-1]}">
           ${getInitials(s.name)}
@@ -105,8 +115,8 @@
       </div>
     `).join('');
 
-                // FULL TABLE
-                let tableHTML = data.map((s, i) => `
+        // FULL TABLE
+        let tableHTML = data.map((s, i) => `
       <tr>
         <td class="lb-rank-cell">
           ${i < 3
@@ -133,7 +143,8 @@
       </tr>
     `).join('');
 
-                panel.innerHTML = `
+        panel.innerHTML = `
+      ${topScorerHTML}
       <div class="podium">${podiumHTML}</div>
       <div class="card">
         <div class="card-header">
@@ -153,10 +164,10 @@
         </table>
       </div>
     `;
-            })
-            .catch(() => {
-                panel.innerHTML = '<div style="text-align:center;padding:48px;color:var(--color-status-error);font-size:13px;">Failed to load leaderboard.</div>';
-            });
-    }
+      })
+      .catch(() => {
+        panel.innerHTML = '<div style="text-align:center;padding:48px;color:var(--color-status-error);font-size:13px;">Failed to load leaderboard.</div>';
+      });
+  }
 </script>
 @endpush

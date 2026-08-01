@@ -295,6 +295,9 @@
                     <td>{{ $quiz->created_at->format('M d, Y') }}</td>
                     <td>
                         <div class="action-btns">
+                            <a href="{{ route('admin.quizzes.show', $quiz) }}" class="action-btn" title="View">
+                                <i class="ti ti-eye"></i>
+                            </a>
                             @if($quiz->status === 'active')
                             <form method="POST" action="{{ route('admin.quizzes.close', $quiz) }}" style="display:inline;">
                                 @csrf

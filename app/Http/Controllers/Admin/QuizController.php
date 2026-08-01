@@ -74,4 +74,19 @@ class QuizController extends Controller
         $quiz->update(['status' => 'closed']);
         return back()->with('success', 'Quiz has been closed.');
     }
+    public function show(Quiz $quiz)
+    {
+        $quiz->load(['teacher', 'questions' => function ($q) {
+            $q->orderBy('order');
+        }, 'questions.options' => function ($q) {
+            $q->orderBy('order');
+        }]);
+
+        $totalMarks = $quiz->questions->sum('marks');
+        $submittedCount = \App\Models\Attempt::where('quiz_id', $quiz->id)
+            ->where('status', 'submitted')
+            ->count();
+
+        return view('admin.quizzes.show', compact('quiz', 'totalMarks', 'submittedCount'));
+    }
 }

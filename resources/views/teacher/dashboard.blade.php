@@ -606,7 +606,53 @@
   </div>
 
 </div>
-<!-- MAIN GRID -->
+
+<!-- CHARTS ROW -->
+<div style="display:grid;grid-template-columns:1.6fr 1fr;gap:20px;margin-bottom:24px;">
+
+  <!-- SUBMISSIONS OVER TIME -->
+  <div class="dq-card" style="padding:20px;">
+    <div class="dq-card-head" style="padding:0 0 18px; border-bottom:none;">
+      <div class="dq-card-head-left">
+        <div class="dq-card-icon indigo"><i class="ti ti-chart-line"></i></div>
+        <div>
+          <div class="dq-card-title">Growth Overview (30 Days)</div>
+          <div class="dq-card-sub">Submissions across all your quizzes</div>
+        </div>
+      </div>
+    </div>
+    <div id="submissionsLegend" style="display:flex; gap:20px; justify-content:center; margin-bottom:14px;"></div>
+    <canvas id="submissionsChart" height="80"></canvas>
+  </div>
+
+  <!-- QUIZ CATEGORIES -->
+  <div class="dq-card" style="padding:20px;">
+    <div class="dq-card-head" style="padding:0 0 18px; border-bottom:none;">
+      <div class="dq-card-head-left">
+        <div class="dq-card-icon amber"><i class="ti ti-chart-donut"></i></div>
+        <div>
+          <div class="dq-card-title">Quiz Categories</div>
+          <div class="dq-card-sub">Distribution across your quizzes</div>
+        </div>
+      </div>
+    </div>
+    @if($categoryDistribution->isEmpty())
+    <div class="dq-empty-state">
+      <i class="ti ti-chart-donut"></i>
+      <p>No category data yet.</p>
+    </div>
+    @else
+    <div style="display:flex; align-items:center; gap:24px;">
+      <div style="width:150px; height:150px; flex-shrink:0;">
+        <canvas id="categoryChart"></canvas>
+      </div>
+      <div id="categoryLegend" style="display:flex; flex-direction:column; gap:10px;"></div>
+    </div>
+    @endif
+  </div>
+
+</div>
+
 <!-- MAIN GRID -->
 <div class="dashboard-grid">
 
@@ -724,7 +770,83 @@
 
 @endsection
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script>
+  const submissionsCtx = document.getElementById('submissionsChart');
+if (submissionsCtx) {
+    document.getElementById('submissionsLegend').innerHTML = `
+        <div style="display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--color-text-secondary);">
+            <span style="width:11px;height:11px;border-radius:3px;background:#818CF8;display:inline-block;"></span> Submissions
+        </div>`;
+
+    new Chart(submissionsCtx, {
+      type: 'line',
+      data: {
+        labels: @json($dailySubmissions30->pluck('label')),
+        datasets: [{
+          label: 'Submissions',
+          data: @json($dailySubmissions30->pluck('count')),
+          fill: true,
+          borderColor: '#818CF8',
+          backgroundColor: 'rgba(129,140,248,0.18)',
+          tension: 0.4,
+          pointRadius: 3,
+          pointBackgroundColor: '#818CF8',
+          pointBorderColor: '#818CF8',
+          pointHoverRadius: 5,
+          borderWidth: 2,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: {
+            ticks: { color: '#6B7280', maxTicksLimit: 8 },
+            grid: { color: 'rgba(255,255,255,0.05)', drawTicks: false }
+          },
+          y: {
+            ticks: { color: '#6B7280', precision: 0 },
+            grid: { color: 'rgba(255,255,255,0.05)', drawTicks: false },
+            beginAtZero: true
+          }
+        }
+      }
+    });
+}
+
+const categoryCtx = document.getElementById('categoryChart');
+if (categoryCtx) {
+    const catLabels = @json($categoryDistribution->pluck('category'));
+    const catCounts = @json($categoryDistribution->pluck('count'));
+    const catColors = ['#34D399', '#60A5FA', '#F59E0B', '#F87171', '#C084FC', '#5EEAD4', '#F472B6', '#818CF8'];
+
+    document.getElementById('categoryLegend').innerHTML = catLabels.map((label, i) => `
+        <div style="display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--color-text-secondary);">
+            <span style="width:11px;height:11px;border-radius:3px;background:${catColors[i % catColors.length]};display:inline-block;flex-shrink:0;"></span>
+            ${label}
+        </div>`).join('');
+
+    new Chart(categoryCtx, {
+      type: 'doughnut',
+      data: {
+        labels: catLabels,
+        datasets: [{
+          data: catCounts,
+          backgroundColor: catColors,
+          borderColor: '#161233',
+          borderWidth: 3,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        cutout: '68%',
+        plugins: { legend: { display: false } }
+      }
+    });
+}
+
   document.querySelectorAll('.stat-card').forEach(card => {
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();

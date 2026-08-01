@@ -120,6 +120,28 @@ class DashboardController extends Controller
             }
         }
 
+        $submissionsRaw = Attempt::whereHas('quiz', fn($q) => $q->where('teacher_id', $teacher->id))
+            ->where('status', 'submitted')
+            ->where('created_at', '>=', now()->subDays(29)->startOfDay())
+            ->selectRaw('DATE(created_at) as day, COUNT(*) as count')
+            ->groupBy('day')
+            ->pluck('count', 'day');
+
+        $dailySubmissions30 = collect(range(29, 0))->map(function ($daysAgo) use ($submissionsRaw) {
+            $date = now()->subDays($daysAgo)->format('Y-m-d');
+            return [
+                'label' => now()->subDays($daysAgo)->format('M d'),
+                'count' => (int) ($submissionsRaw[$date] ?? 0),
+            ];
+        });
+
+        $categoryDistribution = Quiz::where('teacher_id', $teacher->id)
+            ->whereNotNull('category')
+            ->selectRaw('category, COUNT(*) as count')
+            ->groupBy('category')
+            ->orderByDesc('count')
+            ->get();
+
         return view('teacher.dashboard', compact(
             'totalQuizzes',
             'activeQuizzes',
@@ -136,7 +158,9 @@ class DashboardController extends Controller
             'dailyAttempts',
             'dailySubmissions',
             'nearestEndingQuiz',
-            'nearestEndingLabel'
+            'nearestEndingLabel',
+            'dailySubmissions30',
+            'categoryDistribution'
         ));
     }
     public function leaderboard($quizId)

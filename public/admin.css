@@ -25,8 +25,21 @@ body {
     background: #0b0f19 !important;
 }
 
+.main,
+.admin-main {
+    min-width: 0;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+.content,
+.admin-content {
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
 /* ========== SIDEBAR ========== */
-/* Sidebar & Topbar – same solid color */
 .sidebar {
     background: #0b0f19 !important;
     border-right: 1px solid rgba(255, 255, 255, 0.07) !important;
@@ -60,11 +73,27 @@ body {
     background: #1f2937 !important;
 }
 
-/* ========== TOPBAR ========== */
+/* ========== TOPBAR (fixed) ========== */
 .topbar {
+    position: fixed !important;
+    top: 0 !important;
+    left: var(--sidebar-w);
+    right: 0;
+    height: 64px;
+    z-index: 50 !important;
     background: #0b0f19 !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+body.collapsed .topbar {
+    left: var(--sidebar-collapsed);
+}
+
+.main .content {
+    padding-top: 84px !important;
+}
+
 /* ========== TOGGLE BUTTON ========== */
 .toggle-btn {
     background: #111827 !important;

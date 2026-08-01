@@ -8,7 +8,7 @@
 <style>
     .admin-metrics {
         display: grid;
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: 14px;
         margin-bottom: 22px;
     }
@@ -18,11 +18,6 @@
         border: 1px solid var(--color-border-light);
         border-radius: 12px;
         padding: 16px 18px;
-        transition: border-color 0.2s;
-    }
-
-    .metric-card:hover {
-        border-color: rgba(16, 185, 129, 0.35);
     }
 
     .metric-label {
@@ -52,7 +47,7 @@
 
     .admin-grid {
         display: grid;
-        grid-template-columns: 1.6fr 1fr;
+        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
         gap: 16px;
         margin-bottom: 16px;
     }
@@ -61,6 +56,7 @@
         display: flex;
         flex-direction: column;
         gap: 16px;
+        min-width: 0;
     }
 
     .admin-card {
@@ -68,6 +64,7 @@
         border: 1px solid var(--color-border-light);
         border-radius: 14px;
         overflow: hidden;
+        min-width: 0;
     }
 
     .admin-card-header {
@@ -98,11 +95,6 @@
         font-weight: 500;
     }
 
-    .view-all:hover {
-        text-decoration: underline;
-    }
-
-    /* Activity Feed */
     .activity-item {
         display: flex;
         gap: 12px;
@@ -148,7 +140,6 @@
         white-space: nowrap;
     }
 
-    /* Health */
     .health-row {
         display: flex;
         align-items: center;
@@ -178,7 +169,6 @@
         border-radius: 20px;
     }
 
-    /* Attention */
     .attention-item {
         display: flex;
         align-items: center;
@@ -203,7 +193,6 @@
         text-align: center;
     }
 
-    /* Quick Actions */
     .quick-actions {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -231,10 +220,41 @@
         color: #fff;
     }
 
-    /* Bottom tables */
+    .charts-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+
+    .chart-card {
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border-light);
+        border-radius: 14px;
+        padding: 18px;
+        min-height: 300px;
+        min-width: 0;
+    }
+
+    .chart-card h3 {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .chart-wrap {
+        position: relative;
+        height: 230px;
+        width: 100%;
+    }
+
     .admin-bottom {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         gap: 16px;
     }
 
@@ -298,13 +318,24 @@
         font-size: 12px;
     }
 
-    @media (max-width: 1400px) {
-        .admin-metrics {
-            grid-template-columns: repeat(3, 1fr);
-        }
+    @media (max-width: 1100px) {
 
-        .admin-grid {
-            grid-template-columns: 1fr 1fr;
+        .admin-grid,
+        .charts-row,
+        .admin-bottom {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 700px) {
+        .admin-metrics {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .admin-metrics {
+            grid-template-columns: 1fr;
         }
     }
 </style>
@@ -350,6 +381,22 @@
         <div class="metric-trend">This week</div>
     </div>
 </div>
+{{-- CHARTS --}}
+<div class="charts-row">
+    <div class="chart-card">
+        <h3><i class="ti ti-chart-area-line" style="color:#34D399;"></i> Growth Overview (7 Days)</h3>
+        <div class="chart-wrap">
+            <canvas id="growthChart"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-card">
+        <h3><i class="ti ti-chart-pie" style="color:#34D399;"></i> Quiz Categories</h3>
+        <div class="chart-wrap">
+            <canvas id="categoryChart"></canvas>
+        </div>
+    </div>
+</div>
 
 {{-- MAIN GRID --}}
 <div class="admin-grid">
@@ -358,91 +405,29 @@
     <div class="admin-card">
         <div class="admin-card-header">
             <h3><i class="ti ti-activity" style="color:#34D399;"></i> Activity Feed</h3>
-            <a href="#" class="view-all">View all</a>
         </div>
         <div class="admin-card-body">
+            @forelse($activityFeed as $item)
             <div class="activity-item">
-                <div class="activity-icon" style="background:rgba(16,185,129,0.15);color:#34D399;">
-                    <i class="ti ti-school"></i>
+                <div class="activity-icon" style="background:{{ $item['color'] }}22; color:{{ $item['color'] }};">
+                    <i class="ti {{ $item['icon'] }}"></i>
                 </div>
                 <div class="activity-content">
-                    <div class="activity-title">New teacher registered</div>
-                    <div class="activity-desc">A new teacher joined the platform</div>
+                    <div class="activity-title">{{ $item['title'] }}</div>
+                    <div class="activity-desc">{{ $item['desc'] }}</div>
                 </div>
-                <div class="activity-time">2m ago</div>
+                <div class="activity-time">{{ $item['time']->diffForHumans() }}</div>
             </div>
-            <div class="activity-item">
-                <div class="activity-icon" style="background:rgba(59,130,246,0.15);color:#60A5FA;">
-                    <i class="ti ti-user"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">New student registered</div>
-                    <div class="activity-desc">A new student joined the platform</div>
-                </div>
-                <div class="activity-time">5m ago</div>
+            @empty
+            <div style="text-align:center; padding:24px; color:var(--color-text-muted); font-size:13px;">
+                No recent activity yet.
             </div>
-            <div class="activity-item">
-                <div class="activity-icon" style="background:rgba(16,185,129,0.15);color:#34D399;">
-                    <i class="ti ti-file-description"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">Quiz published</div>
-                    <div class="activity-desc">A new quiz was published</div>
-                </div>
-                <div class="activity-time">12m ago</div>
-            </div>
-            <div class="activity-item">
-                <div class="activity-icon" style="background:rgba(245,158,11,0.15);color:#F59E0B;">
-                    <i class="ti ti-alert-triangle"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">High submission volume</div>
-                    <div class="activity-desc">Unusual activity detected on a quiz</div>
-                </div>
-                <div class="activity-time">1h ago</div>
-            </div>
-            <div class="activity-item">
-                <div class="activity-icon" style="background:rgba(248,113,113,0.15);color:#F87171;">
-                    <i class="ti ti-user-off"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">User suspended</div>
-                    <div class="activity-desc">An account was suspended</div>
-                </div>
-                <div class="activity-time">2h ago</div>
-            </div>
+            @endforelse
         </div>
     </div>
 
     {{-- RIGHT COLUMN --}}
     <div class="admin-right-column">
-
-        {{-- Platform Health --}}
-        <div class="admin-card">
-            <div class="admin-card-header">
-                <h3><i class="ti ti-heart-rate-monitor" style="color:#34D399;"></i> Platform Health</h3>
-            </div>
-            <div class="admin-card-body">
-                <div class="health-row">
-                    <div class="health-label"><i class="ti ti-robot"></i> AI Service Status</div>
-                    <span class="badge-online">Online</span>
-                </div>
-                <div class="health-row">
-                    <div class="health-label"><i class="ti ti-clipboard-check"></i> Submissions Today</div>
-                    <strong style="color:#fff;">{{ $submissionsToday }}</strong>
-                </div>
-                <div class="health-row">
-                    <div class="health-label"><i class="ti ti-users"></i> Total Users</div>
-                    <strong style="color:#fff;">{{ $totalTeachers + $totalStudents }}</strong>
-                </div>
-                <div class="health-row">
-                    <div class="health-label"><i class="ti ti-server"></i> System Status</div>
-                    <span class="badge-online">Operational</span>
-                </div>
-            </div>
-        </div>
-
-        {{-- Attention Needed --}}
         <div class="admin-card">
             <div class="admin-card-header">
                 <h3><i class="ti ti-alert-circle" style="color:#F59E0B;"></i> Attention Needed</h3>
@@ -463,32 +448,31 @@
             </div>
         </div>
 
-        {{-- Quick Actions --}}
         <div class="admin-card">
             <div class="admin-card-header">
                 <h3><i class="ti ti-bolt" style="color:#34D399;"></i> Quick Actions</h3>
             </div>
             <div class="admin-card-body">
                 <div class="quick-actions">
-                    <a href="#" class="quick-btn"><i class="ti ti-users"></i> Manage Users</a>
-                    <a href="#" class="quick-btn"><i class="ti ti-file-description"></i> Manage Quizzes</a>
-                    <a href="#" class="quick-btn"><i class="ti ti-speakerphone"></i> Announcement</a>
-                    <a href="#" class="quick-btn"><i class="ti ti-chart-bar"></i> View Reports</a>
+                    <a href="{{ route('admin.users.index') }}" class="quick-btn"><i class="ti ti-users"></i> Manage Users</a>
+                    <a href="{{ route('admin.quizzes.index') }}" class="quick-btn"><i class="ti ti-file-description"></i> Manage Quizzes</a>
+                    <a href="{{ route('admin.teachers.index') }}" class="quick-btn"><i class="ti ti-school"></i> Teachers</a>
+                    <a href="{{ route('admin.students.index') }}" class="quick-btn"><i class="ti ti-user"></i> Students</a>
                 </div>
             </div>
         </div>
-
     </div>
 </div>
+
+
 
 {{-- BOTTOM TABLES --}}
 <div class="admin-bottom">
 
-    {{-- Recent Users --}}
     <div class="admin-card">
         <div class="admin-card-header">
             <h3><i class="ti ti-users" style="color:#34D399;"></i> Recent Users</h3>
-            <a href="#" class="view-all">View all</a>
+            <a href="{{ route('admin.users.index') }}" class="view-all">View all</a>
         </div>
         <table class="mini-table">
             <thead>
@@ -518,11 +502,10 @@
         </table>
     </div>
 
-    {{-- Recent Quizzes --}}
     <div class="admin-card">
         <div class="admin-card-header">
             <h3><i class="ti ti-file-description" style="color:#34D399;"></i> Recent Quizzes</h3>
-            <a href="#" class="view-all">View all</a>
+            <a href="{{ route('admin.quizzes.index') }}" class="view-all">View all</a>
         </div>
         <table class="mini-table">
             <thead>
@@ -539,7 +522,7 @@
                     <td style="color:#fff; font-weight:500;">{{ Str::limit($quiz->title, 22) }}</td>
                     <td>{{ $quiz->teacher->name ?? '—' }}</td>
                     <td>
-                        <span class="status-{{ $quiz->status === 'active' ? 'active' : 'inactive' }}">
+                        <span class="status-{{ $quiz->display_status === 'active' ? 'active' : 'inactive' }}">
                             {{ ucfirst($quiz->display_status) }}
                         </span>
                     </td>
@@ -556,3 +539,112 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    if (typeof Chart === 'undefined') {
+        console.error('Chart.js failed to load');
+        return;
+    }
+
+    const days        = {!! json_encode($days ?? []) !!};
+    const usersData   = {!! json_encode($usersData ?? []) !!};
+    const quizzesData = {!! json_encode($quizzesData ?? []) !!};
+    const catLabels   = {!! json_encode($categoryLabels ?? []) !!};
+    const catValues   = {!! json_encode($categoryValues ?? []) !!};
+
+    // Growth Chart
+    const growthCanvas = document.getElementById('growthChart');
+    if (growthCanvas) {
+        new Chart(growthCanvas, {
+            type: 'line',
+            data: {
+                labels: days,
+                datasets: [
+                    {
+                        label: 'New Users',
+                        data: usersData,
+                        borderColor: '#34D399',
+                        backgroundColor: 'rgba(52, 211, 153, 0.12)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#34D399',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'New Quizzes',
+                        data: quizzesData,
+                        borderColor: '#60A5FA',
+                        backgroundColor: 'rgba(96, 165, 250, 0.12)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#60A5FA',
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: '#94A3B8', font: { size: 12 }, boxWidth: 12 }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: '#64748B' },
+                        grid: { color: 'rgba(255,255,255,0.04)' }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#64748B', stepSize: 1, precision: 0 },
+                        grid: { color: 'rgba(255,255,255,0.04)' }
+                    }
+                }
+            }
+        });
+    }
+
+    // Category Chart
+    const categoryCanvas = document.getElementById('categoryChart');
+    if (categoryCanvas) {
+        new Chart(categoryCanvas, {
+            type: 'doughnut',
+            data: {
+                labels: catLabels.length ? catLabels : ['No Data'],
+                datasets: [{
+                    data: catValues.length ? catValues : [1],
+                    backgroundColor: [
+                        '#10B981', '#3B82F6', '#F59E0B', '#F87171',
+                        '#A78BFA', '#2DD4BF', '#FB923C', '#94A3B8'
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            color: '#94A3B8',
+                            font: { size: 12 },
+                            boxWidth: 12,
+                            padding: 14
+                        }
+                    }
+                },
+                cutout: '62%'
+            }
+        });
+    }
+});
+</script>
+@endpush

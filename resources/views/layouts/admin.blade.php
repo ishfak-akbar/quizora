@@ -41,7 +41,8 @@
                 <i class="ti ti-school nav-icon"></i>
                 <span class="nav-text">Teachers</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="{{ route('admin.students.index') }}"
+                class="nav-item {{ request()->routeIs('admin.students.*') ? 'active' : '' }}">
                 <i class="ti ti-user nav-icon"></i>
                 <span class="nav-text">Students</span>
             </a>

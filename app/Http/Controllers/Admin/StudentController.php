@@ -77,4 +77,36 @@ class StudentController extends Controller
             'quizzesPassed'
         ));
     }
+    public function attempt(User $student, \App\Models\Attempt $attempt)
+    {
+        if ($student->role !== 'student' || $attempt->student_id !== $student->id) {
+            abort(404);
+        }
+
+        $attempt->load(['quiz.questions.options', 'answers.option']);
+
+        $quiz = $attempt->quiz;
+
+        $answers = $attempt->answers()->with(['question.options', 'option'])->get();
+
+        $questionIds = $quiz->questions->pluck('id');
+        $answeredIds = $answers->pluck('question_id');
+
+        foreach ($quiz->questions as $question) {
+            if (!$answeredIds->contains($question->id)) {
+                $answers->push((object)[
+                    'question_id' => $question->id,
+                    'option_id'   => null,
+                    'is_correct'  => false,
+                    'question'    => $question,
+                    'option'      => null,
+                ]);
+            }
+        }
+
+        // Sort by question order
+        $answers = $answers->sortBy(fn($a) => $a->question->order ?? 0)->values();
+
+        return view('admin.students.attempt', compact('student', 'quiz', 'attempt', 'answers'));
+    }
 }

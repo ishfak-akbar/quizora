@@ -87,6 +87,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/teachers/{teacher}', [\App\Http\Controllers\Admin\TeacherController::class, 'show'])->name('admin.teachers.show');
     Route::get('/students', [\App\Http\Controllers\Admin\StudentController::class, 'index'])->name('admin.students.index');
     Route::get('/students/{student}', [\App\Http\Controllers\Admin\StudentController::class, 'show'])->name('admin.students.show');
+    Route::get('/students/{student}/attempts/{attempt}', [\App\Http\Controllers\Admin\StudentController::class, 'attempt'])
+        ->name('admin.students.attempt');
 });
 
 Route::middleware(['auth', 'role:student'])->prefix('student')->group(function () {

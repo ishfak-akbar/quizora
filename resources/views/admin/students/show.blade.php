@@ -324,7 +324,8 @@
             : 0;
             $scoreClass = $pct >= 70 ? 'score-good' : ($pct >= 40 ? 'score-mid' : 'score-low');
             @endphp
-            <tr>
+            <tr onclick="window.location='{{ route('admin.students.attempt', [$student, $attempt]) }}'"
+                style="cursor: pointer;">
                 <td>
                     <div class="a-title">{{ $attempt->quiz->title ?? 'Deleted Quiz' }}</div>
                 </td>

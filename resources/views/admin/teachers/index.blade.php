@@ -230,6 +230,9 @@
                 <td>{{ $teacher->created_at->format('M d, Y') }}</td>
                 <td>
                     <div class="action-btns">
+                        <a href="{{ route('admin.teachers.show', $teacher) }}" class="action-btn" title="View">
+                            <i class="ti ti-eye"></i>
+                        </a>
                         {{-- Suspend / Activate --}}
                         <form method="POST" action="{{ route('admin.users.suspend', $teacher) }}" style="display:inline;">
                             @csrf

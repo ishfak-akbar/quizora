@@ -30,4 +30,33 @@ class TeacherController extends Controller
 
         return view('admin.teachers.index', compact('teachers'));
     }
+    public function show(User $teacher)
+    {
+        if ($teacher->role !== 'teacher') {
+            abort(404);
+        }
+
+        $teacher->loadCount('quizzes');
+
+        $quizzes = $teacher->quizzes()
+            ->withCount(['attempts as submitted_count' => function ($q) {
+                $q->where('status', 'submitted');
+            }])
+            ->latest()
+            ->get();
+
+        $totalSubmissions = $quizzes->sum('submitted_count');
+
+        $uniqueStudents = \App\Models\Attempt::whereIn('quiz_id', $quizzes->pluck('id'))
+            ->where('status', 'submitted')
+            ->distinct('student_id')
+            ->count('student_id');
+
+        return view('admin.teachers.show', compact(
+            'teacher',
+            'quizzes',
+            'totalSubmissions',
+            'uniqueStudents'
+        ));
+    }
 }

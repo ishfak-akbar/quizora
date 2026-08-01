@@ -333,7 +333,7 @@
         <div class="qv-hero-top">
             <div class="qv-hero-pill"><i class="ti ti-file-description"></i> Quiz Overview</div>
             <div class="qv-hero-actions">
-                <a href="{{ route('admin.quizzes.index') }}" class="qv-hero-btn ghost">
+                <a href="javascript:history.back()" class="qv-hero-btn ghost">
                     <i class="ti ti-arrow-left"></i> Back
                 </a>
 

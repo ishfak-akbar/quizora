@@ -30,7 +30,7 @@
         <!-- TOPBAR -->
         <div class="topbar">
             <div class="topbar-left">
-                <a href="{{ route('teacher.dashboard') }}" class="back-btn">
+                <a href="javascript:history.back()" class="back-btn">
                     <i class="ti ti-arrow-left"></i> Back
                 </a>
                 <div class="topbar-title">Edit Quiz</div>

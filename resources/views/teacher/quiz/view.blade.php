@@ -14,7 +14,7 @@
         <div class="qv-hero-top">
             <div class="qv-hero-pill"><i class="ti ti-file-description"></i> Quiz Overview</div>
             <div class="qv-hero-actions">
-                <a href="{{ route('teacher.quizzes') }}" class="qv-hero-btn ghost"><i class="ti ti-arrow-left"></i> Back</a>
+                <a href="javascript:history.back()" class="qv-hero-btn ghost"><i class="ti ti-arrow-left"></i> Back</a>
                 <a href="{{ route('teacher.quiz.edit', $quiz->id) }}" class="qv-hero-btn ghost"><i class="ti ti-edit"></i> Edit</a>
                 <a href="{{ route('teacher.quiz.print', $quiz->id) }}" target="_blank" class="qv-hero-btn solid"><i class="ti ti-printer"></i> Print</a>
             </div>

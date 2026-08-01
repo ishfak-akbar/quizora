@@ -353,7 +353,7 @@
 
     <div class="profile-page">
 
-        <a href="{{ $backUrl }}" class="profile-back">
+        <a href="javascript:history.back()" class="profile-back">
             <i class="ti ti-arrow-left"></i> Back
         </a>
 

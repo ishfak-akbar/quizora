@@ -44,7 +44,8 @@
                 <i class="ti ti-user nav-icon"></i>
                 <span class="nav-text">Students</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="{{ route('admin.quizzes.index') }}"
+                class="nav-item {{ request()->routeIs('admin.quizzes.*') ? 'active' : '' }}">
                 <i class="ti ti-file-description nav-icon"></i>
                 <span class="nav-text">Quizzes</span>
             </a>

@@ -79,6 +79,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.users.index');
     Route::patch('/users/{user}/suspend', [\App\Http\Controllers\Admin\UserController::class, 'suspend'])->name('admin.users.suspend');
     Route::delete('/users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('admin.users.destroy');
+    Route::get('/quizzes', [\App\Http\Controllers\Admin\QuizController::class, 'index'])->name('admin.quizzes.index');
+    Route::patch('/quizzes/{quiz}/close', [\App\Http\Controllers\Admin\QuizController::class, 'forceClose'])->name('admin.quizzes.close');
+    Route::delete('/quizzes/{quiz}', [\App\Http\Controllers\Admin\QuizController::class, 'destroy'])->name('admin.quizzes.destroy');
 });
 
 Route::middleware(['auth', 'role:student'])->prefix('student')->group(function () {

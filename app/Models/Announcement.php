@@ -23,4 +23,13 @@ class Announcement extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+    public function reads()
+    {
+        return $this->hasMany(\App\Models\AnnouncementRead::class);
+    }
+
+    public function isReadBy($userId): bool
+    {
+        return $this->reads()->where('user_id', $userId)->exists();
+    }
 }

@@ -26,6 +26,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/{notification}/read', [\App\Http\Controllers\NotificationController::class, 'markRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllRead'])->name('notifications.read-all');
+    Route::post('/notifications/announcement/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAnnouncementRead'])
+        ->name('notifications.announcement.read');
 });
 
 Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->group(function () {

@@ -1213,18 +1213,21 @@
 
                         if (isAnn) {
                             return `
-        <a href="#" class="notif-item unread" data-ann-title="${n.title.replace(/"/g, '&quot;')}" data-ann-body="${(n.body || '').replace(/"/g, '&quot;')}" data-ann-type="${n.ann_type || 'info'}">
-            <div class="notif-item-icon" style="background:${style.bg}; color:${style.color};">
-                <i class="ti ${style.icon}"></i>
-            </div>
-            <div class="notif-item-body-wrap">
-                <div class="notif-item-title">${n.title}</div>
-                ${n.body ? `<div class="notif-item-body">${n.body.substring(0, 80)}${n.body.length > 80 ? '...' : ''}</div>` : ''}
-                <div class="notif-item-time"><i class="ti ti-clock" style="font-size:10px;"></i> ${timeAgo(n.created_at)}</div>
-            </div>
-        </a>`;
+                                <a href="#" class="notif-item ${n.read_at ? '' : 'unread'}"
+                                data-ann-id="${n.announcement_id}"
+                                data-ann-title="${n.title.replace(/"/g, '&quot;')}"
+                                data-ann-body="${(n.body || '').replace(/"/g, '&quot;')}"
+                                data-ann-type="${n.ann_type || 'info'}">
+                                    <div class="notif-item-icon" style="background:${style.bg}; color:${style.color};">
+                                        <i class="ti ${style.icon}"></i>
+                                    </div>
+                                    <div class="notif-item-body-wrap">
+                                        <div class="notif-item-title">${n.title}</div>
+                                        ${n.body ? `<div class="notif-item-body">${n.body.substring(0, 80)}${n.body.length > 80 ? '...' : ''}</div>` : ''}
+                                        <div class="notif-item-time"><i class="ti ti-clock" style="font-size:10px;"></i> ${timeAgo(n.created_at)}</div>
+                                    </div>
+                                </a>`;
                         }
-
                         return `
                     <a href="${n.link || '#'}" class="notif-item ${!n.read_at ? 'unread' : ''}" onclick="markNotifRead(${n.id})">
                         <div class="notif-item-icon" style="background:${style.bg}; color:${style.color};">
@@ -1242,14 +1245,14 @@
                     notifList.querySelectorAll('[data-ann-title]').forEach(el => {
                         el.addEventListener('click', function(e) {
                             e.preventDefault();
-                            openAnnModal(this.dataset.annTitle, this.dataset.annBody, this.dataset.annType);
+                            openAnnModal(this.dataset.annTitle, this.dataset.annBody, this.dataset.annType, this.dataset.annId);
                             notifDropdown.style.display = 'none';
                         });
                     });
                 });
         }
 
-        function openAnnModal(title, body, type) {
+        function openAnnModal(title, body, type, announcementId) {
             const modal = document.getElementById('annModal');
             const badge = document.getElementById('annModalBadge');
             const colors = {
@@ -1278,6 +1281,16 @@
             document.getElementById('annModalTitle').textContent = title;
             document.getElementById('annModalBody').textContent = body;
             modal.style.display = 'flex';
+            
+            if (announcementId) {
+                fetch(`/notifications/announcement/${announcementId}/read`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                        'Accept': 'application/json',
+                    }
+                }).then(() => loadNotifications());
+            }
         }
 
         function closeAnnModal() {

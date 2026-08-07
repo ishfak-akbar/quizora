@@ -11,20 +11,15 @@
         grid-template-columns: 380px 1fr;
         gap: 20px;
         align-items: start;
-    }
-
-    .ann-form-card,
-    .ann-list-card {
-        background: var(--color-bg-card);
-        border: 1px solid var(--color-border-light);
-        border-radius: 14px;
-        overflow: hidden;
+        height: calc(100vh - 120px);
     }
 
     .ann-form-card {
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border-light);
+        border-radius: 14px;
         padding: 22px;
-        position: sticky;
-        top: 84px;
+        height: fit-content;
     }
 
     .ann-form-title {
@@ -115,18 +110,35 @@
         background: #059669;
     }
 
+    .ann-list-card {
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border-light);
+        border-radius: 14px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
     .ann-list-header {
         padding: 16px 20px;
         border-bottom: 1px solid var(--color-border-light);
         display: flex;
         align-items: center;
         justify-content: space-between;
+        flex-shrink: 0;
     }
 
     .ann-list-header h3 {
         font-size: 14px;
         font-weight: 600;
         color: #fff;
+    }
+
+    .ann-list-body {
+        overflow-y: auto;
+        flex: 1;
+        min-height: 0;
     }
 
     .ann-item {
@@ -263,10 +275,12 @@
     @media (max-width: 900px) {
         .ann-layout {
             grid-template-columns: 1fr;
+            height: auto;
         }
 
-        .ann-form-card {
-            position: static;
+        .ann-list-card {
+            height: auto;
+            max-height: 60vh;
         }
     }
 </style>
@@ -275,9 +289,39 @@
 @section('content')
 
 @if(session('success'))
-<div style="margin-bottom:16px; padding:12px 16px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3); border-radius:10px; color:#34D399; font-size:13px; font-weight:600;">
-    <i class="ti ti-circle-check"></i> {{ session('success') }}
+<div id="annToast" style="
+    position: fixed;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    border-radius: 12px;
+    color: #34D399;
+    font-size: 13px;
+    font-weight: 600;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+">
+    <i class="ti ti-circle-check" style="font-size:16px;"></i>
+    {{ session('success') }}
 </div>
+<script>
+    setTimeout(() => {
+        const t = document.getElementById('annToast');
+        if (t) {
+            t.style.opacity = '0';
+            t.style.transform = 'translateX(-50%) translateY(-10px)';
+            setTimeout(() => t.remove(), 400);
+        }
+    }, 2000);
+</script>
 @endif
 
 <div class="ann-layout">
@@ -337,53 +381,57 @@
             <span style="font-size:12px; color:var(--color-text-muted);">{{ $announcements->total() }} total</span>
         </div>
 
-        @forelse($announcements as $ann)
-        <div class="ann-item">
-            <div class="ann-item-top">
-                <div class="ann-item-title">{{ $ann->title }}</div>
-                <div class="ann-actions">
-                    <form method="POST" action="{{ route('admin.announcements.toggle', $ann) }}" style="display:inline;">
-                        @csrf
-                        @method('PATCH')
-                        <button type="submit" class="ann-btn" title="{{ $ann->is_active ? 'Deactivate' : 'Activate' }}">
-                            <i class="ti ti-{{ $ann->is_active ? 'player-pause' : 'player-play' }}"></i>
-                        </button>
-                    </form>
-                    <form method="POST" action="{{ route('admin.announcements.destroy', $ann) }}" style="display:inline;"
-                        onsubmit="return confirm('Delete this announcement?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="ann-btn danger" title="Delete">
-                            <i class="ti ti-trash"></i>
-                        </button>
-                    </form>
+        <div class="ann-list-body">
+            @forelse($announcements as $ann)
+            <div class="ann-item">
+                <div class="ann-item-top">
+                    <div class="ann-item-title">{{ $ann->title }}</div>
+                    <div class="ann-actions">
+                        <form method="POST" action="{{ route('admin.announcements.toggle', $ann) }}" style="display:inline;">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="ann-btn" title="{{ $ann->is_active ? 'Deactivate' : 'Activate' }}">
+                                <i class="ti ti-{{ $ann->is_active ? 'player-pause' : 'player-play' }}"></i>
+                            </button>
+                        </form>
+                        <form method="POST" action="{{ route('admin.announcements.destroy', $ann) }}" style="display:inline;"
+                            onsubmit="return confirm('Delete this announcement?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="ann-btn danger" title="Delete">
+                                <i class="ti ti-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="ann-item-body">{{ $ann->body }}</div>
+
+                <div class="ann-item-meta">
+                    <span class="ann-badge badge-{{ $ann->audience }}">{{ ucfirst($ann->audience) }}</span>
+                    <span class="ann-badge badge-{{ $ann->type }}">{{ ucfirst($ann->type) }}</span>
+                    <span class="ann-badge {{ $ann->is_active ? 'badge-active' : 'badge-inactive' }}">
+                        {{ $ann->is_active ? 'Active' : 'Inactive' }}
+                    </span>
+                    <span>· {{ $ann->created_at->format('M d, Y H:i') }}</span>
+                    <span>· by {{ $ann->creator->name ?? 'Admin' }}</span>
                 </div>
             </div>
-
-            <div class="ann-item-body">{{ $ann->body }}</div>
-
-            <div class="ann-item-meta">
-                <span class="ann-badge badge-{{ $ann->audience }}">{{ ucfirst($ann->audience) }}</span>
-                <span class="ann-badge badge-{{ $ann->type }}">{{ ucfirst($ann->type) }}</span>
-                <span class="ann-badge {{ $ann->is_active ? 'badge-active' : 'badge-inactive' }}">
-                    {{ $ann->is_active ? 'Active' : 'Inactive' }}
-                </span>
-                <span>· {{ $ann->created_at->format('M d, Y H:i') }}</span>
-                <span>· by {{ $ann->creator->name ?? 'Admin' }}</span>
+            @empty
+            <div class="empty-box">
+                <i class="ti ti-speakerphone" style="font-size:36px; display:block; margin-bottom:12px; opacity:0.35;"></i>
+                No announcements yet. Create one on the left.
             </div>
-        </div>
-        @empty
-        <div class="empty-box">
-            <i class="ti ti-speakerphone" style="font-size:36px; display:block; margin-bottom:12px; opacity:0.35;"></i>
-            No announcements yet. Create one on the left.
-        </div>
-        @endforelse
+            @endforelse
 
-        @if($announcements->hasPages())
-        <div class="pagination-wrap">
-            {{ $announcements->links() }}
+            @if($announcements->hasPages())
+            <div class="pagination-wrap">
+                {{ $announcements->links() }}
+            </div>
+            @endif
         </div>
-        @endif
+
+
     </div>
 </div>
 

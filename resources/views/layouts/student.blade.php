@@ -1086,6 +1086,18 @@
         <div class="content">
             @yield('content')
         </div>
+        {{-- Announcement Modal --}}
+        <div id="annModal" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center;">
+            <div id="annModalBackdrop" style="position:absolute; inset:0; background:rgba(0,0,0,0.55); backdrop-filter:blur(8px);"></div>
+            <div style="position:relative; z-index:1; width:min(480px, 92vw); background:var(--color-bg-card); border:1px solid var(--color-border-light); border-radius:16px; padding:28px; box-shadow:0 24px 64px rgba(0,0,0,0.5);">
+                <button id="annModalClose" style="position:absolute; top:14px; right:14px; width:32px; height:32px; border-radius:8px; border:1px solid var(--color-border-light); background:transparent; color:var(--color-text-muted); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:18px;">
+                    <i class="ti ti-x"></i>
+                </button>
+                <div id="annModalBadge" style="display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; margin-bottom:12px;"></div>
+                <h3 id="annModalTitle" style="font-size:18px; font-weight:700; color:#fff; margin-bottom:10px; padding-right:28px;"></h3>
+                <p id="annModalBody" style="font-size:14px; color:var(--color-text-secondary); line-height:1.6; white-space:pre-wrap;"></p>
+            </div>
+        </div>
     </main>
 
     {{-- SHARED JS --}}
@@ -1157,6 +1169,11 @@
                 bg: 'rgba(52,211,153,0.18)',
                 color: '#34D399'
             },
+            announcement: {
+                icon: 'ti-speakerphone',
+                bg: 'rgba(16,185,129,0.18)',
+                color: '#34D399'
+            },
         };
 
         function notifIconFor(type) {
@@ -1192,6 +1209,22 @@
 
                     notifList.innerHTML = data.notifications.map(n => {
                         const style = notifIconFor(n.type);
+                        const isAnn = n.type === 'announcement' || n.is_announcement;
+
+                        if (isAnn) {
+                            return `
+        <a href="#" class="notif-item unread" data-ann-title="${n.title.replace(/"/g, '&quot;')}" data-ann-body="${(n.body || '').replace(/"/g, '&quot;')}" data-ann-type="${n.ann_type || 'info'}">
+            <div class="notif-item-icon" style="background:${style.bg}; color:${style.color};">
+                <i class="ti ${style.icon}"></i>
+            </div>
+            <div class="notif-item-body-wrap">
+                <div class="notif-item-title">${n.title}</div>
+                ${n.body ? `<div class="notif-item-body">${n.body.substring(0, 80)}${n.body.length > 80 ? '...' : ''}</div>` : ''}
+                <div class="notif-item-time"><i class="ti ti-clock" style="font-size:10px;"></i> ${timeAgo(n.created_at)}</div>
+            </div>
+        </a>`;
+                        }
+
                         return `
                     <a href="${n.link || '#'}" class="notif-item ${!n.read_at ? 'unread' : ''}" onclick="markNotifRead(${n.id})">
                         <div class="notif-item-icon" style="background:${style.bg}; color:${style.color};">
@@ -1204,8 +1237,58 @@
                         </div>
                     </a>`;
                     }).join('');
+
+                    //Bind announcement clicks
+                    notifList.querySelectorAll('[data-ann-title]').forEach(el => {
+                        el.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            openAnnModal(this.dataset.annTitle, this.dataset.annBody, this.dataset.annType);
+                            notifDropdown.style.display = 'none';
+                        });
+                    });
                 });
         }
+
+        function openAnnModal(title, body, type) {
+            const modal = document.getElementById('annModal');
+            const badge = document.getElementById('annModalBadge');
+            const colors = {
+                info: {
+                    bg: 'rgba(59,130,246,0.15)',
+                    color: '#60A5FA',
+                    label: 'Info'
+                },
+                success: {
+                    bg: 'rgba(16,185,129,0.15)',
+                    color: '#34D399',
+                    label: 'Success'
+                },
+                warning: {
+                    bg: 'rgba(245,158,11,0.15)',
+                    color: '#F59E0B',
+                    label: 'Warning'
+                },
+            };
+            const c = colors[type] || colors.info;
+
+            badge.style.background = c.bg;
+            badge.style.color = c.color;
+            badge.textContent = c.label;
+
+            document.getElementById('annModalTitle').textContent = title;
+            document.getElementById('annModalBody').textContent = body;
+            modal.style.display = 'flex';
+        }
+
+        function closeAnnModal() {
+            document.getElementById('annModal').style.display = 'none';
+        }
+
+        document.getElementById('annModalClose')?.addEventListener('click', closeAnnModal);
+        document.getElementById('annModalBackdrop')?.addEventListener('click', closeAnnModal);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeAnnModal();
+        });
 
         function markNotifRead(id) {
             fetch(`/notifications/${id}/read`, {

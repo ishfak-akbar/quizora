@@ -1039,7 +1039,7 @@
                 manage, and analyze with ease.
             </p>
             <div class="hero-actions">
-                <a href="{{ route('register') }}" class="btn btn-primary btn-lg">
+                <a href="{{ route('login') }}" class="btn btn-primary btn-lg">
                     <i class="ti ti-rocket"></i> Start for Free
                 </a>
                 <a href="#how-it-works" class="btn btn-outline btn-lg">
@@ -1099,7 +1099,7 @@
                             <li><i class="ti ti-circle-check-filled"></i> Public or private quiz visibility control</li>
                         </ul>
                     </div>
-                    <a href="{{ route('register') }}" class="audience-link">
+                    <a href="{{ route('login') }}" class="audience-link">
                         Start teaching <i class="ti ti-arrow-right"></i>
                     </a>
                 </div>
@@ -1119,7 +1119,7 @@
                             <li><i class="ti ti-circle-check-filled"></i> Save quizzes to attempt later</li>
                         </ul>
                     </div>
-                    <a href="{{ route('register') }}" class="audience-link">
+                    <a href="{{ route('login') }}" class="audience-link">
                         Start learning <i class="ti ti-arrow-right"></i>
                     </a>
                 </div>
@@ -1324,7 +1324,7 @@
                 <a href="#features" class="footer-link">Features</a>
                 <a href="#how-it-works" class="footer-link">How it works</a>
                 <a href="{{ route('login') }}" class="footer-link">Sign In</a>
-                <a href="{{ route('register') }}" class="footer-link">Register</a>
+                <a href="{{ route('login') }}" class="footer-link">Register</a>
             </div>
             <div class="footer-copy">© {{ date('Y') }} Quizora. Built with Laravel & Vanilla JS.</div>
         </div>

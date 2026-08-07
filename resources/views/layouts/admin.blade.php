@@ -51,39 +51,12 @@
                 <i class="ti ti-file-description nav-icon"></i>
                 <span class="nav-text">Quizzes</span>
             </a>
-            <a href="#" class="nav-item">
-                <i class="ti ti-clipboard-list nav-icon"></i>
-                <span class="nav-text">Submissions</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="ti ti-category nav-icon"></i>
-                <span class="nav-text">Categories</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="ti ti-chart-bar nav-icon"></i>
-                <span class="nav-text">Reports</span>
-            </a>
 
             <div class="nav-label">System</div>
-            <a href="#" class="nav-item">
+            <a href="{{ route('admin.announcements.index') }}"
+                class="nav-item {{ request()->routeIs('admin.announcements.*') ? 'active' : '' }}">
                 <i class="ti ti-speakerphone nav-icon"></i>
                 <span class="nav-text">Announcements</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="ti ti-heart-rate-monitor nav-icon"></i>
-                <span class="nav-text">System Health</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="ti ti-settings nav-icon"></i>
-                <span class="nav-text">Settings</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="ti ti-file-text nav-icon"></i>
-                <span class="nav-text">Logs</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="ti ti-robot nav-icon"></i>
-                <span class="nav-text">AI Services</span>
             </a>
         </nav>
         <div class="sidebar-bottom">

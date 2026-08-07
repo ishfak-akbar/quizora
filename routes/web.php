@@ -89,6 +89,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/students/{student}', [\App\Http\Controllers\Admin\StudentController::class, 'show'])->name('admin.students.show');
     Route::get('/students/{student}/attempts/{attempt}', [\App\Http\Controllers\Admin\StudentController::class, 'attempt'])
         ->name('admin.students.attempt');
+    Route::get('/announcements', [\App\Http\Controllers\Admin\AnnouncementController::class, 'index'])->name('admin.announcements.index');
+    Route::post('/announcements', [\App\Http\Controllers\Admin\AnnouncementController::class, 'store'])->name('admin.announcements.store');
+    Route::patch('/announcements/{announcement}/toggle', [\App\Http\Controllers\Admin\AnnouncementController::class, 'toggle'])->name('admin.announcements.toggle');
+    Route::delete('/announcements/{announcement}', [\App\Http\Controllers\Admin\AnnouncementController::class, 'destroy'])->name('admin.announcements.destroy');
 });
 
 Route::middleware(['auth', 'role:student'])->prefix('student')->group(function () {

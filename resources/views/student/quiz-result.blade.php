@@ -20,10 +20,10 @@
         top: -60px;
         left: 50%;
         transform: translateX(-50%);
-        width: 300px;
-        height: 300px;
+        width: 500px;
+        height: 500px;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(79, 70, 229, 0.15) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(79, 70, 229, 0.2) 20%, transparent 70%);
     }
 
     .result-badge {

@@ -3,6 +3,34 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('teacher.css') }}">
+    <style>
+        .students-stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .students-mini-stat {
+            background: #171234;
+            border: 1px solid var(--color-border-light);
+            border-radius: 14px;
+            padding: 18px;
+            text-align: center;
+        }
+
+        .students-mini-stat-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .students-mini-stat-label {
+            font-size: 11px;
+            color: var(--color-text-muted);
+            margin-top: 4px;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -14,22 +42,22 @@
     </div>
 </div>
 
-<div class="stats-row">
-    <div class="stat-card purple">
-        <div class="stat-value">{{ $totalStudentsCount }}</div>
-        <div class="stat-label">Total Students</div>
+<div class="students-stats-row">
+    <div class="students-mini-stat">
+        <div class="students-mini-stat-value">{{ $totalStudentsCount }}</div>
+        <div class="students-mini-stat-label">Total Students</div>
     </div>
-    <div class="stat-card cyan">
-        <div class="stat-value">{{ $activeThisMonth }}</div>
-        <div class="stat-label">Active This Month</div>
+    <div class="students-mini-stat">
+        <div class="students-mini-stat-value" style="color:var(--color-primary-glow)">{{ $activeThisMonth }}</div>
+        <div class="students-mini-stat-label">Active This Month</div>
     </div>
-    <div class="stat-card green">
-        <div class="stat-value">{{ $avgScore }}%</div>
-        <div class="stat-label">Avg. Score</div>
+    <div class="students-mini-stat">
+        <div class="students-mini-stat-value" style="color:#34D399">{{ $avgScore }}%</div>
+        <div class="students-mini-stat-label">Avg. Score</div>
     </div>
-    <div class="stat-card amber">
-        <div class="stat-value">{{ $totalAttemptsCount }}</div>
-        <div class="stat-label">Total Attempts</div>
+    <div class="students-mini-stat">
+        <div class="students-mini-stat-value" style="color:#F59E0B">{{ $totalAttemptsCount }}</div>
+        <div class="students-mini-stat-label">Total Attempts</div>
     </div>
 </div>
 

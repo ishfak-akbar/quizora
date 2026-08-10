@@ -402,13 +402,14 @@
         /* TOPBAR */
         .topbar {
             height: 64px;
-            background: #1e1b45;
+            background: rgba(14, 11, 32, 0.72);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(14px);
             border-bottom: 1px solid var(--color-border-light);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 28px;
-            gap: 16px;
+            padding: 0 32px;
             position: sticky;
             top: 0;
             z-index: 50;

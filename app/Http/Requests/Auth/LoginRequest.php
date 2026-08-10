@@ -50,6 +50,16 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        //Block suspended accounts
+        $user = Auth::user();
+        if ($user && ($user->status ?? 'active') === 'suspended') {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                'email' => 'Your account has been suspended. Contact the administrator.',
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 
@@ -81,6 +91,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->string('email')) . '|' . $this->ip());
     }
 }

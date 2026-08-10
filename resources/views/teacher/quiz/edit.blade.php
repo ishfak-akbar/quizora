@@ -104,8 +104,13 @@
                         </div>
                         <div class="field">
                             <label>End Date & Time</label>
-                            <input type="datetime-local" class="input" name="ends_at"
-                                value="{{ $quiz->ends_at ? $quiz->ends_at->format('Y-m-d\TH:i') : '' }}" />
+                            <input type="datetime-local" class="input" name="ends_at" id="endsAtInput"
+                                value="{{ $quiz->ends_at ? $quiz->ends_at->format('Y-m-d\TH:i') : '' }}"
+                                {{ !$quiz->ends_at ? 'disabled' : '' }} />
+                            <label style="display:flex; align-items:center; gap:8px; margin-top:8px; font-size:12.5px; font-weight:500; color:var(--color-text-secondary); text-transform:none; letter-spacing:0; cursor:pointer;">
+                                <input type="checkbox" id="unlimitedToggle" onchange="toggleUnlimited()" {{ !$quiz->ends_at ? 'checked' : '' }} style="width:16px; height:16px; accent-color:var(--color-primary-solid); cursor:pointer;">
+                                Keep this quiz open indefinitely (no end date)
+                            </label>
                         </div>
                     </div>
                     <div class="row-2">
@@ -330,6 +335,18 @@
         function toggleSwitch(btn, fieldId) {
             btn.classList.toggle('on');
             document.getElementById(fieldId).value = btn.classList.contains('on') ? '1' : '0';
+        }
+        function toggleUnlimited() {
+            const endsAtInput = document.getElementById('endsAtInput');
+            const isUnlimited = document.getElementById('unlimitedToggle').checked;
+
+            endsAtInput.disabled = isUnlimited;
+            if (isUnlimited) {
+                endsAtInput.value = '';
+                endsAtInput.style.opacity = '0.4';
+            } else {
+                endsAtInput.style.opacity = '1';
+            }
         }
 
         //STEP NAVIGATION

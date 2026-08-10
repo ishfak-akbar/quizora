@@ -101,7 +101,30 @@ class NotificationController extends Controller
 
     public function markAllRead()
     {
-        AppNotification::where('user_id', Auth::id())->unread()->update(['read_at' => now()]);
+        $user = Auth::user();
+
+        AppNotification::where('user_id', $user->id)
+            ->unread()
+            ->update(['read_at' => now()]);
+
+        $roleAudience = $user->role === 'teacher' ? 'teachers' : 'students';
+
+        $announcementIds = Announcement::where('is_active', true)
+            ->where(function ($q) use ($roleAudience) {
+                $q->where('audience', 'all')
+                    ->orWhere('audience', $roleAudience);
+            })
+            ->pluck('id');
+
+        foreach ($announcementIds as $id) {
+            \App\Models\AnnouncementRead::firstOrCreate(
+                [
+                    'user_id'         => $user->id,
+                    'announcement_id' => $id,
+                ],
+                ['read_at' => now()]
+            );
+        }
 
         return response()->json(['success' => true]);
     }

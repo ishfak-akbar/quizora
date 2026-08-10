@@ -152,12 +152,6 @@
         }
 
         /* QUESTION AREA */
-        .quiz-body {
-            max-width: 760px;
-            margin: 0 auto;
-            padding: 32px 28px 140px;
-        }
-
         .question-number-tag {
             font-size: 12px;
             font-weight: 700;
@@ -169,52 +163,112 @@
             margin-bottom: 16px;
         }
 
+        .quiz-body {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 0 28px;
+            height: calc(100vh - 20px - 77px - 88px);
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .quiz-body .question-card {
+            width: 100%;
+        }
+
+        .question-card {
+            background: radial-gradient(
+                ellipse 800px 500px at 50% 10%,
+                rgba(99, 102, 241, 0.18) 0%,
+                rgba(99, 102, 241, 0.04) 85%,
+                transparent 75%
+            ),
+            linear-gradient(180deg, #1c1842 0%, #191539 70%, #0f0c1e 100%);
+            border: 1px solid var(--color-border-light);
+            border-radius: 16px;
+            padding: 24px 26px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .question-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .question-number-tag {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--color-primary-glow);
+            background: rgba(79, 70, 229, 0.15);
+            border: 1px solid rgba(167, 139, 250, 0.25);
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .question-marks {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--color-primary-glow);
+            background: rgba(79, 70, 229, 0.15);
+            border: 1px solid rgba(167, 139, 250, 0.25);
+            padding: 4px 12px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
         .question-text {
-            font-size: 19px;
+            font-size: 22px;
             font-weight: 700;
             color: #fff;
             line-height: 1.5;
-            margin-bottom: 28px;
+            margin-bottom: 22px;
         }
 
         .options-list {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 12px;
         }
 
         .option-card {
             display: flex;
             align-items: center;
-            gap: 14px;
-            background: var(--color-bg-card);
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.03);
             border: 1.5px solid var(--color-border-light);
-            border-radius: 12px;
-            padding: 16px 18px;
+            border-radius: 10px;
+            padding: 12px 14px;
             cursor: pointer;
             transition: all 0.2s;
+            min-height: 48px;
         }
 
         .option-card:hover {
+            background: #483abe;
             border-color: rgba(79, 70, 229, 0.4);
-            background: var(--color-bg-row-hover);
         }
 
         .option-card.selected {
+            background: rgba(79, 70, 229, 0.18);
             border-color: var(--color-primary-solid);
-            background: rgba(79, 70, 229, 0.12);
         }
 
         .option-letter {
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1.5px solid var(--color-border-light);
+            width: 26px;
+            height: 26px;
+            border-radius: 7px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--color-border-light);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             color: var(--color-text-muted);
             flex-shrink: 0;
@@ -228,9 +282,11 @@
         }
 
         .option-text {
-            font-size: 14px;
+            font-size: 15px;
+            font-weight: 500;
             color: var(--color-text-secondary);
             flex: 1;
+            line-height: 1.4;
         }
 
         .option-card.selected .option-text {
@@ -238,30 +294,28 @@
             font-weight: 500;
         }
 
-        /* QUESTION NAV DOTS */
-        .qnav-dots {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 32px;
-            padding-top: 24px;
-            border-top: 1px solid var(--color-border-light);
+        @media (max-width: 560px) {
+            .options-list {
+                grid-template-columns: 1fr;
+            }
         }
 
+        /* QUESTION NAV DOTS */
         .qnav-dot {
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
+            width: 30px;
+            height: 30px;
+            border-radius: 7px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 600;
             background: rgba(255, 255, 255, 0.04);
             border: 1.5px solid var(--color-border-light);
             color: var(--color-text-muted);
             cursor: pointer;
             transition: all 0.2s;
+            flex-shrink: 0;
         }
 
         .qnav-dot.answered {
@@ -290,7 +344,35 @@
             align-items: center;
             justify-content: space-between;
             z-index: 60;
+            position: relative;
         }
+
+        .qnav-dots-bar {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            gap: 6px;
+        }
+
+        .qnav-dots-center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: nowrap;
+            max-width: 50vw;
+            overflow-x: auto;
+            scrollbar-width: none;
+            white-space: nowrap;
+        }
+
+        .qnav-dots-center::-webkit-scrollbar { display: none; }
 
         .nav-btn {
             display: flex;
@@ -379,17 +461,21 @@
     </div>
 
     <div class="quiz-body" id="quizBody">
-        {{-- Questions rendered by JS from the data below --}}
-        <span class="question-number-tag" id="questionTag">Question 1</span>
-        <h2 class="question-text" id="questionText"></h2>
-        <div class="options-list" id="optionsList"></div>
-        <div class="qnav-dots" id="qnavDots"></div>
+        <div class="question-card" id="questionCard">
+            <div class="question-card-header">
+                <span class="question-number-tag" id="questionTag">Question 1</span>
+                <span class="question-marks" id="questionMarks">1 mark</span>
+            </div>
+            <h2 class="question-text" id="questionText"></h2>
+            <div class="options-list" id="optionsList"></div>
+        </div>
     </div>
 
     <div class="quiz-bottom-bar">
         <button class="nav-btn nav-btn-secondary" id="prevBtn" disabled>
             <i class="ti ti-arrow-left"></i> Previous
         </button>
+        <div class="qnav-dots-center" id="qnavDots"></div>
         <button class="nav-btn nav-btn-primary" id="nextBtn">
             Next <i class="ti ti-arrow-right"></i>
         </button>
@@ -415,6 +501,12 @@
 
             document.getElementById('questionTag').textContent = 'Question ' + num;
             document.getElementById('questionText').textContent = q.question_text;
+
+            // Marks
+            const marks = q.marks ?? 1;
+            document.getElementById('questionMarks').textContent =
+                marks + ' mark' + (marks > 1 ? 's' : '');
+
             document.getElementById('currentQNum').textContent = num;
             document.getElementById('progressFill').style.width = (num / totalQuestions * 100) + '%';
 
@@ -422,11 +514,10 @@
             document.getElementById('nextBtn').style.display = num === totalQuestions ? 'none' : 'inline-flex';
             document.getElementById('submitBtn').style.display = num === totalQuestions ? 'inline-flex' : 'none';
 
-            // Render options
             const optList = document.getElementById('optionsList');
             optList.innerHTML = q.options.map((opt, i) => `
                 <div class="option-card ${answers[num] === opt.id ? 'selected' : ''}"
-                     onclick="selectOption(this, ${num}, ${opt.id})">
+                    onclick="selectOption(this, ${num}, ${opt.id})">
                     <div class="option-letter">${letters[i]}</div>
                     <div class="option-text">${opt.option_text}</div>
                 </div>

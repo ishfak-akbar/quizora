@@ -404,8 +404,13 @@ $skippedCount = $answers->whereNull('option_id')->count();
         <i class="ti ti-clock"></i>
         <div class="result-mini-stat-value">
             @if($attempt->submitted_at && $attempt->started_at)
-            {{ gmdate('i:s', $attempt->submitted_at->diffInSeconds($attempt->started_at)) }}
-            @else —
+                @php
+                    $seconds = $attempt->started_at->diffInSeconds($attempt->submitted_at);
+                    $timeTaken = sprintf('%d:%02d', intdiv($seconds, 60), $seconds % 60);
+                @endphp
+                {{ $timeTaken }}
+            @else
+                —
             @endif
         </div>
         <div class="result-mini-stat-label">Time Taken</div>

@@ -404,13 +404,13 @@ $skippedCount = $answers->whereNull('option_id')->count();
         <i class="ti ti-clock"></i>
         <div class="result-mini-stat-value">
             @if($attempt->submitted_at && $attempt->started_at)
-                @php
-                    $seconds = $attempt->started_at->diffInSeconds($attempt->submitted_at);
-                    $timeTaken = sprintf('%d:%02d', intdiv($seconds, 60), $seconds % 60);
-                @endphp
-                {{ $timeTaken }}
+            @php
+            $seconds = $attempt->started_at->diffInSeconds($attempt->submitted_at);
+            $timeTaken = sprintf('%d:%02d', intdiv($seconds, 60), $seconds % 60);
+            @endphp
+            {{ $timeTaken }}
             @else
-                —
+            —
             @endif
         </div>
         <div class="result-mini-stat-label">Time Taken</div>
@@ -419,8 +419,8 @@ $skippedCount = $answers->whereNull('option_id')->count();
 
 {{-- ACTIONS --}}
 <div class="result-actions" style="max-width:760px;margin:0 auto 28px;">
-    <a href="{{ route('student.browse') }}" class="result-btn result-btn-secondary">
-        <i class="ti ti-compass"></i> Browse More
+    <a href="javascript:history.back()" class="result-btn result-btn-secondary">
+        <i class="ti ti-arrow-left"></i> Back
     </a>
     @if($quiz->max_attempts > 1)
     @php
@@ -516,7 +516,7 @@ $skippedCount = $answers->whereNull('option_id')->count();
     document.addEventListener('DOMContentLoaded', function() {
 
         // Score Ring Animation
-        const QUIZ_PCT = {{ $pct }};
+        const QUIZ_PCT = {{$pct}};
 
         try {
             const ring = document.getElementById('scoreRing');

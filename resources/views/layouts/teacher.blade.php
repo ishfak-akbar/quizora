@@ -126,7 +126,7 @@
                     <i class="ti ti-chevron-down user-chevron" aria-hidden="true"></i>
                     <div class="user-dropdown" id="userDropdown">
                         <a href="#" class="dropdown-item"><i class="ti ti-user" aria-hidden="true"></i> Profile</a>
-                        <a href="#" class="dropdown-item"><i class="ti ti-settings" aria-hidden="true"></i> Settings</a>
+                        <a href="{{ route('teacher.settings') }}" class="dropdown-item"><i class="ti ti-settings" aria-hidden="true"></i> Settings</a>
                         <a href="#" class="dropdown-item"><i class="ti ti-help-circle" aria-hidden="true"></i> Help</a>
                         <div class="dropdown-divider"></div>
                         <form method="POST" action="{{ route('logout') }}">

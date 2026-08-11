@@ -205,7 +205,7 @@ class QuizController extends Controller
         ]);
 
         $accessCode = $request->visibility === 'private'
-            ? $this->resolveAccessCode($quiz->access_code)
+            ? $this->resolveAccessCode($request->proposed_code)
             : null;
 
         $quiz->update([

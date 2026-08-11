@@ -211,8 +211,13 @@
             <tr>
                 <td>
                     <div class="user-cell">
-                        <div class="user-avatar-sm">
-                            {{ strtoupper(substr($teacher->name, 0, 1)) }}
+                        <div class="user-avatar" style="overflow:hidden;">
+                            @if(auth()->user()->hasAvatar())
+                            <img src="{{ auth()->user()->avatarUrl() }}" alt=""
+                                style="width:100%;height:100%;object-fit:cover;display:block;">
+                            @else
+                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                            @endif
                         </div>
                         <div>
                             <div class="user-name">{{ $teacher->name }}</div>

@@ -58,8 +58,13 @@ $activeTab = request()->query('tab');
 
                 <div class="avatar-section">
                     <div class="avatar-large" id="avatarPreview"
-                        style="background: {{ $user->avatar_color ?? '#4F46E5' }}">
+                        style="overflow:hidden; background: linear-gradient(135deg,#4F46E5,#A78BFA);">
+                        @if($user->hasAvatar())
+                        <img src="{{ $user->avatarUrl() }}" alt="Avatar"
+                            style="width:100%;height:100%;object-fit:cover;display:block;">
+                        @else
                         {{ strtoupper(substr($user->name, 0, 1)) }}
+                        @endif
                     </div>
                     <div>
                         <h3 style="font-size:16px;font-weight:700;color:#fff;">{{ $user->name }}</h3>
@@ -70,7 +75,7 @@ $activeTab = request()->query('tab');
                     </div>
                 </div>
 
-                <form method="POST" action="{{ route('teacher.settings.update') }}">
+                <form method="POST" action="{{ route('teacher.settings.update') }}" enctype="multipart/form-data">
                     @csrf @method('PATCH')
                     <input type="hidden" name="section" value="profile">
 
@@ -134,18 +139,16 @@ $activeTab = request()->query('tab');
                         </div>
 
                         <div class="field field-full">
-                            <label>Avatar Color</label>
-                            <input type="hidden" name="avatar_color" id="avatarColorInput"
-                                value="{{ old('avatar_color', $user->avatar_color ?? '#4F46E5') }}">
-                            <div class="color-picker-row">
-                                @foreach(['#4F46E5','#7C3AED','#0891B2','#059669','#D97706','#DB2777','#DC2626','#0F766E','#1D4ED8','#374151'] as $color)
-                                <div class="color-swatch {{ old('avatar_color', $user->avatar_color ?? '#4F46E5') === $color ? 'selected' : '' }}"
-                                    style="background:{{ $color }}"
-                                    onclick="selectColor('{{ $color }}', this)"
-                                    title="{{ $color }}">
-                                </div>
-                                @endforeach
-                            </div>
+                            <label>Profile Picture</label>
+                            <input type="file" name="avatar" accept="image/jpeg,image/png,image/webp" class="field-input">
+                            <p class="field-hint">JPG, PNG or WebP · Max 20MB</p>
+                            @error('avatar') <p class="field-error">{{ $message }}</p> @enderror
+                            @if($user->hasAvatar())
+                            <label style="display:flex;align-items:center;gap:6px;margin-top:10px;font-size:12px;color:#F87171;cursor:pointer;">
+                                <input type="checkbox" name="remove_avatar" value="1">
+                                Remove current photo
+                            </label>
+                            @endif
                         </div>
                     </div>
 
@@ -292,13 +295,6 @@ $activeTab = request()->query('tab');
         });
         document.querySelectorAll('.settings-nav-item').forEach(i => i.classList.remove('active'));
         el.classList.add('active');
-    }
-
-    function selectColor(color, el) {
-        document.getElementById('avatarColorInput').value = color;
-        document.getElementById('avatarPreview').style.background = color;
-        document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
-        el.classList.add('selected');
     }
 
     document.getElementById('deleteModal').addEventListener('click', function(e) {

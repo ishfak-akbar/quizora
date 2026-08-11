@@ -324,7 +324,7 @@ class DashboardController extends Controller
     public function aiUpload(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:pdf,txt|max:5120', // 5MB max
+            'file' => 'required|file|mimes:pdf,txt|max:20480', // 20MB max
         ]);
 
         $file = $request->file('file');

@@ -8,7 +8,7 @@
     --color-primary-solid: #4f46e5;
     --color-primary-dark: #2e2570;
     --color-bg-main: #0e0b20;
-    --color-bg-card: #1e1a3e;
+    --color-bg-card: #171234;
     --color-bg-row-hover: #241e47;
     --color-border-light: rgba(255, 255, 255, 0.08);
     --color-text-primary: #ffffff;
@@ -2912,17 +2912,24 @@ textarea.input,
 }
 
 .avatar-large {
-    width: 72px;
-    height: 72px;
-    border-radius: 18px;
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    flex-shrink: 0;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 28px;
+    font-size: 22px;
     font-weight: 700;
     color: #fff;
-    flex-shrink: 0;
-    transition: background 0.3s;
+}
+
+.avatar-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .role-pill {

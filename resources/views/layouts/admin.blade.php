@@ -80,7 +80,14 @@
             </div>
             <div class="topbar-right">
                 <div class="user-btn" id="userBtn">
-                    <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+                    <div class="user-avatar" style="overflow:hidden;">
+                        @if(auth()->user()->hasAvatar())
+                        <img src="{{ auth()->user()->avatarUrl() }}" alt=""
+                            style="width:100%;height:100%;object-fit:cover;display:block;">
+                        @else
+                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                        @endif
+                    </div>
                     <div>
                         <div class="user-name">{{ auth()->user()->name }}</div>
                         <div class="user-role">Super Admin</div>

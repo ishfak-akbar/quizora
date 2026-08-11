@@ -377,19 +377,39 @@ class QuizController extends Controller
                 'gender'        => 'nullable|in:male,female,other,prefer_not_to_say',
                 'location'      => 'nullable|string|max:100',
                 'bio'           => 'nullable|string|max:300',
-                'avatar_color'  => 'nullable|string|max:7',
+                'avatar'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:20480',
             ]);
+
+            $user->fill(collect($validated)->except('avatar')->toArray());
+            $user->save();
+
+            if ($request->hasFile('avatar')) {
+                // delete old if it was a real storage path
+                if ($user->avatar && !str_contains($user->avatar, 'tmp') && \Illuminate\Support\Facades\Storage::disk('public')->exists($user->avatar)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($user->avatar);
+                }
+
+                $user->avatar = $request->file('avatar')->store('avatars', 'public');
+                $user->save();
+            }
+
+            if ($request->boolean('remove_avatar')) {
+                if ($user->avatar && \Illuminate\Support\Facades\Storage::disk('public')->exists($user->avatar)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($user->avatar);
+                }
+                $user->avatar = null;
+                $user->save();
+            }
         } elseif ($section === 'professional') {
             $validated = $request->validate([
                 'institution' => 'nullable|string|max:200',
                 'designation' => 'nullable|string|max:150',
             ]);
+            $user->fill($validated);
+            $user->save();
         } else {
             return back()->withErrors(['section' => 'Invalid settings section.']);
         }
-
-        $user->fill($validated);
-        $user->save();
 
         return redirect()->route('teacher.settings', ['tab' => $section])
             ->with('success', ucfirst($section) . ' updated successfully.');
@@ -503,7 +523,7 @@ class QuizController extends Controller
     {
         $request->validate([
             'title'    => 'required|string|max:255',
-            'csv_file' => 'required|file|mimes:csv,txt|max:2048',
+            'csv_file' => 'required|file|mimes:csv,txt|max:20480',
         ]);
 
         $path = $request->file('csv_file')->getRealPath();

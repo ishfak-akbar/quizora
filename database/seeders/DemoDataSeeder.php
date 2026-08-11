@@ -235,7 +235,6 @@ class DemoDataSeeder extends Seeder
                     'institution' => ['Sylhet Cadet College', 'Notre Dame College', 'Rajshahi University School', 'BUET', 'Dhaka Residential Model College'][array_rand([0, 1, 2, 3, 4])],
                     'designation' => ['Assistant Professor', 'Senior Lecturer', 'Subject Teacher', 'Head of Department'][array_rand([0, 1, 2, 3])],
                     'preferred_language' => 'english',
-                    'avatar_color' => sprintf('#%06X', mt_rand(0, 0xFFFFFF)),
                     'email_verified_at' => now(),
                 ]
             ));
@@ -273,7 +272,6 @@ class DemoDataSeeder extends Seeder
                     'study_goal' => ['exam_prep', 'university_admission', 'bcs', 'self_learning'][array_rand([0, 1, 2, 3])],
                     'preferred_language' => ['english', 'bangla'][array_rand(['english', 'bangla'])],
                     'target_score' => rand(70, 100),
-                    'avatar_color' => sprintf('#%06X', mt_rand(0, 0xFFFFFF)),
                     'email_verified_at' => now(),
                 ]
             ));

@@ -306,7 +306,7 @@ class DashboardController extends Controller
     public function aiUpload(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:pdf,txt|max:5120',
+            'file' => 'required|file|mimes:pdf,txt|max:20480',
         ]);
 
         $file = $request->file('file');
@@ -492,20 +492,64 @@ class DashboardController extends Controller
     public function updateSettings(Request $request)
     {
         $user = User::findOrFail(Auth::id());
-
         $section = $request->input('section', 'profile');
 
         if ($section === 'profile') {
             $validated = $request->validate([
-                'name'         => 'required|string|max:255',
-                'email'        => 'required|email|unique:users,email,' . $user->id,
-                'phone'        => 'nullable|string|max:20',
+                'name'          => 'required|string|max:255',
+                'email'         => 'required|email|unique:users,email,' . $user->id,
+                'phone'         => 'nullable|string|max:20',
                 'date_of_birth' => 'nullable|date|before:today',
-                'gender'       => 'nullable|in:male,female,other,prefer_not_to_say',
-                'location'     => 'nullable|string|max:100',
-                'bio'          => 'nullable|string|max:300',
-                'avatar_color' => 'nullable|string|max:7',
+                'gender'        => 'nullable|in:male,female,other,prefer_not_to_say',
+                'location'      => 'nullable|string|max:100',
+                'bio'           => 'nullable|string|max:300',
+                'avatar'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:20480',
             ]);
+
+            $user->fill(collect($validated)->except('avatar')->toArray());
+            $user->save();
+
+            if ($request->hasFile('avatar')) {
+                if (
+                    $user->avatar
+                    && !str_contains($user->avatar, 'tmp')
+                    && \Illuminate\Support\Facades\Storage::disk('public')->exists($user->avatar)
+                ) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($user->avatar);
+                }
+
+                $file = $request->file('avatar');
+                $filename = 'avatars/' . uniqid() . '.jpg';
+
+                $image = \imagecreatefromstring(file_get_contents($file->getRealPath()));
+                $w = imagesx($image);
+                $h = imagesy($image);
+                $size = min($w, $h);
+                $srcX = (int) (($w - $size) / 2);
+                $srcY = (int) (($h - $size) / 2);
+
+                $thumb = imagecreatetruecolor(256, 256);
+                imagecopyresampled($thumb, $image, 0, 0, $srcX, $srcY, 256, 256, $size, $size);
+
+                ob_start();
+                imagejpeg($thumb, null, 90);
+                $data = ob_get_clean();
+
+                imagedestroy($image);
+                imagedestroy($thumb);
+
+                \Illuminate\Support\Facades\Storage::disk('public')->put($filename, $data);
+                $user->avatar = $filename;
+                $user->save();
+            }
+
+            if ($request->boolean('remove_avatar')) {
+                if ($user->avatar && \Illuminate\Support\Facades\Storage::disk('public')->exists($user->avatar)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($user->avatar);
+                }
+                $user->avatar = null;
+                $user->save();
+            }
         } elseif ($section === 'academic') {
             $validated = $request->validate([
                 'institution'     => 'nullable|string|max:200',
@@ -514,17 +558,18 @@ class DashboardController extends Controller
                 'study_goal'      => 'nullable|in:exam_prep,self_learning,bcs,university_admission,other',
                 'preparing_for'   => 'nullable|string|max:200',
             ]);
+            $user->fill($validated);
+            $user->save();
         } elseif ($section === 'preferences') {
             $validated = $request->validate([
                 'preferred_language' => 'nullable|in:english,bangla',
                 'target_score'       => 'nullable|integer|min:1|max:100',
             ]);
+            $user->fill($validated);
+            $user->save();
         } else {
             return back()->withErrors(['section' => 'Invalid settings section.']);
         }
-
-        $user->fill($validated);
-        $user->save();
 
         return redirect()->route('student.settings', ['tab' => $section])
             ->with('success', ucfirst($section) . ' updated successfully.');

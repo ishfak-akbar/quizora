@@ -359,8 +359,13 @@
 
         {{-- IDENTITY HEADER --}}
         <div class="identity-card card">
-            <div class="identity-avatar" style="background: {{ $student->avatar_color ?? 'var(--color-primary-solid)' }}">
+            <div class="identity-avatar" style="overflow:hidden; background: linear-gradient(135deg,#4F46E5,#A78BFA);">
+                @if($student->hasAvatar())
+                <img src="{{ $student->avatarUrl() }}" alt=""
+                    style="width:100%;height:100%;object-fit:cover;display:block;">
+                @else
                 {{ strtoupper(substr($student->name, 0, 1)) }}
+                @endif
             </div>
             <div class="identity-info">
                 <div class="identity-name">{{ $student->name }}</div>

@@ -37,7 +37,7 @@ class User extends Authenticatable
         'preparing_for',
         'preferred_language',
         'target_score',
-        'avatar_color',
+        'avatar',
     ];
 
     /**
@@ -76,5 +76,18 @@ class User extends Authenticatable
     public function bookmarks()
     {
         return $this->hasMany(Bookmark::class, 'student_id');
+    }
+    public function avatarUrl(): string
+    {
+        if ($this->avatar && \Illuminate\Support\Facades\Storage::disk('public')->exists($this->avatar)) {
+            return asset('storage/' . $this->avatar);
+        }
+        return '';
+    }
+
+    public function hasAvatar(): bool
+    {
+        return !empty($this->avatar)
+            && \Illuminate\Support\Facades\Storage::disk('public')->exists($this->avatar);
     }
 }

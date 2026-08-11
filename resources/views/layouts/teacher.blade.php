@@ -94,7 +94,7 @@
                 $greeting = $hour < 12 ? 'Good morning' : ($hour < 17 ? 'Good afternoon' : 'Good evening' );
                     @endphp
                     <div>
-                    <div class="topbar-title">{{ $greeting }}, {{ auth()->user()->name }} 👋</div>
+                    <div class="topbar-title">{{ $greeting }}, {{ auth()->user()->name }}</div>
                     <div class="topbar-sub">{{ now()->format('l, F j, Y') }}</div>
             </div>
             </div>

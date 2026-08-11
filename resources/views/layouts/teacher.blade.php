@@ -169,10 +169,20 @@
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('toggleBtn');
         const toggleIcon = document.getElementById('toggleIcon');
+
+        if (localStorage.getItem('sidebarCollapsed') === '1') {
+            sidebar.classList.add('collapsed');
+            document.body.classList.add('collapsed');
+            if (toggleIcon) toggleIcon.className = 'ti ti-chevron-right';
+        }
+
         toggleBtn.addEventListener('click', () => {
             const collapsed = sidebar.classList.toggle('collapsed');
             document.body.classList.toggle('collapsed', collapsed);
-            toggleIcon.className = collapsed ? 'ti ti-chevron-right' : 'ti ti-chevron-left';
+            if (toggleIcon) {
+                toggleIcon.className = collapsed ? 'ti ti-chevron-right' : 'ti ti-chevron-left';
+            }
+            localStorage.setItem('sidebarCollapsed', collapsed ? '1' : '0');
         });
 
         const userBtn = document.getElementById('userBtn');

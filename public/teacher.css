@@ -2968,43 +2968,102 @@ textarea.input,
 /* ==========================================================================
    PAGE-SPECIFIC: STUDENTS
    ========================================================================== */
-.stats-row {
+
+.students-stats-row {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 14px;
     margin-bottom: 24px;
 }
 
-/* NOTE: renamed from `.stat-card` to avoid clashing with Dashboard's stat-card.
-   Update students.blade.php: change class="stat-card ..." to class="stat-card-mini ..." */
-.stat-card-mini {
-    background: var(--color-bg-card);
+.students-mini-stat {
+    background: #171234;
     border: 1px solid var(--color-border-light);
     border-radius: 14px;
-    padding: 18px 20px;
-    position: relative;
-    overflow: hidden;
+    padding: 18px;
+    text-align: center;
 }
 
-.stat-card-mini::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
+.students-mini-stat-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
 }
-.stat-card-mini.purple::before {
-    background: linear-gradient(90deg, #4f46e5, #a78bfa);
+
+.students-mini-stat-label {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    margin-top: 4px;
 }
-.stat-card-mini.cyan::before {
-    background: linear-gradient(90deg, #0891b2, #22d3ee);
+
+.modal-recent-wrap {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--color-border-light);
 }
-.stat-card-mini.green::before {
-    background: linear-gradient(90deg, #059669, #34d399);
+
+.modal-section-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 10px;
 }
-.stat-card-mini.amber::before {
-    background: linear-gradient(90deg, #d97706, #f59e0b);
+
+.modal-quiz-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.modal-quiz-row:last-child {
+    border-bottom: none;
+}
+
+.modal-quiz-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.modal-quiz-teacher {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11.5px;
+    color: var(--color-text-secondary);
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.modal-quiz-teacher i {
+    font-size: 13px;
+    color: var(--color-primary-glow);
+}
+
+.modal-quiz-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.modal-quiz-category {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+}
+
+.modal-quiz-empty {
+    font-size: 12.5px;
+    color: var(--color-text-muted);
+    padding: 12px 0;
+    text-align: center;
 }
 
 .stat-label {
@@ -3158,10 +3217,12 @@ textarea.input,
 
 .ai-sidebar {
     background:
-      radial-gradient(ellipse 100% 400px at 50% 0%,
-        rgba(99, 102, 241, 0.18) 0%,
-        transparent 65%),
-      linear-gradient(180deg, #1c1842 0%, #161233 50%, #0f0c1e 100%);
+        radial-gradient(
+            ellipse 100% 400px at 50% 0%,
+            rgba(99, 102, 241, 0.18) 0%,
+            transparent 65%
+        ),
+        linear-gradient(180deg, #1c1842 0%, #161233 50%, #0f0c1e 100%);
     border: 1px solid var(--color-border-light);
     border-radius: 16px;
     padding: 20px;
@@ -3233,10 +3294,12 @@ textarea.input,
 
 .ai-chat-wrap {
     background:
-      radial-gradient(ellipse 100% 400px at 50% 0%,
-        rgba(99, 102, 241, 0.18) 0%,
-        transparent 65%),
-      linear-gradient(180deg, #1c1842 0%, #161233 50%, #0f0c1e 100%);
+        radial-gradient(
+            ellipse 100% 400px at 50% 0%,
+            rgba(99, 102, 241, 0.18) 0%,
+            transparent 65%
+        ),
+        linear-gradient(180deg, #1c1842 0%, #161233 50%, #0f0c1e 100%);
     border: 1px solid var(--color-border-light);
     border-radius: 16px;
     display: flex;

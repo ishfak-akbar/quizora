@@ -248,7 +248,10 @@ class DashboardController extends Controller
             $q->whereIn('quiz_id', $teacherQuizIds)->where('status', 'submitted');
         })
             ->with(['attempts' => function ($q) use ($teacherQuizIds) {
-                $q->whereIn('quiz_id', $teacherQuizIds)->where('status', 'submitted');
+                $q->whereIn('quiz_id', $teacherQuizIds)
+                    ->where('status', 'submitted')
+                    ->with('quiz.teacher')
+                    ->latest('submitted_at');
             }])
             ->get()
             ->map(function ($student) {
@@ -275,6 +278,16 @@ class DashboardController extends Controller
                     $status = 'inactive';
                 }
 
+                $recentQuizzes = $studentAttempts->take(5)->map(function ($a) {
+                    $pct = $a->total_marks > 0 ? round(($a->score / $a->total_marks) * 100) : 0;
+                    return [
+                        'title'   => $a->quiz->title ?? 'Deleted Quiz',
+                        'category' => $a->quiz->category ?? 'General',
+                        'teacher' => $a->quiz->teacher->name ?? 'Unknown',
+                        'score'   => $pct,
+                    ];
+                })->values();
+
                 return [
                     'id' => $student->id,
                     'name' => $student->name,
@@ -285,7 +298,8 @@ class DashboardController extends Controller
                     'avg_score' => $avg,
                     'last_active_raw' => $lastActiveDate,
                     'last_active' => $lastActiveDate ? $lastActiveDate->diffForHumans() : 'Never',
-                    'status' => $status
+                    'status' => $status,
+                    'recent_quizzes' => $recentQuizzes,
                 ];
             });
 

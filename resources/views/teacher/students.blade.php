@@ -1,38 +1,6 @@
 @extends('layouts.teacher')
 @section('title', 'Quizora — Students')
 
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('teacher.css') }}">
-    <style>
-        .students-stats-row {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 14px;
-            margin-bottom: 24px;
-        }
-
-        .students-mini-stat {
-            background: #171234;
-            border: 1px solid var(--color-border-light);
-            border-radius: 14px;
-            padding: 18px;
-            text-align: center;
-        }
-
-        .students-mini-stat-value {
-            font-size: 22px;
-            font-weight: 700;
-            color: #fff;
-        }
-
-        .students-mini-stat-label {
-            font-size: 11px;
-            color: var(--color-text-muted);
-            margin-top: 4px;
-        }
-    </style>
-@endpush
-
 @section('content')
 
 <div class="page-header">
@@ -118,7 +86,8 @@
                 </td>
                 <td>
                     <button class="action-btn" title="View Details"
-                        onclick="openModal('{{ $student['name'] }}','{{ $student['email'] }}','{{ $student['initial'] }}','{{ $bg }}','{{ $student['quizzes_taken'] }}','{{ $student['avg_score'] }}%','{{ $student['quizzes_passed'] }}')">
+                        data-recent="{{ json_encode($student['recent_quizzes']) }}"
+                        onclick="openModal(this,'{{ $student['name'] }}','{{ $student['email'] }}','{{ $student['initial'] }}','{{ $bg }}','{{ $student['quizzes_taken'] }}','{{ $student['avg_score'] }}%','{{ $student['quizzes_passed'] }}')">
                         <i class="ti ti-eye"></i>
                     </button>
                 </td>
@@ -160,6 +129,11 @@
                 <div class="modal-stat-label">Quizzes Passed</div>
             </div>
         </div>
+
+        <div class="modal-recent-wrap">
+            <div class="modal-section-label">Last 5 Quizzes</div>
+            <div id="modalRecentList"></div>
+        </div>
     </div>
 </div>
 
@@ -179,7 +153,7 @@
         });
     }
 
-    function openModal(name, email, initial, bg, quizzes, avg, passed) {
+    function openModal(btn, name, email, initial, bg, quizzes, avg, passed) {
         document.getElementById('modalName').textContent = name;
         document.getElementById('modalEmail').textContent = email;
         document.getElementById('modalAvatar').textContent = initial;
@@ -187,6 +161,27 @@
         document.getElementById('modalQuizzes').textContent = quizzes;
         document.getElementById('modalAvgScore').textContent = avg;
         document.getElementById('modalPassed').textContent = passed;
+
+        const recentQuizzes = JSON.parse(btn.dataset.recent || '[]');
+        const list = document.getElementById('modalRecentList');
+
+        if (recentQuizzes.length === 0) {
+            list.innerHTML = '<div class="modal-quiz-empty">No quiz attempts yet.</div>';
+        } else {
+            list.innerHTML = recentQuizzes.map(q => {
+                const scoreClass = q.score >= 75 ? 'score-high' : (q.score >= 50 ? 'score-mid' : 'score-low');
+                return `
+                    <div class="modal-quiz-row">
+                        <div class="modal-quiz-info">
+                            <div class="modal-quiz-title">${q.title}</div>
+                            <div class="modal-quiz-category">${q.category}</div>
+                        </div>
+                        <div class="modal-quiz-teacher"><i class="ti ti-user"></i> ${q.teacher}</div>
+                        <span class="score-pill ${scoreClass}">${q.score}%</span>
+                    </div>`;
+            }).join('');
+        }
+
         document.getElementById('modalOverlay').classList.add('open');
     }
 

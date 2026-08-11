@@ -2969,14 +2969,14 @@ textarea.input,
    PAGE-SPECIFIC: STUDENTS
    ========================================================================== */
 
-.students-stats-row {
+.stats-row {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 14px;
     margin-bottom: 24px;
 }
 
-.students-mini-stat {
+.stat-card-mini {
     background: #171234;
     border: 1px solid var(--color-border-light);
     border-radius: 14px;
@@ -2984,13 +2984,13 @@ textarea.input,
     text-align: center;
 }
 
-.students-mini-stat-value {
+.stat-value {
     font-size: 22px;
     font-weight: 700;
     color: #fff;
 }
 
-.students-mini-stat-label {
+.stat-label {
     font-size: 11px;
     color: var(--color-text-muted);
     margin-top: 4px;

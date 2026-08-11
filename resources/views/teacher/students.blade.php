@@ -10,22 +10,22 @@
     </div>
 </div>
 
-<div class="students-stats-row">
-    <div class="students-mini-stat">
-        <div class="students-mini-stat-value">{{ $totalStudentsCount }}</div>
-        <div class="students-mini-stat-label">Total Students</div>
+<div class="stats-row">
+    <div class="stat-card-mini">
+        <div class="stat-value">{{ $totalStudentsCount }}</div>
+        <div class="stat-label">Total Students</div>
     </div>
-    <div class="students-mini-stat">
-        <div class="students-mini-stat-value" style="color:var(--color-primary-glow)">{{ $activeThisMonth }}</div>
-        <div class="students-mini-stat-label">Active This Month</div>
+    <div class="stat-card-mini">
+        <div class="stat-value" style="color:var(--color-primary-glow)">{{ $activeThisMonth }}</div>
+        <div class="stat-label">Active This Month</div>
     </div>
-    <div class="students-mini-stat">
-        <div class="students-mini-stat-value" style="color:#34D399">{{ $avgScore }}%</div>
-        <div class="students-mini-stat-label">Avg. Score</div>
+    <div class="stat-card-mini">
+        <div class="stat-value" style="color:#34D399">{{ $avgScore }}%</div>
+        <div class="stat-label">Avg. Score</div>
     </div>
-    <div class="students-mini-stat">
-        <div class="students-mini-stat-value" style="color:#F59E0B">{{ $totalAttemptsCount }}</div>
-        <div class="students-mini-stat-label">Total Attempts</div>
+    <div class="stat-card-mini">
+        <div class="stat-value" style="color:#F59E0B">{{ $totalAttemptsCount }}</div>
+        <div class="stat-label">Total Attempts</div>
     </div>
 </div>
 

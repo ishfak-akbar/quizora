@@ -40,23 +40,24 @@ body {
    ========================================================================== */
 
 /* ---------- Page Header ---------- */
-.page-header {
+.page-heading {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 24px;
+    flex-direction: column;
+    gap: 2px;
 }
 
-.page-header h1 {
-    font-size: 22px;
-    font-weight: 700;
-    color: #fff;
+.page-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
 }
 
-.page-header p {
-    font-size: 13px;
+.page-subtitle {
+    font-size: 12px;
+    font-weight: 400;
     color: var(--color-text-muted);
-    margin-top: 4px;
+    margin: 0;
+    opacity: 0.7;
 }
 
 /* ---------- Filters / Search Bar ---------- */

@@ -1,5 +1,7 @@
 @extends('layouts.teacher')
 @section('title', 'Quizora — My Quizzes')
+@section('page-title', 'My Quizzes')
+@section('page-subtitle', 'Create, manage, and organize your quizzes.')
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('teacher.css') }}">
@@ -7,15 +9,7 @@
 
 @section('content')
 
-<div class="page-header">
-    <div>
-        <h1>My Quizzes</h1>
-        <p>Manage and track all your quizzes</p>
-    </div>
-    <a href="{{ route('teacher.quiz.create') }}" class="create-btn">
-        <i class="ti ti-plus"></i> Create Quiz
-    </a>
-</div>
+    
 
 <div class="filters">
     <div class="search-wrap">
@@ -26,6 +20,9 @@
     <button class="filter-btn" onclick="filterQuizzes('active', this)">Active</button>
     <button class="filter-btn" onclick="filterQuizzes('draft', this)">Draft</button>
     <button class="filter-btn" onclick="filterQuizzes('closed', this)">Closed</button>
+    <a href="{{ route('teacher.quiz.create') }}" class="create-btn">
+        <i class="ti ti-plus"></i> Create Quiz
+    </a>
 </div>
 
 <div class="quiz-grid" id="quizGrid">

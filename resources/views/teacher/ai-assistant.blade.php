@@ -1,5 +1,7 @@
 @extends('layouts.teacher')
 @section('title', 'Quizora — AI Assistant')
+@section('page-title', 'AI Assistant')
+@section('page-subtitle', 'Get AI-powered insights and assistance with your quizzes.')
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('teacher.css') }}">

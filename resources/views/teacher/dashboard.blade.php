@@ -1,5 +1,7 @@
 @extends('layouts.teacher')
 @section('title', 'Quizora — Dashboard')
+@section('page-title', 'Dashboard')
+@section('page-subtitle', 'Monitor your quizzes, students, and overall performance.')
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('teacher.css') }}">

@@ -1,5 +1,7 @@
 @extends('layouts.teacher')
 @section('title', 'Quizora — Results')
+@section('page-title', 'Results')
+@section('page-subtitle', 'Review student attempts, scores, and quiz performance.')
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('teacher.css') }}">
@@ -7,12 +9,6 @@
 
 @section('content')
 
-<div class="page-header">
-    <div>
-        <h1>Results</h1>
-        <p>View student performance across all your quizzes</p>
-    </div>
-</div>
 
 <div class="results-layout">
 

@@ -54,13 +54,13 @@
         }
 
         .page-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
             margin: 0;
         }
 
         .page-subtitle {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 400;
             color: var(--color-text-muted);
             margin: 0;

@@ -1,5 +1,7 @@
 @extends('layouts.teacher')
 @section('title', 'Quizora — Question Bank')
+@section('page-title', 'Question Bank')
+@section('page-subtitle', 'Create and manage reusable questions for your quizzes.')
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('teacher.css') }}">
@@ -7,15 +9,6 @@
 
 @section('content')
 
-<div class="page-header">
-    <div>
-        <h1>Question Bank</h1>
-        <p>Save questions once, reuse them across any quiz</p>
-    </div>
-    <button class="btn-primary" onclick="document.getElementById('addModal').classList.add('open')">
-        <i class="ti ti-plus"></i> Add Question
-    </button>
-</div>
 <div class="filters">
     <form method="GET" class="search-wrap">
         <i class="ti ti-search"></i>
@@ -24,6 +17,9 @@
     <div id="categoryFilterWrap" style="min-width:180px;"></div>
     <button type="button" class="select-toggle-btn" id="selectModeBtn" onclick="toggleSelectMode()">
         <i class="ti ti-checkbox" id="selectModeIcon"></i> <span id="selectModeLabel">Select Multiple</span>
+    </button>
+    <button class="btn-primary" onclick="document.getElementById('addModal').classList.add('open')">
+        <i class="ti ti-plus"></i> Add Question
     </button>
 </div>
 

@@ -1,5 +1,7 @@
 @extends('layouts.teacher')
 @section('title', 'Quizora — Settings')
+@section('page-title', 'Settings')
+@section('page-subtitle', 'Manage your account and application preferences.')
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('teacher.css') }}">
@@ -16,13 +18,6 @@ $activeTab = 'password';
 $activeTab = request()->query('tab');
 }
 @endphp
-
-<div class="page-header">
-    <div>
-        <h1>Settings</h1>
-        <p>Manage your profile, credentials, and account</p>
-    </div>
-</div>
 
 <div class="settings-layout">
 

@@ -1,18 +1,13 @@
 @extends('layouts.teacher')
 @section('title', 'Leaderboard')
+@section('page-title', 'Leaderboard')
+@section('page-subtitle', 'View student rankings and quiz performance.')
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('teacher.css') }}">
 @endpush
 
 @section('content')
-
-<div class="page-header">
-  <div>
-    <h1>Leaderboard</h1>
-    <p>Top performing students per quiz</p>
-  </div>
-</div>
 
 <div class="lb-layout">
 

@@ -1,14 +1,10 @@
 @extends('layouts.teacher')
 @section('title', 'Quizora — Students')
+@section('page-title', 'Students')
+@section('page-subtitle', 'View and monitor the students taking your quizzes.')
 
 @section('content')
 
-<div class="page-header">
-    <div>
-        <h1>Students</h1>
-        <p>All students who have attempted your quizzes</p>
-    </div>
-</div>
 
 <div class="stats-row">
     <div class="stat-card-mini">

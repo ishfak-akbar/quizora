@@ -89,14 +89,10 @@
     <main class="main" id="main">
         <header class="topbar">
             <div>
-                @php
-                $hour = now()->hour;
-                $greeting = $hour < 12 ? 'Good morning' : ($hour < 17 ? 'Good afternoon' : 'Good evening' );
-                    @endphp
-                    <div>
-                    <div class="topbar-title">{{ $greeting }}, {{ auth()->user()->name }}</div>
-                    <div class="topbar-sub">{{ now()->format('l, F j, Y') }}</div>
-            </div>
+                <div class="page-heading">
+                    <h1 class="page-title">@yield('page-title', 'Dashboard')</h1>
+                    <p class="page-subtitle">@yield('page-subtitle')</p>
+                </div>
             </div>
             <div class="topbar-right">
                 <div style="position:relative;">

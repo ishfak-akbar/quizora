@@ -1,8 +1,10 @@
 @extends('layouts.teacher')
 @section('title', 'Quizora — ' . $quiz->title)
+@section('page-title', 'Quiz Details')
+@section('page-subtitle', 'View the questions, settings, and information of this quiz.')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('teacher.css') }}">
+<link rel="stylesheet" href="{{ asset('teacher.css') }}">
 @endpush
 
 @section('content')

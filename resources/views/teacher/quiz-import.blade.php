@@ -1,17 +1,13 @@
 @extends('layouts.teacher')
 @section('title', 'Quizora — Import Quiz')
+@section('page-title', 'Import Quiz')
+@section('page-subtitle', 'Import quiz questions and options using a CSV file.')
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('teacher.css') }}">
 @endpush
 
 @section('content')
-<div class="page-header">
-    <div>
-        <h1>Import Quiz</h1>
-        <p>Bulk-create a quiz from a CSV file instead of adding questions one by one</p>
-    </div>
-</div>
 
 {{-- IMPORT HERO --}}
 <div class="import-hero">

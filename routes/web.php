@@ -7,6 +7,7 @@ use App\Http\Controllers\Teacher\DashboardController as TeacherDashboard;
 use App\Http\Controllers\Student\DashboardController as StudentDashboard;
 use App\Http\Controllers\Teacher\QuizController;
 use App\Http\Controllers\Student\QuizController as StudentQuizController;
+use App\Http\Controllers\Admin\SettingsController as AdminSettingsController;
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -95,6 +96,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::post('/announcements', [\App\Http\Controllers\Admin\AnnouncementController::class, 'store'])->name('admin.announcements.store');
     Route::patch('/announcements/{announcement}/toggle', [\App\Http\Controllers\Admin\AnnouncementController::class, 'toggle'])->name('admin.announcements.toggle');
     Route::delete('/announcements/{announcement}', [\App\Http\Controllers\Admin\AnnouncementController::class, 'destroy'])->name('admin.announcements.destroy');
+    Route::get('/settings', [AdminSettingsController::class, 'index'])->name('admin.settings');
+    Route::patch('/settings', [AdminSettingsController::class, 'update'])->name('admin.settings.update');
+    Route::put('/settings/password', [AdminSettingsController::class, 'updatePassword'])->name('admin.settings.password');
 });
 
 Route::middleware(['auth', 'role:student'])->prefix('student')->group(function () {

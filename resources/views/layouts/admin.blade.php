@@ -60,7 +60,7 @@
             </a>
         </nav>
         <div class="sidebar-bottom">
-            <a href="#" class="nav-item">
+            <a href="{{ route('admin.settings') }}" class="nav-item">
                 <i class="ti ti-settings nav-icon"></i>
                 <span class="nav-text">Settings</span>
             </a>
@@ -94,6 +94,9 @@
                     </div>
                     <i class="ti ti-chevron-down user-chevron"></i>
                     <div class="user-dropdown" id="userDropdown">
+                        <a href="{{ route('admin.settings') }}" class="dropdown-item">
+                            <i class="ti ti-settings"></i> Settings
+                        </a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="dropdown-item danger" style="width:100%;border:none;text-align:left;">

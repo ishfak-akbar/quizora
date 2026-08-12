@@ -1,5 +1,7 @@
 @extends('layouts.student')
 @section('title', 'Quizora — My Results')
+@section('page-title', 'My Results')
+@section('page-subtitle', 'Review your quiz performance and results.')
 
 @push('styles')
 <style>
@@ -180,11 +182,6 @@
 @endpush
 
 @section('content')
-
-<div class="page-header">
-    <h1>My Results</h1>
-    <p>Track your performance across all attempted quizzes</p>
-</div>
 
 <div class="stats-row">
     <div class="mini-stat">

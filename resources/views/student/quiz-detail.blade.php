@@ -1,5 +1,7 @@
 @extends('layouts.student')
 @section('title', 'Quizora — ' . $quiz->title)
+@section('page-title', 'Quiz Details')
+@section('page-subtitle', 'Review the quiz information before you begin.')
 
 @push('styles')
 <style>

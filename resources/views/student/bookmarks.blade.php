@@ -1,5 +1,6 @@
 @extends('layouts.student')
-@section('title', 'Quizora — Bookmarks')
+@section('page-title', 'Bookmarks')
+@section('page-subtitle', 'Access the quizzes you saved for later.')
 @push('styles')
 <style>
 </style>
@@ -48,10 +49,6 @@ return [$fallbacks[$index % count($fallbacks)], $fallbackIcons[$index % count($f
 }
 @endphp
 
-<div class="page-header">
-    <h1>Bookmarks</h1>
-    <p>Quizzes you've saved for later</p>
-</div>
 
 @if($bookmarks->isEmpty())
 <div class="empty-state">

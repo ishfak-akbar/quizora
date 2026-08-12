@@ -1,5 +1,7 @@
 @extends('layouts.student')
 @section('title', 'Quizora — AI Tutor')
+@section('page-title', 'AI Tutor')
+@section('page-subtitle', 'Get personalized help and guidance with your learning.')
 
 @push('styles')
 <style>

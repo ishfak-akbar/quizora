@@ -1,5 +1,7 @@
 @extends('layouts.student')
 @section('title', 'Quizora — Dashboard')
+@section('page-title', 'Dashboard')
+@section('page-subtitle', 'Overview of your quizzes, progress, and recent activity.')
 @push('styles')
 <style>
   .cta-row {

@@ -1,5 +1,7 @@
 @extends('layouts.student')
 @section('title', 'Quizora — Leaderboard')
+@section('page-title', 'Leaderboard')
+@section('page-subtitle', 'See how your performance compares with other students.')
 
 @push('styles')
 <style>
@@ -286,11 +288,6 @@
 @endpush
 
 @section('content')
-
-<div class="page-header">
-    <h1>Leaderboard</h1>
-    <p>See how you rank against other students</p>
-</div>
 
 <div class="lb-layout">
 

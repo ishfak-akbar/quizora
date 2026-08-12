@@ -1,5 +1,7 @@
 @extends('layouts.student')
 @section('title', 'Quizora — Private Quizzes')
+@section('page-title', 'Private Quizzes')
+@section('page-subtitle', 'Enter an access code to join a private quiz.')
 
 @push('styles')
 <style>
@@ -157,11 +159,6 @@
 @endpush
 
 @section('content')
-
-<div class="page-header">
-    <h1>Private Quizzes</h1>
-    <p>Enter a code from your teacher to unlock a private quiz</p>
-</div>
 
 {{-- UNLOCK HERO --}}
 <div class="unlock-hero">

@@ -1,5 +1,7 @@
 @extends('layouts.student')
 @section('title', 'Quizora — Browse Quizzes')
+@section('page-title', 'Browse Quizzes')
+@section('page-subtitle', 'Explore and attempt quizzes available to you.')
 @push('styles')
 <style>
     /* ── SEARCH BAR ── */
@@ -178,11 +180,6 @@
 @endpush
 
 @section('content')
-
-<div class="page-header">
-    <h1>Discover Quizzes</h1>
-    <p>Browse public quizzes from school basics to BCS preparation</p>
-</div>
 
 {{-- SEARCH + FILTERS --}}
 <form method="GET" action="{{ route('student.browse') }}" id="browseForm">

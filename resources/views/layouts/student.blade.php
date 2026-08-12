@@ -47,20 +47,24 @@
             overflow-x: hidden;
         }
 
-        .page-header {
-            margin-bottom: 20px;
+        .page-heading {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
 
-        .page-header h1 {
-            font-size: 22px;
-            font-weight: 700;
-            color: #fff;
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0;
         }
 
-        .page-header p {
+        .page-subtitle {
             font-size: 13px;
+            font-weight: 400;
             color: var(--color-text-muted);
-            margin-top: 4px;
+            margin: 0;
+            opacity: 0.7;
         }
 
         .quiz-grid {
@@ -401,17 +405,11 @@
             z-index: 50;
         }
 
-        .topbar-title {
-            font-size: 16px;
+        .page-title {
+            font-size: 18px;
             font-weight: 600;
             color: #fff;
             flex: 1;
-        }
-
-        .topbar-sub {
-            font-size: 13px;
-            color: var(--color-text-muted);
-            margin-top: 2px;
         }
 
         .topbar-right {
@@ -1015,8 +1013,10 @@
             $greeting = $hour < 12 ? 'Good morning' : ($hour < 17 ? 'Good afternoon' : 'Good evening' );
                 @endphp
                 <div>
-                <div class="topbar-title">{{ $greeting }}, {{ auth()->user()->name }}</div>
-                <div class="topbar-sub">{{ now()->format('l, F j, Y') }}</div>
+                <div class="page-heading">
+                    <h1 class="page-title">@yield('page-title', 'Dashboard')</h1>
+                    <p class="page-subtitle">@yield('page-subtitle')</p>
+                </div>
                 </div>
                 <div class="topbar-right">
                     <div style="position:relative;">

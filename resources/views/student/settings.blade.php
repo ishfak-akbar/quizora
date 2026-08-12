@@ -1,5 +1,7 @@
 @extends('layouts.student')
 @section('title', 'Quizora — Settings')
+@section('page-title', 'Settings')
+@section('page-subtitle', 'Manage your account and application preferences.')
 
 @push('styles')
 <style>
@@ -373,11 +375,6 @@ $activeTab = 'password';
 $activeTab = request()->query('tab');
 }
 @endphp
-
-<div class="page-header">
-    <h1>Settings</h1>
-    <p>Manage your profile, preferences, and account</p>
-</div>
 
 <div class="settings-layout">
 

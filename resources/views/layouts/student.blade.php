@@ -385,20 +385,6 @@
             left: calc(var(--sidebar-collapsed) - 14px);
         }
 
-        /* MAIN */
-        .main {
-            margin-left: var(--sidebar-w);
-            flex: 1;
-            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        body.collapsed .main {
-            margin-left: var(--sidebar-collapsed);
-        }
-
         /* TOPBAR */
         .topbar {
             height: 64px;
@@ -562,12 +548,6 @@
             height: 1px;
             background: var(--color-border-light);
             margin: 4px 0;
-        }
-
-        /* CONTENT WRAPPER */
-        .content {
-            padding: 20px;
-            flex: 1;
         }
 
         /* SHARED COMPONENT STYLES */

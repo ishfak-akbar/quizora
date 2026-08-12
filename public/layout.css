@@ -226,6 +226,7 @@ body.collapsed .toggle-btn {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    min-width: 0;
 }
 
 body.collapsed .main {
@@ -622,6 +623,7 @@ body.collapsed .main {
 .content {
     padding: 20px;
     flex: 1;
+    min-width: 0;
 }
 
 /* ================= TOAST ================= */
